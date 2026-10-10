@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2040" height="1210" viewBox="0 0 2040 1210">
+<defs>
+ <linearGradient id="paper" x2="0" y2="1"><stop stop-color="#eee3c5"/><stop offset="1" stop-color="#d6c69f"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#101c1c" flood-opacity=".75"/></filter>
+ <style>
+  .title{font:bold 30px Georgia,serif;fill:#292d28;letter-spacing:2px}.sub{font:14px Georgia,serif;fill:#45544b;letter-spacing:1px}
+  .region{font:bold 14px Georgia,serif;fill:#fff1c7;paint-order:stroke;stroke:#24312d;stroke-width:5px;stroke-linejoin:round;letter-spacing:.7px}
+  .name{font:bold 14px Georgia,serif;fill:#fff5df;paint-order:stroke;stroke:#1e2928;stroke-width:4px;stroke-linejoin:round}
+  .mini{font:bold 12px Georgia,serif;fill:#fff0d0;paint-order:stroke;stroke:#1e2928;stroke-width:4px;stroke-linejoin:round}
+  .key{font:13px Georgia,serif;fill:#273632}.keyhead{font:bold 14px Georgia,serif;fill:#273632;letter-spacing:.8px}
+ </style>
+</defs>
+<rect width="1640" height="1210" fill="url(#paper)"/>
+<text x="35" y="42" class="title">THORNVALE · BIRD'S-EYE WORLD LAYOUT</text>
+<text x="37" y="66" class="sub">STRAIGHT-DOWN MAP · TERRAIN-LED ZONES · LEVEL 1–45 · PLACEMENT CONCEPT</text>
+<!-- Semi-high-fidelity bird's-eye rendering is the exact terrain base for all overlays below. -->
+<image href="thornvale_world_topdown.png" x="52" y="85" width="1536" height="1024"/>
+<rect x="52" y="85" width="1536" height="1024" fill="none" stroke="#463e2f" stroke-width="3"/>
+<!-- subtle, naturally shaped region limits: these trace terrain transitions, never equal wedges -->
+<g transform="translate(52 85)" fill="none" stroke="#f4dda5" stroke-width="3" stroke-dasharray="8 8" opacity=".65">
+ <!-- Boundaries follow the visible terrain changes in this specific rendering. -->
+ <path d="M85 570 C144 510 241 493 318 526 C391 546 446 602 433 670 C440 741 389 798 312 819 C225 843 126 810 93 746 C48 701 45 623 85 570Z"/>
+ <path d="M190 720 C258 662 359 650 426 690 C499 715 546 781 517 843 C502 914 418 961 335 943 C258 965 173 913 159 850 C133 802 151 752 190 720Z"/>
+ <path d="M523 411 C590 364 688 366 748 411 C819 440 846 502 820 562 C802 625 723 656 653 634 C581 660 503 614 487 551 C464 497 479 442 523 411Z"/>
+ <path d="M774 566 C842 527 932 548 976 594 C1032 627 1051 694 1014 746 C985 808 914 829 854 796 C785 805 731 753 737 690 C720 643 737 592 774 566Z"/>
+ <path d="M891 366 C953 316 1040 320 1102 366 C1162 396 1185 455 1160 514 C1140 578 1076 608 1007 584 C937 605 872 560 860 501 C840 452 852 397 891 366Z"/>
+ <path d="M1011 249 C1065 205 1149 206 1201 249 C1262 278 1280 339 1251 395 C1226 450 1163 476 1103 454 C1042 471 980 432 969 376 C951 330 970 277 1011 249Z"/>
+ <path d="M84 405 C144 356 228 355 290 392 C354 426 375 484 350 541 C327 598 264 619 206 595 C145 615 81 577 67 526 C45 482 51 438 84 405Z"/>
+ <path d="M530 779 C596 736 682 742 735 785 C793 818 808 879 778 930 C745 984 674 1006 615 976 C553 981 499 929 493 876 C476 839 494 802 530 779Z"/>
+ <path d="M595 92 C666 55 759 68 805 117 C864 153 918 214 910 266 C880 321 738 338 679 308 C618 317 559 277 554 221 C530 172 550 121 595 92Z"/>
+ <path d="M1069 42 C1138 4 1245 22 1290 67 C1385 85 1472 143 1460 197 C1472 254 1403 302 1334 302 C1274 342 1167 322 1128 286 C1045 271 1007 214 1026 160 C1019 109 1033 65 1069 42Z"/>
+</g>
+<!-- The overhead terrain rendering already contains the winding road network; markers follow those routes. -->
+<!-- district names placed on the actual terrain patterns in the shared rendering -->
+<g transform="translate(52 85)" class="region" font-size="12">
+ <text x="215" y="800">TALLOWFIELDS · 3–10</text>
+ <text x="85" y="472">SALTFEN REACH · 19–28</text>
+ <text x="530" y="613">HEARTHMOOR BASIN · 6–15</text>
+ <text x="828" y="746">CAMPWATER VALE · 1–9</text>
+ <text x="930" y="570">BRACKENWOOD FRINGE · 9–18</text>
+ <text x="1070" y="330">BLACKBRIAR WILDS · 12–21</text>
+ <text x="520" y="920">BELLWATER DELTA · 25–31</text>
+ <text x="650" y="240">GREYFOLD DOWNS · 22–34</text>
+ <text x="1190" y="230">FROSTSPINE CROWN · 29–38</text>
+</g>
+<!-- destination markers: town/camp labels and the cave/Warden key use coordinates in the same raster -->
+<g transform="translate(52 85)" filter="url(#shadow)">
+ <g fill="#e9bb61" stroke="#342e22" stroke-width="3" text-anchor="middle" class="mini">
+  <g><circle cx="818" cy="630" r="13"/><text x="818" y="634">1</text></g><g><circle cx="314" cy="742" r="13"/><text x="314" y="746">2</text></g><g><circle cx="758" cy="525" r="16"/><text x="758" y="529">3</text></g><g><circle cx="1160" cy="566" r="14"/><text x="1160" y="570">4</text></g><g><circle cx="240" cy="493" r="14"/><text x="240" y="497">5</text></g><g><circle cx="1100" cy="390" r="13"/><text x="1100" y="394">6</text></g><g><circle cx="900" cy="180" r="13"/><text x="900" y="184">7</text></g><g><circle cx="1420" cy="107" r="14"/><text x="1420" y="111">8</text></g><g><circle cx="956" cy="465" r="12"/><text x="956" y="469">9</text></g><g><circle cx="637" cy="840" r="13"/><text x="637" y="844">10</text></g><g><circle cx="280" cy="900" r="10"/><text x="280" y="904">C</text></g>
+ </g>
+ <!-- cave mouths: lettered to preserve legibility -->
+ <g fill="#202928" stroke="#fff0cf" stroke-width="3"><path d="M405 180a12 12 0 0 1 24 0v12h-24z"/><path d="M1068 545a12 12 0 0 1 24 0v12h-24z"/><path d="M1392 250a12 12 0 0 1 24 0v12h-24z"/><path d="M1400 880a12 12 0 0 1 24 0v12h-24z"/><path d="M918 488a12 12 0 0 1 24 0v12h-24z"/></g>
+ <g class="mini"><text x="433" y="186">A</text><text x="1096" y="551">B</text><text x="1420" y="256">C</text><text x="1428" y="886">D</text><text x="943" y="494">E</text></g>
+ <!-- Warden lairs, not biome boundaries -->
+ <g fill="#d65143" stroke="#ffe4a7" stroke-width="4"><path d="M854 425l16 28h-32z"/><path d="M1120 452l16 28h-32z"/><path d="M386 520l16 28h-32z"/><path d="M1320 150l16 28h-32z"/></g>
+ <g class="mini"><text x="870" y="445">I</text><text x="1136" y="472">II</text><text x="402" y="540">III</text><text x="1338" y="169">IV</text></g>
+</g>
+<!-- Side key keeps every label readable while pins remain anchored to visible landmarks. -->
+<rect x="1610" y="85" width="390" height="1024" rx="8" fill="#efe4c8" stroke="#8b7e5e" stroke-width="2"/>
+<text x="1635" y="125" class="keyhead">SETTLEMENTS &amp; CAMPS</text>
+<g class="key"><text x="1635" y="160">1  Wanderer's Rest · starting camp</text><text x="1635" y="190">2  Tallowmere · farm hamlet</text><text x="1635" y="220">3  Hearthmoor · river city</text><text x="1635" y="250">4  Ashford · forest frontier</text><text x="1635" y="280">5  Sunkettle · stilt market</text><text x="1635" y="310">6  Blackbriar Lodge · hunter refuge</text><text x="1635" y="340">7  Pilgrim's Rest · hot spring refuge</text><text x="1635" y="370">8  Rimewatch · high pass fort</text><text x="1635" y="400">9  Quiet Cart · hidden merchant</text><text x="1635" y="430">10  Drowned Bell · chapel ruins</text><text x="1635" y="460">C  Roaming coast camp</text></g>
+<text x="1635" y="515" class="keyhead">CAVES</text>
+<g class="key"><text x="1635" y="548">A  Sea-cave · northwestern cliffs</text><text x="1635" y="578">B  Root cavern · Blackbriar ravine</text><text x="1635" y="608">C  Rimecrypt · mountain pass</text><text x="1635" y="638">D  Tidelock · southern sea cliffs</text><text x="1635" y="668">E  Weeping Grotto · waterfall gorge</text></g>
+<text x="1635" y="723" class="keyhead">WARDEN CHAPTERS</text>
+<g class="key"><text x="1635" y="756">I  Hornstag · level 12</text><text x="1635" y="786">II  Rootfather · level 22</text><text x="1635" y="816">III  Bogmaw · level 32</text><text x="1635" y="846">IV  Frost Wyrm · level 42</text></g>
+<text x="1635" y="900" class="keyhead">MAP NOTES</text>
+<g class="key"><text x="1635" y="933">Zone borders follow terrain and vegetation.</text><text x="1635" y="963">Roads and trails are painted into the</text><text x="1635" y="993">overhead rendering; numbered pins match</text><text x="1635" y="1023">the landmarks and proposed destinations.</text><text x="1635" y="1063">Concept layout; confirm distances in-game.</text></g>
+</svg>

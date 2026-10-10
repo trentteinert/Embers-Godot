@@ -1,0 +1,277 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1190" viewBox="0 0 1800 1190">
+<defs>
+ <linearGradient id="bg" x2="0" y2="1"><stop stop-color="#18242d"/><stop offset="1" stop-color="#10181f"/></linearGradient>
+ <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="none" stroke="#d4dde2" stroke-width="1.3"/></marker>
+ <filter id="soft"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity=".35"/></filter>
+</defs>
+<rect width="100%" height="100%" fill="url(#bg)"/>
+<text x="44" y="50" fill="#f0eee8" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" letter-spacing="2">MELEE TALENT TREES — DRAFT MAP</text>
+<text x="44" y="78" fill="#aab6bc" font-family="Inter,Arial,sans-serif" font-size="14">Rows open at 0 / 2 / 5 / 8 / 10 points in that tree • signatures open at 12 points invested • each rank costs 1 point</text>
+
+<g><rect x="30" y="104" width="560" height="970" rx="16" fill="#17232b" stroke="#df874d" stroke-opacity=".75" stroke-width="2"/>
+<rect x="30" y="104" width="560" height="7" rx="4" fill="#df874d"/>
+<text x="52" y="140" fill="#df874d" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="800" letter-spacing="1.6">BULWARK</text>
+<text x="52" y="163" fill="#b6c0c4" font-family="Inter,Arial,sans-serif" font-size="12" letter-spacing="1">FRONTLINE • RAGE • SURVIVAL</text>
+<path d="M 430.5 230 C 430.5 340, 170.5 340, 170.5 450" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 170.5 360 C 170.5 470, 170.5 470, 170.5 580" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 430.5 360 C 430.5 610, 170.5 610, 170.5 860" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="48" y="181" fill="#df874d" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 1  ·  START • OPEN</text>
+<line x1="48" y1="186" x2="572" y2="186" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="48" y="193" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="209" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Charge</text>
+<text x="58" y="223" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="308" y="193" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="209" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Cleave</text>
+<text x="318" y="223" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="48" y="238" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="254" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Thick Skin</text>
+<text x="58" y="268" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="308" y="238" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="254" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Vitality</text>
+<text x="318" y="268" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<line x1="48" y1="292" x2="572" y2="292" stroke="#52616a" stroke-opacity=".28"/>
+<text x="48" y="311" fill="#df874d" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 2  ·  2 POINTS SPENT</text>
+<line x1="48" y1="316" x2="572" y2="316" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="48" y="323" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="339" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Battle Shout</text>
+<text x="58" y="353" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="308" y="323" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="339" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Stalwart</text>
+<text x="318" y="353" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="48" y="368" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="384" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Heavy Hands</text>
+<text x="58" y="398" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="308" y="368" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="384" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Ragebound</text>
+<text x="318" y="398" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<line x1="48" y1="422" x2="572" y2="422" stroke="#52616a" stroke-opacity=".28"/>
+<text x="48" y="441" fill="#df874d" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 3  ·  5 POINTS SPENT</text>
+<line x1="48" y1="446" x2="572" y2="446" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="48" y="453" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="469" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Whirlwind</text>
+<text x="58" y="483" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="308" y="453" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="469" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Second Wind</text>
+<text x="318" y="483" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="48" y="498" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="514" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Battle Rhythm</text>
+<text x="58" y="528" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="308" y="498" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="514" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Bloodlust</text>
+<text x="318" y="528" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="48" y1="552" x2="572" y2="552" stroke="#52616a" stroke-opacity=".28"/>
+<text x="48" y="571" fill="#df874d" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 4  ·  8 POINTS SPENT</text>
+<line x1="48" y1="576" x2="572" y2="576" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="48" y="583" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="599" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Ground Slam</text>
+<text x="58" y="613" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="308" y="583" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="599" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Crushing Blows</text>
+<text x="318" y="613" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="48" y="628" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="644" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Finisher</text>
+<text x="58" y="658" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="308" y="628" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="644" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Unbreakable</text>
+<text x="318" y="658" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="48" y1="682" x2="572" y2="682" stroke="#52616a" stroke-opacity=".28"/>
+<text x="48" y="701" fill="#df874d" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 5  ·  10 POINTS SPENT</text>
+<line x1="48" y1="706" x2="572" y2="706" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="48" y="713" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="729" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Heroic Strike</text>
+<text x="58" y="743" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">STRIKE MORPH</text>
+<g filter="url(#soft)"><rect x="308" y="713" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="729" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Titan</text>
+<text x="318" y="743" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="48" y="758" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="58" y="774" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Giant Slayer</text>
+<text x="58" y="788" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="308" y="758" width="245" height="38" rx="7" fill="#202e37" stroke="#df874d" stroke-opacity=".62"/></g>
+<text x="318" y="774" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Bloodrush</text>
+<text x="318" y="788" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="48" y1="812" x2="572" y2="812" stroke="#52616a" stroke-opacity=".28"/>
+<text x="48" y="844" fill="#f0d78c" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.1">SIGNATURE • 12 POINTS SPENT TO UNLOCK</text>
+<rect x="48" y="853" width="245" height="44" rx="8" fill="#392f20" stroke="#f0d78c" stroke-width="1.5"/>
+<text x="59" y="871" fill="#fff5d5" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800">Last Stand</text>
+<text x="59" y="887" fill="#d7cda9" font-family="Inter,Arial,sans-serif" font-size="9.5">SIGNATURE ACTIVE • COSTS 1 POINT</text>
+</g>
+<g><rect x="620" y="104" width="560" height="970" rx="16" fill="#17232b" stroke="#a28be8" stroke-opacity=".75" stroke-width="2"/>
+<rect x="620" y="104" width="560" height="7" rx="4" fill="#a28be8"/>
+<text x="642" y="140" fill="#a28be8" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="800" letter-spacing="1.6">SHADOW</text>
+<text x="642" y="163" fill="#b6c0c4" font-family="Inter,Arial,sans-serif" font-size="12" letter-spacing="1">STEALTH • PRECISION • BURST</text>
+<path d="M 1020.5 275 C 1020.5 362.5, 760.5 362.5, 760.5 450" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 1020.5 360 C 1020.5 405, 1020.5 405, 1020.5 450" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 760.5 490 C 760.5 535, 760.5 535, 760.5 580" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 1020.5 490 C 1020.5 600, 1020.5 600, 1020.5 710" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="638" y="181" fill="#a28be8" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 1  ·  START • OPEN</text>
+<line x1="638" y1="186" x2="1162" y2="186" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="638" y="193" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="209" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Ambush</text>
+<text x="648" y="223" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="898" y="193" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="209" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Keen Edge</text>
+<text x="908" y="223" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="638" y="238" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="254" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Shadow Step</text>
+<text x="648" y="268" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="898" y="238" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="254" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Stealth</text>
+<text x="908" y="268" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<line x1="638" y1="292" x2="1162" y2="292" stroke="#52616a" stroke-opacity=".28"/>
+<text x="638" y="311" fill="#a28be8" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 2  ·  2 POINTS SPENT</text>
+<line x1="638" y1="316" x2="1162" y2="316" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="638" y="323" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="339" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Backstab</text>
+<text x="648" y="353" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">STRIKE MORPH</text>
+<g filter="url(#soft)"><rect x="898" y="323" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="339" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Preparation</text>
+<text x="908" y="353" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="638" y="368" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="384" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Evasion</text>
+<text x="648" y="398" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="898" y="368" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="384" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Sharpened Blades</text>
+<text x="908" y="398" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<line x1="638" y1="422" x2="1162" y2="422" stroke="#52616a" stroke-opacity=".28"/>
+<text x="638" y="441" fill="#a28be8" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 3  ·  5 POINTS SPENT</text>
+<line x1="638" y1="446" x2="1162" y2="446" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="638" y="453" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="469" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Smoke Bomb</text>
+<text x="648" y="483" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="898" y="453" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="469" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Deep Cover</text>
+<text x="908" y="483" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="638" y="498" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="514" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Fleet Footed</text>
+<text x="648" y="528" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="898" y="498" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="514" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Quick Hands</text>
+<text x="908" y="528" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="638" y1="552" x2="1162" y2="552" stroke="#52616a" stroke-opacity=".28"/>
+<text x="638" y="571" fill="#a28be8" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 4  ·  8 POINTS SPENT</text>
+<line x1="638" y1="576" x2="1162" y2="576" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="638" y="583" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="599" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Blade Flurry</text>
+<text x="648" y="613" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="898" y="583" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="599" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Lethality</text>
+<text x="908" y="613" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="638" y="628" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="644" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Executioner</text>
+<text x="648" y="658" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="898" y="628" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="644" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Dual Wield</text>
+<text x="908" y="658" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">UNLOCK</text>
+<line x1="638" y1="682" x2="1162" y2="682" stroke="#52616a" stroke-opacity=".28"/>
+<text x="638" y="701" fill="#a28be8" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 5  ·  10 POINTS SPENT</text>
+<line x1="638" y1="706" x2="1162" y2="706" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="638" y="713" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="729" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Sinister Strike</text>
+<text x="648" y="743" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">STRIKE MORPH</text>
+<g filter="url(#soft)"><rect x="898" y="713" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="729" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Shadow Dance</text>
+<text x="908" y="743" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE</text>
+<g filter="url(#soft)"><rect x="638" y="758" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="648" y="774" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Shadow Cloak</text>
+<text x="648" y="788" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE</text>
+<g filter="url(#soft)"><rect x="898" y="758" width="245" height="38" rx="7" fill="#202e37" stroke="#a28be8" stroke-opacity=".62"/></g>
+<text x="908" y="774" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Marked for Death</text>
+<text x="908" y="788" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="638" y1="812" x2="1162" y2="812" stroke="#52616a" stroke-opacity=".28"/>
+<text x="638" y="844" fill="#f0d78c" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.1">SIGNATURE • 12 POINTS SPENT TO UNLOCK</text>
+<rect x="638" y="853" width="245" height="44" rx="8" fill="#392f20" stroke="#f0d78c" stroke-width="1.5"/>
+<text x="649" y="871" fill="#fff5d5" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800">Assassinate</text>
+<text x="649" y="887" fill="#d7cda9" font-family="Inter,Arial,sans-serif" font-size="9.5">SIGNATURE ACTIVE • COSTS 1 POINT</text>
+</g>
+<g><rect x="1210" y="104" width="560" height="970" rx="16" fill="#17232b" stroke="#89c66a" stroke-opacity=".75" stroke-width="2"/>
+<rect x="1210" y="104" width="560" height="7" rx="4" fill="#89c66a"/>
+<text x="1232" y="140" fill="#89c66a" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="800" letter-spacing="1.6">VENOM</text>
+<text x="1232" y="163" fill="#b6c0c4" font-family="Inter,Arial,sans-serif" font-size="12" letter-spacing="1">POISON • PRESSURE • CONTROL</text>
+<path d="M 1350.5 230 C 1350.5 340, 1350.5 340, 1350.5 450" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 1350.5 360 C 1350.5 470, 1350.5 470, 1350.5 580" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 1610.5 490 C 1610.5 535, 1610.5 535, 1610.5 580" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 1350.5 230 C 1350.5 470, 1350.5 470, 1350.5 710" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<path d="M 1350.5 230 C 1350.5 545, 1350.5 545, 1350.5 860" fill="none" stroke="#cdd6db" stroke-opacity=".68" stroke-width="1.6" marker-end="url(#arrow)"/>
+<text x="1228" y="181" fill="#89c66a" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 1  ·  START • OPEN</text>
+<line x1="1228" y1="186" x2="1752" y2="186" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="1228" y="193" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="209" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Poison Blade</text>
+<text x="1238" y="223" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="1488" y="193" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="209" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Potent Toxins</text>
+<text x="1498" y="223" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="1228" y="238" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="254" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Light Step</text>
+<text x="1238" y="268" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="1488" y="238" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="254" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Resilience</text>
+<text x="1498" y="268" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="1228" y1="292" x2="1752" y2="292" stroke="#52616a" stroke-opacity=".28"/>
+<text x="1228" y="311" fill="#89c66a" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 2  ·  2 POINTS SPENT</text>
+<line x1="1228" y1="316" x2="1752" y2="316" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="1228" y="323" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="339" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Lingering Venom</text>
+<text x="1238" y="353" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="1488" y="323" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="339" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Toxic Veil</text>
+<text x="1498" y="353" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE</text>
+<g filter="url(#soft)"><rect x="1228" y="368" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="384" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Vital Strikes</text>
+<text x="1238" y="398" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="1488" y="368" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="384" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Fast Hands</text>
+<text x="1498" y="398" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="1228" y1="422" x2="1752" y2="422" stroke="#52616a" stroke-opacity=".28"/>
+<text x="1228" y="441" fill="#89c66a" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 3  ·  5 POINTS SPENT</text>
+<line x1="1228" y1="446" x2="1752" y2="446" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="1228" y="453" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="469" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Phantom Knives</text>
+<text x="1238" y="483" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">ACTIVE</text>
+<g filter="url(#soft)"><rect x="1488" y="453" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="469" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Festering Wounds</text>
+<text x="1498" y="483" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="1228" y="498" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="514" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Steady Hands</text>
+<text x="1238" y="528" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<g filter="url(#soft)"><rect x="1488" y="498" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="514" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Slippery</text>
+<text x="1498" y="528" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×3</text>
+<line x1="1228" y1="552" x2="1752" y2="552" stroke="#52616a" stroke-opacity=".28"/>
+<text x="1228" y="571" fill="#89c66a" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 4  ·  8 POINTS SPENT</text>
+<line x1="1228" y1="576" x2="1752" y2="576" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="1228" y="583" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="599" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Crippling Toxin</text>
+<text x="1238" y="613" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE</text>
+<g filter="url(#soft)"><rect x="1488" y="583" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="599" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Deadly Dose</text>
+<text x="1498" y="613" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="1228" y="628" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="644" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Feast</text>
+<text x="1238" y="658" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="1488" y="628" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="644" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Toughened Hide</text>
+<text x="1498" y="658" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<line x1="1228" y1="682" x2="1752" y2="682" stroke="#52616a" stroke-opacity=".28"/>
+<text x="1228" y="701" fill="#89c66a" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.05">ROW 5  ·  10 POINTS SPENT</text>
+<line x1="1228" y1="706" x2="1752" y2="706" stroke="#52616a" stroke-opacity=".45"/>
+<g filter="url(#soft)"><rect x="1228" y="713" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="729" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Contagion</text>
+<text x="1238" y="743" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE</text>
+<g filter="url(#soft)"><rect x="1488" y="713" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="729" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Double Dose</text>
+<text x="1498" y="743" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="1228" y="758" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1238" y="774" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Honed Edge</text>
+<text x="1238" y="788" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">PASSIVE ×2</text>
+<g filter="url(#soft)"><rect x="1488" y="758" width="245" height="38" rx="7" fill="#202e37" stroke="#89c66a" stroke-opacity=".62"/></g>
+<text x="1498" y="774" fill="#f2f1ec" font-family="Inter,Arial,sans-serif" font-size="12.5" font-weight="700">Toxic Strike</text>
+<text x="1498" y="788" fill="#abb7bd" font-family="Inter,Arial,sans-serif" font-size="9.5" letter-spacing=".25">STRIKE MORPH</text>
+<line x1="1228" y1="812" x2="1752" y2="812" stroke="#52616a" stroke-opacity=".28"/>
+<text x="1228" y="844" fill="#f0d78c" font-family="Inter,Arial,sans-serif" font-size="10" font-weight="700" letter-spacing="1.1">SIGNATURE • 12 POINTS SPENT TO UNLOCK</text>
+<rect x="1228" y="853" width="245" height="44" rx="8" fill="#392f20" stroke="#f0d78c" stroke-width="1.5"/>
+<text x="1239" y="871" fill="#fff5d5" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800">Venom Burst</text>
+<text x="1239" y="887" fill="#d7cda9" font-family="Inter,Arial,sans-serif" font-size="9.5">SIGNATURE ACTIVE • COSTS 1 POINT</text>
+</g>
+<rect x="32" y="1127" width="1736" height="42" rx="9" fill="#202d35" stroke="#47565e"/>
+<text x="52" y="1153" fill="#e7e4db" font-family="Inter,Arial,sans-serif" font-size="12"><tspan font-weight="700">HOW TO READ:</tspan> Most nodes need only the row gate. Arrows mark the few nodes with explicit prerequisites. PASSIVE ×N = maximum ranks. Strike morphs are mutually exclusive. Rows count all ranks spent in their own tree.</text>
+</svg>

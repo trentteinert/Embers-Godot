@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img">
+<rect width="1200" height="700" fill="#e8e4d8"/>
+<rect x="0" y="0" width="1200" height="66" fill="#203431"/>
+<text x="30" y="32" font-family="Avenir Next, Arial, sans-serif" font-size="23" font-weight="700" fill="#f4eddb" text-anchor="start" >Frostspine Crown</text>
+<text x="1165" y="32" font-family="Avenir Next, Arial, sans-serif" font-size="15" font-weight="700" fill="#d4d5b9" text-anchor="end" >LEVEL BAND  30-45</text>
+<text x="32" y="58" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="600" fill="#61716a" text-anchor="start" >TOP-DOWN ZONE PLAN  ·  PATHS, PLACES, LEVELS, AND TERRAIN TEXTURE</text>
+<rect x="24" y="74" width="620" height="500" rx="14" fill="#dfe3d3" stroke="#263d37" stroke-width="3"/>
+<defs><clipPath id="land"><path d="M 49 108 L 595 98 L 624 187 L 601 504 L 548 558 L 112 559 L 45 493 L 30 280 Z"/></clipPath></defs>
+<path d="M 49 108 L 595 98 L 624 187 L 601 504 L 548 558 L 112 559 L 45 493 L 30 280 Z" fill="#edf0e8" stroke="#364940" stroke-width="4"/>
+<g clip-path="url(#land)"><path d="M90 441 L140.0 286 L190 441 Z" fill="#778990" opacity=".8"/><path d="M122.0 341.8 L140.0 286 L159.0 344.9 L144.0 334.05 L137.0 352.65 Z" fill="#edf0e8" opacity=".95"/><path d="M217 390 L282.0 194 L347 390 Z" fill="#778990" opacity=".8"/><path d="M258.6 264.56 L282.0 194 L306.7 268.48 L287.2 254.76 L278.1 278.28 Z" fill="#edf0e8" opacity=".95"/><path d="M384 436 L437.5 272 L491 436 Z" fill="#778990" opacity=".8"/><path d="M418.24 331.04 L437.5 272 L457.83 334.32 L441.78 322.84 L434.29 342.52 Z" fill="#edf0e8" opacity=".95"/><path d="M500 387 L572.0 167 L644 387 Z" fill="#778990" opacity=".8"/><path d="M546.08 246.2 L572.0 167 L599.36 250.6 L577.76 235.2 L567.68 261.6 Z" fill="#edf0e8" opacity=".95"/><path d="M555 516 L606.0 374 L657 516 Z" fill="#778990" opacity=".8"/><path d="M587.64 425.12 L606.0 374 L625.38 427.96 L610.08 418.02 L602.94 435.06 Z" fill="#edf0e8" opacity=".95"/><path d="M 42 485 Q 209 408 351 447 T 638 379" fill="none" stroke="#9db3b7" stroke-width="22" opacity=".8"/></g>
+<path d="M 130.4 469.0 L 204.8 449.0 L 273.0 414.0 L 347.4 374.0 L 403.2 319.0 L 502.4 269.0 L 576.8 389.0 L 539.6 509.0" fill="none" stroke="#594b37" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 130.4 469.0 L 204.8 449.0 L 273.0 414.0 L 347.4 374.0 L 403.2 319.0 L 502.4 269.0 L 576.8 389.0 L 539.6 509.0" fill="none" stroke="#dfd0a6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 273.0 414.0 L 335.0 499.0 L 434.2 499.0 L 502.4 434.0 L 576.8 389.0" fill="none" stroke="#73694e" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+<path d="M 403.2 319.0 L 496.2 199.0 L 576.8 224.0 L 502.4 269.0" fill="none" stroke="#73694e" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+<path d="M121.4 476.0 L130.4 460.0 L139.4 476.0 Z" fill="#d5b879" stroke="#514838" stroke-width="2"/><path d="M130.4 462.0 v14" stroke="#514838" stroke-width="1.5"/>
+<rect x="44.2" y="475.0" width="162.4" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="125.4" y="489.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Foothill Shelter · 30-34</text>
+<rect x="265.0" y="406.0" width="16" height="16" rx="2" fill="#eadfc2" stroke="#443e33" stroke-width="2"/><path d="M269.0 415.0 v-5 h3 v5 M274.0 418.0 v-7 h3 v7" stroke="#5e5242" stroke-width="1.5"/>
+<rect x="120.9" y="386.0" width="150.2" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="196.0" y="400.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Pilgrim&#x27;s Rest · 32-36</text>
+<path d="M394.2 326.0 L403.2 310.0 L412.2 326.0 Z" fill="#d5b879" stroke="#514838" stroke-width="2"/><path d="M403.2 312.0 v14" stroke="#514838" stroke-width="1.5"/>
+<rect x="354.3" y="291.0" width="125.8" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="417.2" y="305.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Miner Camp · 34-38</text>
+<rect x="494.4" y="261.0" width="16" height="16" rx="2" fill="#aab8b2" stroke="#443e33" stroke-width="2"/><path d="M498.4 270.0 v-5 h3 v5 M503.4 273.0 v-7 h3 v7" stroke="#5e5242" stroke-width="1.5"/>
+<rect x="357.5" y="240.0" width="119.7" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="417.4" y="254.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Rimewatch · 37-40</text>
+<path d="M566.8 397.0 v-5 a10 10 0 0 1 20 0 v5 z" fill="#343a37" stroke="#ddd1af" stroke-width="2"/>
+<rect x="437.9" y="396.0" width="119.7" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="497.79999999999995" y="410.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Rimecrypt · 39-41</text>
+<path d="M539.6 497.0 L550.6 518.0 L528.6 518.0 Z" fill="#bd684f" stroke="#49362f" stroke-width="2"/><circle cx="539.6" cy="512.0" r="2" fill="#fff1d2"/>
+<rect x="363.6" y="517.0" width="144.1" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="435.6" y="531.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Summit Warden · 41-42</text>
+<path d="M620.2 360.0 L629.2 369.0 L620.2 378.0 L611.2 369.0 Z" fill="#a8a18b" stroke="#4b463c" stroke-width="1.8"/>
+<rect x="437.1" y="340.0" width="156.3" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="515.2" y="354.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Highland Quests · 43-45</text>
+<text x="42" y="94" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#263a34" text-anchor="start" >N</text>
+<path d="M48 101 l-5 12 h10 z" fill="#263a34"/>
+<rect x="666" y="74" width="510" height="500" rx="14" fill="#f7f2e4" stroke="#a29b84" stroke-width="2"/>
+<text x="690" y="101" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >STORY HOOK</text>
+<text x="690" y="120" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Out-of-season cold and changing meltwater threaten winter stores</text>
+<text x="690" y="137" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >and close the pass. The player secures a route and reaches the</text>
+<text x="690" y="154" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >final Warden chapter at level 42.</text>
+<text x="690" y="182" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >SETTLEMENTS</text>
+<text x="690" y="201" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Pilgrim&#x27;s Rest is the main refuge around a hot spring; Rimewatch</text>
+<text x="690" y="218" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >is the fortified pass outpost. Isolated shelters and miners&#x27;</text>
+<text x="690" y="235" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >camps link them.</text>
+<text x="690" y="263" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >BUILDING + SKILLS</text>
+<text x="690" y="282" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Slate roofs, stone windbreaks, rope lifts, avalanche gates,</text>
+<text x="690" y="299" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >hot-spring sheds, and insulated storehouses. Ore, mountain</text>
+<text x="690" y="316" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >herbs, spring water, and monster parts feed high-tier smithing</text>
+<text x="690" y="333" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >and potions.</text>
+<text x="690" y="361" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >OPTIONAL CLUES</text>
+<text x="690" y="380" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Snow and melt lines change across old boundary markers. The</text>
+<text x="690" y="397" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Warden, human activity, and the failing Ember all remain</text>
+<text x="690" y="414" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >plausible causes.</text>
+<rect x="24" y="590" width="1152" height="74" rx="12" fill="#f7f2e4" stroke="#c2baa5" stroke-width="1.5"/>
+<text x="42" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >PATH KEY</text>
+<line x1="42" y1="637" x2="77" y2="637" stroke="#594b37" stroke-width="7"/><line x1="42" y1="637" x2="77" y2="637" stroke="#dfd0a6" stroke-width="4"/>
+<text x="84" y="641" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >main route</text>
+<line x1="168" y1="637" x2="203" y2="637" stroke="#73694e" stroke-width="3" stroke-dasharray="7 6"/>
+<text x="210" y="641" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >optional trail</text>
+<text x="42" y="657" font-family="Avenir Next, Arial, sans-serif" font-size="8" font-weight="600" fill="#526255" text-anchor="start" >Levels are recommended encounter / quest bands.</text>
+<text x="365" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >TERRAIN COLOR EXAMPLES · ADJUSTABLE</text>
+<rect x="365" y="626" width="18" height="16" rx="3" fill="#edf0e8" stroke="#68675b" stroke-width=".8"/>
+<text x="389" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Snow cream</text>
+<rect x="510" y="626" width="18" height="16" rx="3" fill="#b7d0d2" stroke="#68675b" stroke-width=".8"/>
+<text x="534" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Glacial blue</text>
+<rect x="655" y="626" width="18" height="16" rx="3" fill="#768991" stroke="#68675b" stroke-width=".8"/>
+<text x="679" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Slate</text>
+<text x="805" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >MAP SYMBOLS</text>
+<text x="805" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Town square · village circle · camp tent · cave arch · ruin diamond · Warden triangle</text>
+</svg>

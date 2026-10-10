@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img">
+<rect width="1200" height="700" fill="#e8e4d8"/>
+<rect x="0" y="0" width="1200" height="66" fill="#203431"/>
+<text x="30" y="32" font-family="Avenir Next, Arial, sans-serif" font-size="23" font-weight="700" fill="#f4eddb" text-anchor="start" >Saltfen Reach</text>
+<text x="1165" y="32" font-family="Avenir Next, Arial, sans-serif" font-size="15" font-weight="700" fill="#d4d5b9" text-anchor="end" >LEVEL BAND  21-31</text>
+<text x="32" y="58" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="600" fill="#61716a" text-anchor="start" >TOP-DOWN ZONE PLAN  ·  PATHS, PLACES, LEVELS, AND TERRAIN TEXTURE</text>
+<rect x="24" y="74" width="620" height="500" rx="14" fill="#b9d0ca" stroke="#263d37" stroke-width="3"/>
+<defs><clipPath id="land"><path d="M 49 108 L 595 98 L 624 187 L 601 504 L 548 558 L 112 559 L 45 493 L 30 280 Z"/></clipPath></defs>
+<path d="M 49 108 L 595 98 L 624 187 L 601 504 L 548 558 L 112 559 L 45 493 L 30 280 Z" fill="#756b58" stroke="#364940" stroke-width="4"/>
+<g clip-path="url(#land)"><ellipse cx="140" cy="180" rx="54" ry="22" fill="#5b91a0" opacity=".86"/><ellipse cx="275" cy="252" rx="37" ry="25" fill="#5b91a0" opacity=".86"/><ellipse cx="457" cy="180" rx="55" ry="30" fill="#5b91a0" opacity=".86"/><ellipse cx="184" cy="401" rx="45" ry="21" fill="#5b91a0" opacity=".86"/><ellipse cx="365" cy="467" rx="66" ry="28" fill="#5b91a0" opacity=".86"/><ellipse cx="541" cy="347" rx="40" ry="24" fill="#5b91a0" opacity=".86"/><path d="M83 313 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M90 313 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M97 313 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M259 180 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M266 180 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M273 180 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M393 339 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M400 339 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M407 339 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M557 266 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M564 266 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M571 266 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M463 523 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M470 523 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/><path d="M477 523 q-2 -12 1 -22" stroke="#b2aa73" stroke-width="2"/></g>
+<path d="M 136.6 444.0 L 204.8 379.0 L 248.2 274.0 L 322.6 334.0 L 384.6 389.0 L 514.8 394.0 L 583.0 474.0" fill="none" stroke="#594b37" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 136.6 444.0 L 204.8 379.0 L 248.2 274.0 L 322.6 334.0 L 384.6 389.0 L 514.8 394.0 L 583.0 474.0" fill="none" stroke="#dfd0a6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 248.2 274.0 L 372.2 224.0 L 514.8 264.0" fill="none" stroke="#73694e" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+<path d="M 204.8 379.0 L 297.8 489.0 L 415.6 499.0 L 514.8 394.0" fill="none" stroke="#73694e" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+<path d="M127.6 451.0 L136.6 435.0 L145.6 451.0 Z" fill="#d5b879" stroke="#514838" stroke-width="2"/><path d="M136.6 437.0 v14" stroke="#514838" stroke-width="1.5"/>
+<rect x="60.5" y="451.0" width="144.1" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="132.6" y="465.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Dry Isle Camp · 21-24</text>
+<circle cx="248.2" cy="274.0" r="7" fill="#f0e4c8" stroke="#514838" stroke-width="2"/><circle cx="248.2" cy="274.0" r="2" fill="#514838"/>
+<rect x="124.4" y="245.0" width="113.6" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="181.2" y="259.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Reedbank · 22-25</text>
+<rect x="376.6" y="381.0" width="16" height="16" rx="2" fill="#eadfc2" stroke="#443e33" stroke-width="2"/><path d="M380.6 390.0 v-5 h3 v5 M385.6 393.0 v-7 h3 v7" stroke="#5e5242" stroke-width="1.5"/>
+<rect x="338.8" y="373.0" width="119.7" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="398.6" y="387.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Sunkettle · 24-30</text>
+<path d="M504.79999999999995 272.0 v-5 a10 10 0 0 1 20 0 v5 z" fill="#343a37" stroke="#ddd1af" stroke-width="2"/>
+<rect x="341.7" y="235.0" width="150.2" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="416.79999999999995" y="249.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Weeping Grotto · 26-30</text>
+<path d="M583.0 465.0 L592.0 474.0 L583.0 483.0 L574.0 474.0 Z" fill="#a8a18b" stroke="#4b463c" stroke-width="1.8"/>
+<rect x="441.1" y="481.0" width="119.7" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="501.0" y="495.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Peat Walk · 29-31</text>
+<text x="42" y="94" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#263a34" text-anchor="start" >N</text>
+<path d="M48 101 l-5 12 h10 z" fill="#263a34"/>
+<rect x="666" y="74" width="510" height="500" rx="14" fill="#f7f2e4" stroke="#a29b84" stroke-width="2"/>
+<text x="690" y="101" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >STORY HOOK</text>
+<text x="690" y="120" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Channels are hard to read and supplies go missing along flooded</text>
+<text x="690" y="137" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >routes. The player maps a reliable passage and finds evidence of</text>
+<text x="690" y="154" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >water changes beyond the normal season.</text>
+<text x="690" y="182" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >SETTLEMENTS</text>
+<text x="690" y="201" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Sunkettle is a stilt market on a dry island. Reed-side hamlets,</text>
+<text x="690" y="218" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >fishing platforms, dry islands, and wooded banks feed into its</text>
+<text x="690" y="235" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >trade routes.</text>
+<text x="690" y="263" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >BUILDING + SKILLS</text>
+<text x="690" y="282" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Stilt huts, reed huts on raised peat, plank boardwalks, tied</text>
+<text x="690" y="299" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >skiffs, drying racks, and peat stores. Peat, reeds, bog herbs,</text>
+<text x="690" y="316" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >fish, and salvage support fuel, food, herblore, and crafting.</text>
+<text x="690" y="344" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >OPTIONAL CLUES</text>
+<text x="690" y="363" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >The fen carries clues from the floodplain toward the delta, but</text>
+<text x="690" y="380" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >silt and roots obscure where the changes began.</text>
+<rect x="24" y="590" width="1152" height="74" rx="12" fill="#f7f2e4" stroke="#c2baa5" stroke-width="1.5"/>
+<text x="42" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >PATH KEY</text>
+<line x1="42" y1="637" x2="77" y2="637" stroke="#594b37" stroke-width="7"/><line x1="42" y1="637" x2="77" y2="637" stroke="#dfd0a6" stroke-width="4"/>
+<text x="84" y="641" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >main route</text>
+<line x1="168" y1="637" x2="203" y2="637" stroke="#73694e" stroke-width="3" stroke-dasharray="7 6"/>
+<text x="210" y="641" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >optional trail</text>
+<text x="42" y="657" font-family="Avenir Next, Arial, sans-serif" font-size="8" font-weight="600" fill="#526255" text-anchor="start" >Levels are recommended encounter / quest bands.</text>
+<text x="365" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >TERRAIN COLOR EXAMPLES · ADJUSTABLE</text>
+<rect x="365" y="626" width="18" height="16" rx="3" fill="#756b58" stroke="#68675b" stroke-width=".8"/>
+<text x="389" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Peat earth</text>
+<rect x="510" y="626" width="18" height="16" rx="3" fill="#a49b68" stroke="#68675b" stroke-width=".8"/>
+<text x="534" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Reed olive</text>
+<rect x="655" y="626" width="18" height="16" rx="3" fill="#5b91a0" stroke="#68675b" stroke-width=".8"/>
+<text x="679" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Fen water</text>
+<text x="805" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >MAP SYMBOLS</text>
+<text x="805" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Town square · village circle · camp tent · cave arch · ruin diamond · Warden triangle</text>
+</svg>

@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img">
+<rect width="1200" height="700" fill="#e8e4d8"/>
+<rect x="0" y="0" width="1200" height="66" fill="#203431"/>
+<text x="30" y="32" font-family="Avenir Next, Arial, sans-serif" font-size="23" font-weight="700" fill="#f4eddb" text-anchor="start" >Cyan Wooded River Floodplain</text>
+<text x="1165" y="32" font-family="Avenir Next, Arial, sans-serif" font-size="15" font-weight="700" fill="#d4d5b9" text-anchor="end" >LEVEL BAND  23-31</text>
+<text x="32" y="58" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="600" fill="#61716a" text-anchor="start" >TOP-DOWN ZONE PLAN  ·  PATHS, PLACES, LEVELS, AND TERRAIN TEXTURE</text>
+<rect x="24" y="74" width="620" height="500" rx="14" fill="#b9d0ca" stroke="#263d37" stroke-width="3"/>
+<defs><clipPath id="land"><path d="M 49 108 L 595 98 L 624 187 L 601 504 L 548 558 L 112 559 L 45 493 L 30 280 Z"/></clipPath></defs>
+<path d="M 49 108 L 595 98 L 624 187 L 601 504 L 548 558 L 112 559 L 45 493 L 30 280 Z" fill="#698b70" stroke="#364940" stroke-width="4"/>
+<g clip-path="url(#land)"><path d="M 54 225 C 164 180 160 291 285 263 S 411 278 645 194" fill="none" stroke="#70aab7" stroke-width="27" opacity=".9"/><path d="M 90 455 C 193 396 247 503 353 442 S 493 442 624 354" fill="none" stroke="#70aab7" stroke-width="23" opacity=".9"/><path d="M 251 135 C 312 204 243 280 343 334 S 421 420 402 555" fill="none" stroke="#70aab7" stroke-width="13" opacity=".9"/><path d="M123 216 q-10 -15 0 -27 q12 12 0 27" fill="#527a62" opacity=".86"/><path d="M207 306 q-10 -15 0 -27 q12 12 0 27" fill="#527a62" opacity=".86"/><path d="M481 247 q-10 -15 0 -27 q12 12 0 27" fill="#527a62" opacity=".86"/><path d="M337 489 q-10 -15 0 -27 q12 12 0 27" fill="#527a62" opacity=".86"/><path d="M559 402 q-10 -15 0 -27 q12 12 0 27" fill="#527a62" opacity=".86"/></g>
+<path d="M 136.6 259.0 L 204.8 324.0 L 254.4 414.0 L 353.6 399.0 L 403.2 349.0 L 521.0 359.0 L 576.8 479.0" fill="none" stroke="#594b37" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 136.6 259.0 L 204.8 324.0 L 254.4 414.0 L 353.6 399.0 L 403.2 349.0 L 521.0 359.0 L 576.8 479.0" fill="none" stroke="#dfd0a6" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 254.4 414.0 L 322.6 499.0 L 403.2 509.0 L 521.0 449.0 L 576.8 479.0" fill="none" stroke="#73694e" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+<path d="M 403.2 349.0 L 452.8 254.0 L 521.0 259.0" fill="none" stroke="#73694e" stroke-width="3" stroke-dasharray="8 8" stroke-linecap="round"/>
+<path d="M127.6 266.0 L136.6 250.0 L145.6 266.0 Z" fill="#d5b879" stroke="#514838" stroke-width="2"/><path d="M136.6 252.0 v14" stroke="#514838" stroke-width="1.5"/>
+<rect x="48.4" y="228.0" width="162.4" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="129.6" y="242.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Upper Ferry Camp · 23-26</text>
+<circle cx="254.4" cy="414.0" r="7" fill="#f0e4c8" stroke="#514838" stroke-width="2"/><circle cx="254.4" cy="414.0" r="2" fill="#514838"/>
+<rect x="118.5" y="421.0" width="125.8" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="181.4" y="435.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Willowbank · 23-27</text>
+<rect x="395.2" y="341.0" width="16" height="16" rx="2" fill="#eadfc2" stroke="#443e33" stroke-width="2"/><path d="M399.2 350.0 v-5 h3 v5 M404.2 353.0 v-7 h3 v7" stroke="#5e5242" stroke-width="1.5"/>
+<rect x="342.1" y="332.0" width="150.2" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="417.20000000000005" y="346.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >River Junction · 24-30</text>
+<path d="M521.0 250.0 L530.0 259.0 L521.0 268.0 L512.0 259.0 Z" fill="#a8a18b" stroke="#4b463c" stroke-width="1.8"/>
+<rect x="392.1" y="230.0" width="119.7" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="452.0" y="244.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Mill Ford · 26-29</text>
+<circle cx="576.8" cy="479.0" r="9" fill="#d5c891" stroke="#514838" stroke-width="2"/><path d="M576.8 473.0 v12 M571.8 478.0 h10" stroke="#564e3e" stroke-width="2"/>
+<rect x="432.9" y="486.0" width="125.8" height="21" rx="4" fill="#f6f0df" fill-opacity=".94" stroke="#6b6659" stroke-width=".8"/>
+<text x="495.79999999999995" y="500.0" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#263630" text-anchor="middle" >Old Sluice · 29-31</text>
+<text x="42" y="94" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#263a34" text-anchor="start" >N</text>
+<path d="M48 101 l-5 12 h10 z" fill="#263a34"/>
+<rect x="666" y="74" width="510" height="500" rx="14" fill="#f7f2e4" stroke="#a29b84" stroke-width="2"/>
+<text x="690" y="101" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >STORY HOOK</text>
+<text x="690" y="120" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Channels shift, breaking crossings and mill work. Upstream and</text>
+<text x="690" y="137" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >downstream villages disagree about who should maintain or</text>
+<text x="690" y="154" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >redirect water; the player restores safe trade routes.</text>
+<text x="690" y="182" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >SETTLEMENTS</text>
+<text x="690" y="201" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >A market town at the confluence links raised-bank villages,</text>
+<text x="690" y="218" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >ferry points, mills, and woodland clearings. Its people are</text>
+<text x="690" y="235" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >connected by river trade and shared waterworks.</text>
+<text x="690" y="263" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >BUILDING + SKILLS</text>
+<text x="690" y="282" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Willow-framed halls, raised plank walks, ferry yards, mill</text>
+<text x="690" y="299" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >wheels, stilted store sheds, and flood markers. Reeds, clay,</text>
+<text x="690" y="316" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >willow, river fish, and stone feed food, potions, construction,</text>
+<text x="690" y="333" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >and craft.</text>
+<text x="690" y="361" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="700" fill="#526255" text-anchor="start" >OPTIONAL CLUES</text>
+<text x="690" y="380" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >Water-carved marks continue upstream toward the heath and</text>
+<text x="690" y="397" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >downstream toward the fen. They provide observations, not a</text>
+<text x="690" y="414" font-family="Avenir Next, Arial, sans-serif" font-size="12" font-weight="400" fill="#303a34" text-anchor="start" >verdict on the cause.</text>
+<rect x="24" y="590" width="1152" height="74" rx="12" fill="#f7f2e4" stroke="#c2baa5" stroke-width="1.5"/>
+<text x="42" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >PATH KEY</text>
+<line x1="42" y1="637" x2="77" y2="637" stroke="#594b37" stroke-width="7"/><line x1="42" y1="637" x2="77" y2="637" stroke="#dfd0a6" stroke-width="4"/>
+<text x="84" y="641" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >main route</text>
+<line x1="168" y1="637" x2="203" y2="637" stroke="#73694e" stroke-width="3" stroke-dasharray="7 6"/>
+<text x="210" y="641" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >optional trail</text>
+<text x="42" y="657" font-family="Avenir Next, Arial, sans-serif" font-size="8" font-weight="600" fill="#526255" text-anchor="start" >Levels are recommended encounter / quest bands.</text>
+<text x="365" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >TERRAIN COLOR EXAMPLES · ADJUSTABLE</text>
+<rect x="365" y="626" width="18" height="16" rx="3" fill="#698b70" stroke="#68675b" stroke-width=".8"/>
+<text x="389" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Willow green</text>
+<rect x="510" y="626" width="18" height="16" rx="3" fill="#718078" stroke="#68675b" stroke-width=".8"/>
+<text x="534" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Wet earth</text>
+<rect x="655" y="626" width="18" height="16" rx="3" fill="#70aab7" stroke="#68675b" stroke-width=".8"/>
+<text x="679" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Channel blue</text>
+<text x="805" y="614" font-family="Avenir Next, Arial, sans-serif" font-size="10" font-weight="700" fill="#526255" text-anchor="start" >MAP SYMBOLS</text>
+<text x="805" y="639" font-family="Avenir Next, Arial, sans-serif" font-size="9" font-weight="600" fill="#303a34" text-anchor="start" >Town square · village circle · camp tent · cave arch · ruin diamond · Warden triangle</text>
+</svg>

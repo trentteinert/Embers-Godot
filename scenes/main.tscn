@@ -1,0 +1,38 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/world.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/player.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/camera_rig.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/ui.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/combat.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/quests.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/crafting.gd" id="8"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+
+[node name="World" type="Node3D" parent="."]
+script = ExtResource("2")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("3")
+
+[node name="CameraRig" type="Node3D" parent="."]
+script = ExtResource("4")
+
+[node name="Combat" type="Node3D" parent="."]
+script = ExtResource("6")
+
+[node name="Quests" type="Node3D" parent="."]
+script = ExtResource("7")
+
+[node name="Crafting" type="Node3D" parent="."]
+script = ExtResource("8")
+
+[node name="UI" type="CanvasLayer" parent="."]
+script = ExtResource("5")

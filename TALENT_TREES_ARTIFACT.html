@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Classless Talent Trees — Draft Atlas</title>
+<style>
+  :root { color-scheme: dark; --bg:#10181f; --panel:#17232b; --ink:#f0eee8; --muted:#aab6bc; --line:#34444d; --accent:#d5a65b; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:radial-gradient(ellipse at 50% -10%, #273741 0, var(--bg) 58%); color:var(--ink); font:16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; }
+  main { width:min(1440px, 94vw); margin:0 auto; padding:54px 0 80px; }
+  header { padding:0 4px 30px; border-bottom:1px solid var(--line); margin-bottom:30px; }
+  .eyebrow { color:#9cabb2; letter-spacing:.16em; font-size:.78rem; font-weight:700; text-transform:uppercase; }
+  h1 { margin:.4rem 0 .6rem; font-size:clamp(2rem,5vw,3.5rem); line-height:1.05; }
+  header p { max-width:850px; color:#c1c9cc; margin:.5rem 0; }
+  .rules { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:12px; margin:22px 0 4px; }
+  .rule { background:rgba(23,35,43,.86); border:1px solid var(--line); border-radius:12px; padding:14px 16px; }
+  .rule strong { color:#fff; display:block; font-size:.9rem; }
+  .rule span { color:var(--muted); font-size:.88rem; }
+  section { margin:38px 0 46px; }
+  h2 { font-size:1.65rem; margin:0 0 5px; }
+  .intro { color:var(--muted); margin:0 0 18px; }
+  figure { margin:0; border:1px solid #3a4a53; background:#111a20; border-radius:16px; padding:12px; box-shadow:0 18px 48px #0005; }
+  figure img { display:block; width:100%; height:auto; border-radius:9px; }
+  figcaption { padding:10px 6px 2px; color:#aebbc0; font-size:.85rem; }
+  .links { border-top:1px solid var(--line); margin-top:42px; padding-top:20px; color:var(--muted); }
+  a { color:#9fc9e5; }
+  @media (max-width:700px) { main { width:96vw; padding-top:30px; } figure { padding:6px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">Embers • Working Design</div>
+    <h1>Classless Talent Trees</h1>
+    <p>Draft atlas for the nine weapon-style talent trees. Talents define a build through point investment; there is no permanent class selection. These layouts extend the existing Melee trees and propose first-pass Ranged and Magic trees.</p>
+    <div class="rules">
+      <div class="rule"><strong>Row gates</strong><span>Rows open at 0, 2, 5, 8, and 10 points spent in that tree.</span></div>
+      <div class="rule"><strong>Point costs</strong><span>Each rank costs one point. Passive nodes show their maximum ranks.</span></div>
+      <div class="rule"><strong>Prerequisites</strong><span>Most nodes only need the row gate. Arrows show the few explicit dependencies.</span></div>
+      <div class="rule"><strong>Signatures</strong><span>Unlock after 12 points are spent, then cost one point to learn (13 total).</span></div>
+    </div>
+  </header>
+
+  <section>
+    <h2>Melee</h2>
+    <p class="intro">Bulwark leans into frontline defense and Rage. Shadow builds stealth and precision. Venom specializes in poison pressure.</p>
+    <figure><img src="assets/melee_talent_trees_draft.svg" alt="Melee talent tree diagrams for Bulwark, Shadow, and Venom"><figcaption>Current prototype talents are reused where they fit; the diagrams flag prerequisite chains and mutually exclusive Strike morphs.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Ranged</h2>
+    <p class="intro">Marksman focuses on precision and target priority. Trapper controls space with snares and field tools. Beastwarden combines tracking with companion play.</p>
+    <figure><img src="assets/ranged_talent_trees_draft.svg" alt="Ranged talent tree diagrams for Marksman, Trapper, and Beastwarden"><figcaption>These are first-pass classless proposals based on the current Hunter abilities. Focus is not treated as a settled classless resource.</figcaption></figure>
+  </section>
+
+  <section>
+    <h2>Magic</h2>
+    <p class="intro">Ember brings burning area damage, Frost combines control with defense, and Storm chains damage with mobility.</p>
+    <figure><img src="assets/magic_talent_trees_draft.svg" alt="Magic talent tree diagrams for Ember, Frost, and Storm"><figcaption>Current Mage abilities are placed into elemental paths where they fit. The classless Magic resource model remains open.</figcaption></figure>
+  </section>
+
+  <div class="links">Full design notes and node-by-node layouts: <a href="SKILLS_AND_TALENTS_DESIGN.md">SKILLS_AND_TALENTS_DESIGN.md</a>. All trees are proposals; no gameplay code has been changed.</div>
+</main>
+</body>
+</html>
