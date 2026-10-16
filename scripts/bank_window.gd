@@ -279,12 +279,12 @@ func _fill_bank(words: PackedStringArray) -> void:
 func _fill_dev(words: PackedStringArray) -> void:
 	var r: int = _rarity.selected
 	for g: Dictionary in data.get("dev_gear", []):
-		var fake := {"uid": 0, "name": "%s (%s)" % [g["name"], Items.RARITY_NAMES[r]], "slot": g["slot"], "type": g["kind"], "rarity": r, "ilvl": 1, "stats": {}, "mat": "b0b4bc", "armor": ""}
-		if not _hit(words, _item_text(fake) + " gear"):
+		var fake := {"uid": 0, "name": "%s (%s)" % [g["name"], Items.RARITY_NAMES[r]], "slot": g["slot"], "type": g["kind"], "rarity": r, "ilvl": 1, "stats": {}, "mat": "b0b4bc", "armor": g.get("armor", "")}
+		if not _hit(words, _item_text(fake) + " gear " + str(g.get("armor", ""))):
 			continue
 		var sl = _cell(_bank_grid, ["dev_gear", g])
 		sl.set_item(fake)
-		sl.tooltip_text = "New %s %s (free)\nClick: one · Set the rarity and level above" % [Items.RARITY_NAMES[r], g["name"]]
+		sl.tooltip_text = "New %s %s%s (free)\nClick: one · Set the rarity and level above" % [Items.RARITY_NAMES[r], (str(g["armor"]).capitalize() + " ") if str(g.get("armor", "")) != "" else "", g["name"]]
 	for m: Dictionary in data.get("dev_mats", []):
 		var id: String = str(m["id"])
 		if not Data.MATERIALS.has(id) or not _hit(words, _mat_text(id)):
@@ -314,5 +314,5 @@ static func cell_click(sl: Button, right: bool, shift: bool) -> void:
 			w.online.send({"t": "bank_dev_give", "mat": sl.ref[1], "n": n})
 		"dev_gear":
 			var g: Dictionary = sl.ref[1]
-			w.online.send({"t": "bank_dev_give", "slot": g["slot"], "kind": g["kind"], "rarity": w._rarity.selected, "ilvl": int(w._level.value)})
+			w.online.send({"t": "bank_dev_give", "slot": g["slot"], "kind": g["kind"], "armor": g.get("armor", ""), "base": g["name"], "rarity": w._rarity.selected, "ilvl": int(w._level.value)})
 	Sfx.play("ui_click", Vector3.INF, -8.0)

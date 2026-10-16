@@ -66,27 +66,32 @@ const BASE_NAMES := {
 	"head": [
 		"Helm",
 		"Hood",
-		"Cap"
+		"Cap",
+		"Coif"
 	],
 	"chest": [
 		"Chestguard",
 		"Tunic",
-		"Hauberk"
+		"Hauberk",
+		"Vest"
 	],
 	"hands": [
 		"Gloves",
 		"Gauntlets",
-		"Grips"
+		"Grips",
+		"Mitts"
 	],
 	"legs": [
 		"Leggings",
 		"Greaves",
-		"Trousers"
+		"Trousers",
+		"Breeches"
 	],
 	"feet": [
 		"Boots",
 		"Treads",
-		"Sabatons"
+		"Sabatons",
+		"Shoes"
 	],
 	"ring": [
 		"Ring",
@@ -107,14 +112,134 @@ const BASE_NAMES := {
 ## Armor types by class. Weapons are class-bound already; armor now is too.
 const ARMOR_FOR := {"warrior": "plate", "hunter": "mail", "mage": "cloth"}
 const ARMOR_NAMES := {
-	"plate": {"head": ["Helm", "Greathelm", "Visor"], "chest": ["Breastplate", "Chestplate", "Cuirass"], "hands": ["Gauntlets", "Plate Gloves", "Vambraces"],
-		"legs": ["Greaves", "Plate Leggings", "Cuisses"], "feet": ["Sabatons", "Plate Boots", "Warboots"]},
-	"mail": {"head": ["Coif", "Mail Hood", "Ringed Cap"], "chest": ["Hauberk", "Mail Shirt", "Chain Vest"], "hands": ["Mail Gloves", "Chain Mitts", "Ringed Grips"],
-		"legs": ["Mail Leggings", "Chain Chausses", "Ringed Trousers"], "feet": ["Mail Boots", "Chain Treads", "Ringed Boots"]},
-	"leather": {"head": ["Hood", "Leather Cap", "Cowl"], "chest": ["Jerkin", "Leather Tunic", "Vest"], "hands": ["Leather Gloves", "Grips", "Wraps"],
-		"legs": ["Leather Trousers", "Leggings", "Breeches"], "feet": ["Leather Boots", "Treads", "Soft Boots"]},
-	"cloth": {"head": ["Hat", "Cap", "Circlet"], "chest": ["Robe", "Vestments", "Tunic"], "hands": ["Cloth Wraps", "Mitts", "Gloves"],
-		"legs": ["Cloth Pants", "Skirt", "Leggings"], "feet": ["Slippers", "Sandals", "Cloth Boots"]},
+	"plate": {
+		"head": [
+			"Helm",
+			"Greathelm",
+			"Visor",
+			"Warhelm"
+		],
+		"chest": [
+			"Breastplate",
+			"Chestplate",
+			"Cuirass",
+			"Warplate"
+		],
+		"hands": [
+			"Gauntlets",
+			"Plate Gloves",
+			"Vambraces",
+			"Handguards"
+		],
+		"legs": [
+			"Greaves",
+			"Plate Leggings",
+			"Cuisses",
+			"Tassets"
+		],
+		"feet": [
+			"Sabatons",
+			"Plate Boots",
+			"Warboots",
+			"Ironshod Boots"
+		]
+	},
+	"mail": {
+		"head": [
+			"Coif",
+			"Mail Hood",
+			"Ringed Cap",
+			"Chain Helm"
+		],
+		"chest": [
+			"Hauberk",
+			"Mail Shirt",
+			"Chain Vest",
+			"Byrnie"
+		],
+		"hands": [
+			"Mail Gloves",
+			"Chain Mitts",
+			"Ringed Grips",
+			"Chain Gauntlets"
+		],
+		"legs": [
+			"Mail Leggings",
+			"Chain Chausses",
+			"Ringed Trousers",
+			"Mail Skirt"
+		],
+		"feet": [
+			"Mail Boots",
+			"Chain Treads",
+			"Ringed Boots",
+			"Chain Sabatons"
+		]
+	},
+	"leather": {
+		"head": [
+			"Hood",
+			"Leather Cap",
+			"Cowl",
+			"Skullcap"
+		],
+		"chest": [
+			"Jerkin",
+			"Leather Tunic",
+			"Vest",
+			"Brigandine"
+		],
+		"hands": [
+			"Leather Gloves",
+			"Grips",
+			"Wraps",
+			"Bracers"
+		],
+		"legs": [
+			"Leather Trousers",
+			"Leggings",
+			"Breeches",
+			"Chaps"
+		],
+		"feet": [
+			"Leather Boots",
+			"Treads",
+			"Soft Boots",
+			"Riding Boots"
+		]
+	},
+	"cloth": {
+		"head": [
+			"Hat",
+			"Cap",
+			"Circlet",
+			"Witch Hat"
+		],
+		"chest": [
+			"Robe",
+			"Vestments",
+			"Tunic",
+			"Mantle"
+		],
+		"hands": [
+			"Cloth Wraps",
+			"Mitts",
+			"Gloves",
+			"Sleeves"
+		],
+		"legs": [
+			"Cloth Pants",
+			"Skirt",
+			"Leggings",
+			"Kilt"
+		],
+		"feet": [
+			"Slippers",
+			"Sandals",
+			"Cloth Boots",
+			"Shoes"
+		]
+	}
 }
 const SUFFIX := {"str": "of the Bear", "agi": "of the Fox", "int": "of the Owl", "sta": "of the Ox", "crit": "of Precision"}
 

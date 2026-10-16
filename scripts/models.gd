@@ -385,12 +385,28 @@ static func _apply_look(cfg: Dictionary, look: Dictionary, equip: Dictionary) ->
 
 
 ## Colour of a piece: material tier tint, shaped by armor type (metal, dull chain, brown leather, dyed cloth).
-## Which of the few cuts of a piece of armor this item has (0-3). Standard armor is one shape in different colours with small
-## differences like these; an item can name its own with "look" once there are special looks.
+## Which of the four cuts of a piece of armor this item is (0-3): the position of its base name in that armor type's list for the
+## slot (Plate chests: Breastplate, Chestplate, Cuirass, Warplate), so every cut has a name of its own. Standard armor is one
+## shape in different colours with differences like these; an item can name its own look ("look") once there are special ones.
 static func _style(item: Dictionary) -> int:
 	if item.has("look"):
 		return int(item["look"]) % 4
-	return absi(hash(String(item.get("name", "")))) % 4
+	var nm := String(item.get("name", ""))
+	var armor := String(item.get("armor", ""))
+	var slot := String(item.get("slot", ""))
+	var list: Array = []
+	if Items.ARMOR_NAMES.has(armor) and (Items.ARMOR_NAMES[armor] as Dictionary).has(slot):
+		list = Items.ARMOR_NAMES[armor][slot]
+	elif Items.BASE_NAMES.has(slot):
+		list = Items.BASE_NAMES[slot]
+	var best := -1
+	var best_len := 0
+	for i in list.size():
+		var base := String(list[i])
+		if nm.contains(base) and base.length() > best_len:   # "Witch Hat" before "Hat"
+			best = i
+			best_len = base.length()
+	return best if best >= 0 else absi(hash(nm)) % 4
 
 
 static func _tier_col(item: Dictionary, armor: String) -> Color:
