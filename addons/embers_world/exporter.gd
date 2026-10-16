@@ -745,6 +745,8 @@ func _meta(points: Array, heights: PackedFloat32Array) -> Dictionary:
 				warnings.append("%s: the server doesn't know a character called \"%s\". Known: %s" % [p.name, p.id, ", ".join(known_npcs)])
 			else:
 				meta["npcs"][p.id] = xz
+		elif p.kind == K.BANK:
+			meta["npcs"][p.id if p.id != "" else "banker"] = xz   # the server makes a bank of it (see Zone::npc_defs)
 		elif p.kind == K.CAMPFIRE:
 			meta["campfires"].append(xz)
 		elif p.kind == K.FISHING_SPOT:

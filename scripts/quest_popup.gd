@@ -7,7 +7,7 @@ const SHOW_SECS := 9.0
 static var _current: QuestPopup = null
 
 
-## d: {title, text, xp, gold, rewards: [String]}
+## d: {title, text, xp, gold, rewards: [{name, n, mat, item}]}
 static func present(ui: Node, d: Dictionary) -> void:
 	if _current != null and is_instance_valid(_current):
 		_current.queue_free()
@@ -53,21 +53,27 @@ func _build(ui: Node, d: Dictionary) -> void:
 		var t: Label = ui._label("\"%s\"" % text, 16, ui.MUTED, null, true)
 		t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(t)
-	var rows: Array = []
+	var xp_gold := HBoxContainer.new()
+	xp_gold.alignment = BoxContainer.ALIGNMENT_CENTER
+	xp_gold.add_theme_constant_override("separation", 22)
 	if int(d.get("xp", 0)) > 0:
-		rows.append(["+%d XP" % int(d["xp"]), ui.XP_COL])
+		xp_gold.add_child(ui._label("+%d XP" % int(d["xp"]), 19, ui.XP_COL))
 	if int(d.get("gold", 0)) > 0:
-		rows.append(["+%d gold" % int(d["gold"]), ui.EMBER_HI])
-	for r in d.get("rewards", []):
-		rows.append([str(r), ui.TEXT])
-	if not rows.is_empty():
+		xp_gold.add_child(ui._label("+%d gold" % int(d["gold"]), 19, ui.EMBER_HI))
+	var rewards: Array = d.get("rewards", [])
+	if xp_gold.get_child_count() > 0 or not rewards.is_empty():
 		var rh: Label = ui._label("Rewards", 15, ui.MUTED)
 		rh.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(rh)
-		for r: Array in rows:
-			var l: Label = ui._label(str(r[0]), 19, r[1])
-			l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			v.add_child(l)
+	if xp_gold.get_child_count() > 0:
+		v.add_child(xp_gold)
+	if not rewards.is_empty():
+		var row := HBoxContainer.new()
+		row.alignment = BoxContainer.ALIGNMENT_CENTER
+		row.add_theme_constant_override("separation", 14)
+		v.add_child(row)
+		for r: Dictionary in rewards:
+			row.add_child(_reward_cell(ui, r))
 	var hint: Label = ui._label("click to close", 12, ui.MUTED, ui.font_label)
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	v.add_child(hint)
@@ -78,6 +84,39 @@ func _build(ui: Node, d: Dictionary) -> void:
 	tw.tween_interval(SHOW_SECS)
 	tw.tween_property(self, "modulate:a", 0.0, 0.6)
 	tw.tween_callback(queue_free)
+
+
+## One reward: its icon (gear or material) with the name under it, and the amount for materials.
+func _reward_cell(ui: Node, r: Dictionary) -> Control:
+	var v := VBoxContainer.new()
+	v.custom_minimum_size = Vector2(110, 0)
+	v.add_theme_constant_override("separation", 2)
+	var box := PanelContainer.new()
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(64, 64)
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	var border: Color = ui.LINE
+	var name_col: Color = ui.TEXT
+	var it: Variant = r.get("item")
+	if it is Dictionary and not (it as Dictionary).is_empty():
+		icon.texture = Items.icon(it)
+		border = Items.color(it)
+		name_col = Items.color(it)
+	elif r.get("mat") != null and Data.MATERIALS.has(str(r["mat"])):
+		icon.texture = Icons.material(str(r["mat"]))
+		border = Color(Data.MATERIALS[str(r["mat"])]["color"])
+	box.add_theme_stylebox_override("panel", ui._sb(Color("1a1624"), border, 2, 4))
+	box.add_child(icon)
+	var center := CenterContainer.new()
+	center.add_child(box)
+	v.add_child(center)
+	var n := int(r.get("n", 1))
+	var l: Label = ui._label("%s%s" % [str(r.get("name", "")), (" x%d" % n) if n > 1 else ""], 15, name_col, null, true)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	v.add_child(l)
+	return v
 
 
 func _gui_input(event: InputEvent) -> void:

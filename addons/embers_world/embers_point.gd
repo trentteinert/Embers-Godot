@@ -4,19 +4,19 @@ extends Marker3D
 ## A place the server needs to know about. Pick the kind, put it where it belongs. Shows a coloured label in
 ## the editor. For NPCs and Elite lairs, `id` is the character (see the list in the README).
 
-enum Kind { SPAWN, SHRINE, CAMP, VILLAGE, FORGE, FURNACE, ANVIL, SLAYER, MERCHANT, NPC, ELITE_LAIR, CAMPFIRE, FISHING_SPOT, RESOURCE_SPOT }
+enum Kind { SPAWN, SHRINE, CAMP, VILLAGE, FORGE, FURNACE, ANVIL, SLAYER, MERCHANT, NPC, ELITE_LAIR, CAMPFIRE, FISHING_SPOT, RESOURCE_SPOT, BANK }
 
 @export var kind: Kind = Kind.SPAWN: set = _set_kind
 ## NPC / Elite lair: the character id ("tam", "king", "rowan", ...). Resource spot: the material
-## ("twig", "oak", "copper", ...). Merchant: 1, 2 or 3 (1 is the main shop).
+## ("twig", "oak", "copper", ...). Merchant: 1, 2 or 3 (1 is the main shop). Bank: "banker" (a person) or "bank_chest" (a chest).
 @export var id := "": set = _set_id
 ## Fishing spot only: the area of water (0 Meadow, 1 Thornwood, 2 Mire, 3 Frostspine, 4 Coast).
 @export_range(0, 4) var water_biome := 0
 
 ## The bosses with a lair of their own; every other known character is an NPC.
 const ELITES := ["alpha", "barrowking", "champion"]
-const NAMES := ["Spawn", "Shrine", "Camp", "Village", "Forge", "Furnace", "Anvil", "Slayer", "Merchant", "NPC", "Elite lair", "Campfire", "Fishing spot", "Resource"]
-const COLORS := [Color("ffd27a"), Color("c8a8ff"), Color("ff9a4a"), Color("8ad07a"), Color("e0703a"), Color("e0703a"), Color("e0703a"), Color("e8506a"), Color("f2c27a"), Color("7ac8ff"), Color("ff4a4a"), Color("ff9a4a"), Color("5ab0ff"), Color("b0b0b8")]
+const NAMES := ["Spawn", "Shrine", "Camp", "Village", "Forge", "Furnace", "Anvil", "Slayer", "Merchant", "NPC", "Elite lair", "Campfire", "Fishing spot", "Resource", "Bank"]
+const COLORS := [Color("ffd27a"), Color("c8a8ff"), Color("ff9a4a"), Color("8ad07a"), Color("e0703a"), Color("e0703a"), Color("e0703a"), Color("e8506a"), Color("f2c27a"), Color("7ac8ff"), Color("ff4a4a"), Color("ff9a4a"), Color("5ab0ff"), Color("b0b0b8"), Color("f2c27a")]
 ## Drop onto the terrain whenever you move it in the editor.
 @export var stick_to_ground := true
 @export_tool_button("Snap to ground") var _snap_button: Callable = snap_to_ground
@@ -75,6 +75,8 @@ static func ids_for(k: int) -> Array:
 			return ELITES
 		Kind.MERCHANT:
 			return ["1", "2", "3"]
+		Kind.BANK:
+			return ["banker", "bank_chest"]
 		Kind.RESOURCE_SPOT:
 			return known.get("materials", [])
 	return []
@@ -150,6 +152,8 @@ func _make_shape(k: int) -> Node3D:
 		sprite = "slayer"
 	elif k == Kind.FORGE:
 		sprite = "smith"
+	elif k == Kind.BANK and id != "bank_chest":
+		sprite = "merchant"
 	if sprite != "":
 		var m := EmbersProp.make(EmbersProp.Category.NPC, sprite)
 		if m != null:
@@ -167,6 +171,8 @@ func _make_shape(k: int) -> Node3D:
 			body.add_child(cs)
 			holder.add_child(body)
 			return holder
+	if k == Kind.BANK:
+		return _chest_shape()
 	var mi := MeshInstance3D.new()
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -197,6 +203,25 @@ func _make_shape(k: int) -> Node3D:
 		mi.mesh = b
 		mi.position.y = 0.4
 	return mi
+
+
+## The bank chest, as it looks in the game.
+func _chest_shape() -> Node3D:
+	var root := Node3D.new()
+	var wood := Color("7a5230")
+	var trim := Color("d8b04a")
+	for part: Array in [[Vector3(1.1, 0.6, 0.7), Vector3(0, 0.3, 0), wood], [Vector3(1.14, 0.22, 0.74), Vector3(0, 0.71, 0), wood.darkened(0.15)], [Vector3(0.16, 0.34, 0.06), Vector3(0, 0.55, 0.37), trim], [Vector3(1.16, 0.08, 0.76), Vector3(0, 0.5, 0), trim.darkened(0.2)]]:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = part[0]
+		mi.mesh = bm
+		mi.position = part[1]
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = part[2]
+		mat.roughness = 1.0
+		mi.material_override = mat
+		root.add_child(mi)
+	return root
 
 
 func _sprites() -> Dictionary:

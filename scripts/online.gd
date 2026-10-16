@@ -1288,7 +1288,7 @@ func _show_action(v: Dictionary) -> void:
 
 ## Placing fires with F is switched off: cook at a campfire (or a town). The server still knows how, in case it is wanted again.
 func light_fire() -> void:
-	main.ui.toast("Cook at a campfire", Color("e0a080"))
+	send({"t": "light_fire"})   # the server burns a log from your bag (needs Flint and Steel)
 
 
 # ================================================================ chat
