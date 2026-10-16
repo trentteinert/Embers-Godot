@@ -3586,6 +3586,13 @@ func _fill_settings() -> void:
 		_save_game_setting("orbit_speed", val))
 	cb.add_child(cs)
 	_win_body.add_child(cb)
+	if main.online != null:
+		_section("ACCOUNT")
+		var lo := Button.new()
+		lo.text = "Log out"
+		lo.custom_minimum_size = Vector2(230, 0)
+		lo.pressed.connect(func() -> void: main.online.logout())
+		_win_body.add_child(lo)
 	_section("STUCK?")
 	var stuck := Button.new()
 	stuck.text = "I'm stuck: take me to the shrine"

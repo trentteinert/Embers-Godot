@@ -1962,54 +1962,17 @@ func _cyl(top: float, bottom: float, h: float, sides := 8) -> CylinderMesh:
 	return c
 
 
-func _build_props() -> void:
-	var stone := _stone_material()
-	var dark := stone.duplicate() as StandardMaterial3D
-	dark.albedo_color = Color(0.7, 0.68, 0.75)
-	var props := Node3D.new()
-	props.name = "StoryProps"
-	add_child(props)
-
-	# --- Bramble's stall
-	var m := merchant_pos
-	var wood := StandardMaterial3D.new()
-	wood.albedo_color = Color("7a5232")
-	wood.roughness = 1.0
-	var cloth := StandardMaterial3D.new()
-	cloth.albedo_color = Color("b8443a")
-	cloth.roughness = 1.0
-	var cloth2 := StandardMaterial3D.new()
-	cloth2.albedo_color = Color("e8dcc0")
-	cloth2.roughness = 1.0
-	_add_mesh(props, _box(Vector3(2.6, 0.9, 0.8)), wood, m + Vector3(0, 0.45, -1.1), 0.0, true)
-	_add_mesh(props, _box(Vector3(2.8, 0.1, 1.0)), cloth2, m + Vector3(0, 0.95, -1.1))
-	for px_off in [-1.4, 1.4]:
-		_add_mesh(props, _box(Vector3(0.14, 2.6, 0.14)), wood, m + Vector3(px_off, 1.3, -1.6))
-		_add_mesh(props, _box(Vector3(0.14, 2.2, 0.14)), wood, m + Vector3(px_off, 1.1, -0.6))
-	for k in 4:
-		var awning := _add_mesh(props, _box(Vector3(0.75, 0.08, 1.4)), cloth if k % 2 == 0 else cloth2, m + Vector3(-1.1 + k * 0.74, 2.45, -1.1))
-		awning.rotation.x = -0.35
-	_add_mesh(props, _box(Vector3(0.7, 0.7, 0.7)), wood, m + Vector3(2.0, 0.35, -0.2), 0.3, true)
-	_add_mesh(props, _box(Vector3(0.6, 0.6, 0.6)), wood, m + Vector3(2.1, 1.0, -0.3), 0.6)
-	_add_mesh(props, _cyl(0.32, 0.36, 0.8), wood, m + Vector3(-2.0, 0.4, -0.4), 0.0, true)
-	var bottle := StandardMaterial3D.new()
-	bottle.albedo_color = Color("d9483b")
-	bottle.emission_enabled = true
-	bottle.emission = Color("d9483b")
-	bottle.emission_energy_multiplier = 0.6
-	for k in 3:
-		_add_mesh(props, _box(Vector3(0.14, 0.24, 0.14)), bottle, m + Vector3(-0.6 + k * 0.35, 1.12, -1.2))
-
-	# --- Hearth Shrine
+## The Hearth Shrine: stone steps, four pedestals, the Ember's flame and the Wisp. `solid` = people bump into it.
+func _build_shrine(props: Node3D, stone: StandardMaterial3D, dark: StandardMaterial3D, solid := true) -> void:
 	var s := shrine_pos
-	_add_mesh(props, _cyl(3.2, 3.4, 0.6), stone, s + Vector3(0, 0.25, 0), 0.0, true)
-	_add_mesh(props, _cyl(2.2, 2.4, 0.5), dark, s + Vector3(0, 0.75, 0), PI / 8.0, true)
+	_add_mesh(props, _cyl(3.2, 3.4, 0.6), stone, s + Vector3(0, 0.25, 0), 0.0, solid)
+	_add_mesh(props, _cyl(2.2, 2.4, 0.5), dark, s + Vector3(0, 0.75, 0), PI / 8.0, solid)
 	_add_mesh(props, _cyl(0.9, 0.6, 0.8), dark, s + Vector3(0, 1.4, 0))
 	for k in 4:
 		var a := PI * 0.25 + k * PI * 0.5
 		var pp := s + Vector3(cos(a) * 4.4, 0, sin(a) * 4.4)
 		pp.y = height_at(pp.x, pp.z)
-		_add_mesh(props, _box(Vector3(0.7, 1.4, 0.7)), stone, pp + Vector3(0, 0.6, 0), a, true)
+		_add_mesh(props, _box(Vector3(0.7, 1.4, 0.7)), stone, pp + Vector3(0, 0.6, 0), a, solid)
 		_add_mesh(props, _box(Vector3(0.9, 0.15, 0.9)), dark, pp + Vector3(0, 1.35, 0), a)
 		var orb := Node3D.new()
 		orb.position = pp + Vector3(0, 1.9, 0)
@@ -2072,6 +2035,49 @@ func _build_props() -> void:
 	wl.light_energy = 1.2
 	_wisp.add_child(wl)
 	props.add_child(_wisp)
+
+
+
+
+func _build_props() -> void:
+	var stone := _stone_material()
+	var dark := stone.duplicate() as StandardMaterial3D
+	dark.albedo_color = Color(0.7, 0.68, 0.75)
+	var props := Node3D.new()
+	props.name = "StoryProps"
+	add_child(props)
+
+	# --- Bramble's stall
+	var m := merchant_pos
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color("7a5232")
+	wood.roughness = 1.0
+	var cloth := StandardMaterial3D.new()
+	cloth.albedo_color = Color("b8443a")
+	cloth.roughness = 1.0
+	var cloth2 := StandardMaterial3D.new()
+	cloth2.albedo_color = Color("e8dcc0")
+	cloth2.roughness = 1.0
+	_add_mesh(props, _box(Vector3(2.6, 0.9, 0.8)), wood, m + Vector3(0, 0.45, -1.1), 0.0, true)
+	_add_mesh(props, _box(Vector3(2.8, 0.1, 1.0)), cloth2, m + Vector3(0, 0.95, -1.1))
+	for px_off in [-1.4, 1.4]:
+		_add_mesh(props, _box(Vector3(0.14, 2.6, 0.14)), wood, m + Vector3(px_off, 1.3, -1.6))
+		_add_mesh(props, _box(Vector3(0.14, 2.2, 0.14)), wood, m + Vector3(px_off, 1.1, -0.6))
+	for k in 4:
+		var awning := _add_mesh(props, _box(Vector3(0.75, 0.08, 1.4)), cloth if k % 2 == 0 else cloth2, m + Vector3(-1.1 + k * 0.74, 2.45, -1.1))
+		awning.rotation.x = -0.35
+	_add_mesh(props, _box(Vector3(0.7, 0.7, 0.7)), wood, m + Vector3(2.0, 0.35, -0.2), 0.3, true)
+	_add_mesh(props, _box(Vector3(0.6, 0.6, 0.6)), wood, m + Vector3(2.1, 1.0, -0.3), 0.6)
+	_add_mesh(props, _cyl(0.32, 0.36, 0.8), wood, m + Vector3(-2.0, 0.4, -0.4), 0.0, true)
+	var bottle := StandardMaterial3D.new()
+	bottle.albedo_color = Color("d9483b")
+	bottle.emission_enabled = true
+	bottle.emission = Color("d9483b")
+	bottle.emission_energy_multiplier = 0.6
+	for k in 3:
+		_add_mesh(props, _box(Vector3(0.14, 0.24, 0.14)), bottle, m + Vector3(-0.6 + k * 0.35, 1.12, -1.2))
+
+	_build_shrine(props, stone, dark)
 
 	# --- runestones
 	for i in rune_pos.size():
@@ -2297,3 +2303,14 @@ void fragment() {
 	SPECULAR = 0.1;
 }
 """
+
+
+## A custom world (CustomWorld) has no story props, but the shrine and its Wisp are drawn where you put the Shrine point.
+func build_custom_shrine() -> void:
+	var stone := _stone_material()
+	var dark := stone.duplicate() as StandardMaterial3D
+	dark.albedo_color = Color(0.7, 0.68, 0.75)
+	var props := Node3D.new()
+	props.name = "ShrineProps"
+	add_child(props)
+	_build_shrine(props, stone, dark, false)

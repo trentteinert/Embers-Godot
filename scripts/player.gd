@@ -375,6 +375,8 @@ func _physics_process(delta: float) -> void:
 		_tick_resource(delta)
 		_update_aim(move, moving)
 		_animate(delta, moving, false)
+		if net != null:
+			net.fly_sync(self, delta)   # online: the server follows where we fly (development)
 		return
 	elif collision_mask == 0:
 		collision_mask = 1 | 2

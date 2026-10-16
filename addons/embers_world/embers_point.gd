@@ -173,6 +173,8 @@ func _make_shape(k: int) -> Node3D:
 			return holder
 	if k == Kind.BANK:
 		return _chest_shape()
+	if k == Kind.SHRINE:
+		return _shrine_shape()
 	var mi := MeshInstance3D.new()
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
@@ -203,6 +205,66 @@ func _make_shape(k: int) -> Node3D:
 		mi.mesh = b
 		mi.position.y = 0.4
 	return mi
+
+
+## The Hearth Shrine and its Wisp, as the game draws them at this spot.
+func _shrine_shape() -> Node3D:
+	var root := Node3D.new()
+	var stone := Color("6f6e7a")
+	var dark := stone.darkened(0.12)
+	var parts: Array = [
+		[_cyl(3.2, 3.4, 0.6), Vector3(0, 0.25, 0), stone],
+		[_cyl(2.2, 2.4, 0.5), Vector3(0, 0.75, 0), dark],
+		[_cyl(0.9, 0.6, 0.8), Vector3(0, 1.4, 0), dark],
+	]
+	for k in 4:
+		var a := PI * 0.25 + k * PI * 0.5
+		var pp := Vector3(cos(a) * 4.4, 0, sin(a) * 4.4)
+		var box := BoxMesh.new()
+		box.size = Vector3(0.7, 1.4, 0.7)
+		parts.append([box, pp + Vector3(0, 0.6, 0), stone])
+		var cap := BoxMesh.new()
+		cap.size = Vector3(0.9, 0.15, 0.9)
+		parts.append([cap, pp + Vector3(0, 1.35, 0), dark])
+	for part: Array in parts:
+		var mi := MeshInstance3D.new()
+		mi.mesh = part[0]
+		mi.position = part[1]
+		var m := StandardMaterial3D.new()
+		m.albedo_color = part[2]
+		m.roughness = 1.0
+		mi.material_override = m
+		root.add_child(mi)
+	var cols := [Color("c4421a"), Color("f2994a"), Color("ffe9a0")]
+	for fi in 3:
+		var cm := CylinderMesh.new()
+		cm.top_radius = 0.0
+		cm.bottom_radius = 0.42 - fi * 0.12
+		cm.height = 1.1 - fi * 0.25
+		cm.radial_segments = 5
+		var mi := MeshInstance3D.new()
+		mi.mesh = cm
+		mi.position = Vector3(0, 1.95 + cm.height * 0.5 + fi * 0.04, 0)
+		var m := StandardMaterial3D.new()
+		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		m.albedo_color = cols[fi]
+		mi.material_override = m
+		root.add_child(mi)
+	var wisp: Node3D = (load("res://scripts/models.gd") as GDScript).call("wisp", "9fe0ff")
+	if wisp != null:
+		wisp.scale = Vector3.ONE * 0.6
+		wisp.position = Vector3(2.4, 2.5, -0.6)
+		root.add_child(wisp)
+	return root
+
+
+func _cyl(top: float, bottom: float, h: float) -> CylinderMesh:
+	var c := CylinderMesh.new()
+	c.top_radius = top
+	c.bottom_radius = bottom
+	c.height = h
+	c.radial_segments = 16
+	return c
 
 
 ## The bank chest, as it looks in the game.

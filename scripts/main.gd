@@ -397,6 +397,9 @@ func _set_kit(id: String) -> void:
 
 
 func switch_class(id: String) -> void:
+	if online != null:
+		ui.toast("You pick a class when you create a character online", Color("e0a080"))
+		return
 	if id == player.class_id:
 		return
 	state["cls"] = id
@@ -412,6 +415,9 @@ func switch_class(id: String) -> void:
 
 
 func set_level(l: int) -> void:
+	if online != null:
+		online.send({"t": "dev_level", "level": l})   # the server raises it (development tools)
+		return
 	skills.set_xp(skills.combat_id(), Data.xp_for_level(l))
 	player.setup(state["cls"], state["lvl"], true, _tier())
 	save_game()
@@ -455,6 +461,9 @@ func sync_combat_level(leveled_up: bool) -> void:
 
 ## Testing: every skill to max.
 func max_all_skills() -> void:
+	if online != null:
+		ui.toast("Skill levels are set by the server online", Color("e0a080"))
+		return
 	for id: String in Data.SKILL_ORDER:
 		state["skills"][id] = Data.xp_for_level(Data.MAX_SKILL)
 	sync_combat_level(false)
@@ -1223,6 +1232,11 @@ func set_dev_mode(on: bool) -> void:
 func set_flying(on: bool) -> void:
 	if on and not dev_mode:
 		return
+	if online != null:
+		if on and not online.server_dev:
+			ui.toast("This server has its development tools turned off", Color("e0a080"))
+			return
+		online.send({"t": "dev_fly", "on": on})
 	player.flying = on
 	if on:
 		player.velocity = Vector3.ZERO
@@ -1232,6 +1246,13 @@ func set_flying(on: bool) -> void:
 ## Dev mode: jump to a world position (above the ground when flying).
 func dev_teleport(pos: Vector3) -> void:
 	if not dev_mode:
+		return
+	if online != null:
+		if not online.server_dev:
+			ui.toast("This server has its development tools turned off", Color("e0a080"))
+			return
+		online.send({"t": "dev_teleport", "x": pos.x, "z": pos.z})   # the server moves us, then we follow it
+		ui.toast("Teleported")
 		return
 	var y := world.height_at(pos.x, pos.z)
 	if bool(state.get("tut_safe", false)) and Vector2(pos.x - world.camp_pos.x, pos.z - world.camp_pos.z).length() > CAMP_LEASH:

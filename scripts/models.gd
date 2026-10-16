@@ -253,6 +253,15 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 		cfg["wmetal"] = _tier_col(wep, "plate").to_html(false)
 	if cfg.get("weapon_l", "") == "shield":
 		cfg["weapon_l"] = "shield" if String(off.get("type", "")) == "shield" else ""
+		# the shield keeps its own look (not the chest's or the helm's colours) until you find one with a different look:
+		# plain grey metal with a red face; a better shield takes its tier's metal and its rarity's colour
+		cfg["shield_metal"] = "8c96a3"
+		cfg["shield_face"] = "b8342c"
+		cfg["shield_trim"] = "d8b04a"
+		if not off.is_empty() and int(off.get("ilvl", 1)) > 4:
+			cfg["shield_metal"] = _tier_col(off, "plate").to_html(false)
+			if int(off.get("rarity", 0)) > 0:
+				cfg["shield_face"] = Items.RARITY_COLORS[int(off["rarity"])]
 	var ch: Dictionary = equip.get("chest", {})
 	if not ch.is_empty():
 		var a: String = ch.get("armor", Items.ARMOR_FOR[id])
@@ -287,17 +296,23 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 				cfg["sleeve"] = c.to_html(false)
 		if int(ch["rarity"]) > 0:
 			cfg["trim"] = rc.to_html(false)
+	if not ch.is_empty():
+		cfg["style_chest"] = _style(ch)
 	var lg: Dictionary = equip.get("legs", {})
 	if not lg.is_empty():
+		cfg["style_legs"] = _style(lg)
 		cfg["pants"] = _tier_col(lg, lg.get("armor", Items.ARMOR_FOR[id])).to_html(false)
 	var ft: Dictionary = equip.get("feet", {})
 	if not ft.is_empty():
+		cfg["style_feet"] = _style(ft)
 		cfg["boots"] = _tier_col(ft, ft.get("armor", Items.ARMOR_FOR[id])).darkened(0.1).to_html(false)
 	var hd: Dictionary = equip.get("hands", {})
 	if not hd.is_empty():
+		cfg["style_hands"] = _style(hd)
 		cfg["glove"] = _tier_col(hd, hd.get("armor", Items.ARMOR_FOR[id])).to_html(false)
 	var hh: Dictionary = equip.get("head", {})
 	if not hh.is_empty():
+		cfg["style_head"] = _style(hh)
 		var a2: String = hh.get("armor", Items.ARMOR_FOR[id])
 		var hc := _tier_col(hh, a2)
 		match a2:
@@ -370,6 +385,14 @@ static func _apply_look(cfg: Dictionary, look: Dictionary, equip: Dictionary) ->
 
 
 ## Colour of a piece: material tier tint, shaped by armor type (metal, dull chain, brown leather, dyed cloth).
+## Which of the few cuts of a piece of armor this item has (0-3). Standard armor is one shape in different colours with small
+## differences like these; an item can name its own with "look" once there are special looks.
+static func _style(item: Dictionary) -> int:
+	if item.has("look"):
+		return int(item["look"]) % 4
+	return absi(hash(String(item.get("name", "")))) % 4
+
+
 static func _tier_col(item: Dictionary, armor: String) -> Color:
 	var mat := Color(String(item.get("mat", "b87333")))
 	match armor:
@@ -410,6 +433,20 @@ static func humanoid(cfg: Dictionary) -> Rig:
 		box(rig, shin, Vector3(0.16 * thin, 0.24, 0.19 * thin), pants, Vector3(0, -0.12, 0))
 		var foot := pivot(rig, shin, "foot_l" if side < 0 else "foot_r", Vector3(0, -0.22, 0))
 		box(rig, foot, Vector3(0.19, 0.13, 0.27), cfg.get("boots", "3a3446"), Vector3(0, -0.065, 0.03))
+		match int(cfg.get("style_legs", 0)):
+			1:   # knee pads
+				box(rig, shin, Vector3(0.19 * thin, 0.1, 0.07), _c(pants).lightened(0.15).to_html(false), Vector3(0, 0.02, 0.115 * thin))
+			2:   # a stripe down the outside
+				box(rig, leg, Vector3(0.025, 0.5, 0.05), cfg.get("trim", "d8b04a"), Vector3(0.09 * side * thin, -0.2, 0.0))
+			3:   # turned-up cuffs
+				box(rig, shin, Vector3(0.19 * thin, 0.05, 0.215 * thin), _c(pants).lightened(0.2).to_html(false), Vector3(0, -0.22, 0))
+		match int(cfg.get("style_feet", 0)):
+			1:   # tall boot cuffs
+				box(rig, shin, Vector3(0.18 * thin, 0.09, 0.215 * thin), _c(cfg.get("boots", "3a3446")).lightened(0.12).to_html(false), Vector3(0, -0.17, 0))
+			2:   # a toe cap
+				box(rig, foot, Vector3(0.17, 0.07, 0.09), _c(cfg.get("boots", "3a3446")).lightened(0.18).to_html(false), Vector3(0, -0.09, 0.16))
+			3:   # an ankle strap
+				box(rig, foot, Vector3(0.2, 0.03, 0.14), cfg.get("trim", "d8b04a"), Vector3(0, -0.01, 0.0))
 		leg.visible = robe == ""
 	if robe != "":
 		cyl(rig, b, 0.24, 0.36, 0.64, robe, Vector3(0, 0.32, 0), Vector3.ZERO, 8)
@@ -429,6 +466,16 @@ static func humanoid(cfg: Dictionary) -> Rig:
 	else:
 		box(rig, torso, Vector3(0.46 * thin, 0.5, 0.28 * thin), cfg.get("shirt", "888888"), Vector3(0, 0.27, 0))
 	box(rig, torso, Vector3(0.2, 0.42, 0.02), cfg.get("shirt2", "666666"), Vector3(0, 0.27, 0.141 * thin))
+	match int(cfg.get("style_chest", 0)):
+		1:   # a sash across the chest
+			box(rig, torso, Vector3(0.1, 0.62, 0.02), cfg.get("trim", "d8b04a"), Vector3(0.02, 0.27, 0.152 * thin), Vector3(0, 0, 0.55))
+		2:   # a breast plate
+			box(rig, torso, Vector3(0.34 * thin, 0.27, 0.03), _c(cfg.get("shirt2", "666666")).lightened(0.12).to_html(false), Vector3(0, 0.34, 0.15 * thin))
+			box(rig, torso, Vector3(0.36 * thin, 0.04, 0.032), cfg.get("trim", "d8b04a"), Vector3(0, 0.2, 0.15 * thin))
+		3:   # a collar and belt pouches
+			box(rig, torso, Vector3(0.3, 0.07, 0.3), _c(cfg.get("shirt2", "666666")).lightened(0.08).to_html(false), Vector3(0, 0.5, 0))
+			for sd in [-1, 1]:
+				box(rig, torso, Vector3(0.1, 0.12, 0.09), cfg.get("belt", "5a3a24"), Vector3(0.27 * sd * thin, -0.02, 0.06))
 	box(rig, torso, Vector3(0.48 * thin, 0.07, 0.3 * thin), cfg.get("belt", "5a3a24"), Vector3(0, 0.05, 0))
 	if not cfg.get("bare_top", false):
 		box(rig, torso, Vector3(0.08, 0.07, 0.02), cfg.get("trim", "d8b04a"), Vector3(0, 0.05, 0.151 * thin))
@@ -466,6 +513,13 @@ static func humanoid(cfg: Dictionary) -> Rig:
 			box(rig, fore, Vector3(0.145, 0.05, 0.165), cuff, Vector3(0, -0.15, 0))
 		if cfg.has("glove"):
 			box(rig, fore, Vector3(0.16, 0.16, 0.18), cfg["glove"], Vector3(0, -0.2, 0))
+			match int(cfg.get("style_hands", 0)):
+				1:   # a long bracer
+					box(rig, fore, Vector3(0.155, 0.12, 0.175), _c(cfg["glove"]).darkened(0.1).to_html(false), Vector3(0, -0.07, 0))
+				2:   # a flared cuff
+					box(rig, fore, Vector3(0.2, 0.05, 0.22), _c(cfg["glove"]).lightened(0.12).to_html(false), Vector3(0, -0.12, 0))
+				3:   # knuckle plates
+					box(rig, fore, Vector3(0.14, 0.04, 0.05), cfg.get("trim", "d8b04a"), Vector3(0, -0.27, 0.09))
 		else:
 			box(rig, fore, Vector3(0.13, 0.12, 0.14), skin, Vector3(0, -0.21, 0))
 		if cfg.get("pauldrons", false):
@@ -508,6 +562,14 @@ static func _headwear(rig: Rig, head: Node3D, cfg: Dictionary) -> void:
 			box(rig, head, Vector3(0.47, 0.04, 0.43), "8c96a3", Vector3(0, 0.24, 0))
 			if cfg.has("plume"):
 				box(rig, head, Vector3(0.06, 0.18, 0.34), cfg["plume"], Vector3(0, 0.53, -0.02))
+			match int(cfg.get("style_head", 0)):
+				1:   # a ridge along the top
+					box(rig, head, Vector3(0.07, 0.07, 0.4), _c(m).lightened(0.15).to_html(false), Vector3(0, 0.47, 0))
+				2:   # a nose guard
+					box(rig, head, Vector3(0.05, 0.2, 0.03), _c(m).lightened(0.1).to_html(false), Vector3(0, 0.2, 0.23))
+				3:   # little horns
+					for sd in [-1, 1]:
+						box(rig, head, Vector3(0.06, 0.2, 0.06), "e8e0c8", Vector3(0.27 * sd, 0.5, 0), Vector3(0, 0, -0.5 * sd))
 		"hood":
 			var h: String = cfg.get("hood", "444444")
 			box(rig, head, Vector3(0.5, 0.1, 0.44), h, Vector3(0, 0.42, -0.01))
@@ -515,6 +577,13 @@ static func _headwear(rig: Rig, head: Node3D, cfg: Dictionary) -> void:
 				box(rig, head, Vector3(0.06, 0.42, 0.42), h, Vector3(0.25 * side, 0.2, -0.02))
 			box(rig, head, Vector3(0.5, 0.44, 0.06), h, Vector3(0, 0.2, -0.21))
 			box(rig, head, Vector3(0.2, 0.16, 0.16), h, Vector3(0, 0.4, -0.27), Vector3(0.6, 0, 0))
+			match int(cfg.get("style_head", 0)):
+				1:   # a long pointed tip
+					box(rig, head, Vector3(0.12, 0.14, 0.3), h, Vector3(0, 0.34, -0.42), Vector3(0.9, 0, 0))
+				2:   # a trim band
+					box(rig, head, Vector3(0.51, 0.04, 0.45), _c(h).lightened(0.25).to_html(false), Vector3(0, 0.36, -0.01))
+				3:   # a face wrap
+					box(rig, head, Vector3(0.43, 0.1, 0.06), _c(h).darkened(0.1).to_html(false), Vector3(0, 0.08, 0.185))
 			if cfg.has("hair") and cfg.get("hair_style", "short") != "bald":
 				box(rig, head, Vector3(0.38, 0.06, 0.03), cfg["hair"], Vector3(0, 0.34, 0.18))
 				_hair(rig, head, String(cfg.get("hair_style", "short")), cfg["hair"], false)
@@ -525,6 +594,13 @@ static func _headwear(rig: Rig, head: Node3D, cfg: Dictionary) -> void:
 			cyl(rig, head, 0.42, 0.42, 0.04, hat, Vector3(0, 0.4, 0), Vector3.ZERO, 8)
 			cyl(rig, head, 0.27, 0.27, 0.06, cfg.get("trim", "e0c060"), Vector3(0, 0.45, 0), Vector3.ZERO, 8)
 			cyl(rig, head, 0.0, 0.26, 0.62, hat, Vector3(0, 0.76, -0.04), Vector3(-0.18, 0, 0), 6)
+			match int(cfg.get("style_head", 0)):
+				1:   # a bent tip
+					cyl(rig, head, 0.0, 0.1, 0.3, hat, Vector3(0, 1.1, -0.17), Vector3(-0.9, 0, 0), 5)
+				2:   # a feather
+					box(rig, head, Vector3(0.04, 0.3, 0.07), "e8e0c8", Vector3(0.22, 0.6, 0.05), Vector3(0, 0, -0.5))
+				3:   # a buckle band
+					box(rig, head, Vector3(0.08, 0.06, 0.04), "e8c048", Vector3(0, 0.45, 0.28))
 		"wide":
 			var hat2: String = cfg.get("hat", "6b4a2c")
 			cyl(rig, head, 0.44, 0.44, 0.04, hat2, Vector3(0, 0.4, 0), Vector3.ZERO, 8)
@@ -751,9 +827,9 @@ static func _weapon(rig: Rig, hand: Node3D, arm: Node3D, w: String, cfg: Diction
 			sh.position = Vector3(-0.16, -0.12, 0.05) if fa != null else Vector3(-0.1, -0.26, 0.04)
 			sh.rotation.z = PI * 0.5
 			mount.add_child(sh)
-			cyl(rig, sh, 0.3, 0.3, 0.06, cfg.get("metal", "8c96a3"), Vector3.ZERO, Vector3.ZERO, 8)
-			cyl(rig, sh, 0.22, 0.22, 0.07, cfg.get("plume", "b8342c"), Vector3(0, 0.013, 0), Vector3.ZERO, 8)
-			ball(rig, sh, 0.06, cfg.get("trim", "d8b04a"), Vector3(0, 0.05, 0), Vector3.ONE, 6, 3)
+			cyl(rig, sh, 0.3, 0.3, 0.06, cfg.get("shield_metal", cfg.get("metal", "8c96a3")), Vector3.ZERO, Vector3.ZERO, 8)
+			cyl(rig, sh, 0.22, 0.22, 0.07, cfg.get("shield_face", cfg.get("plume", "b8342c")), Vector3(0, 0.013, 0), Vector3.ZERO, 8)
+			ball(rig, sh, 0.06, cfg.get("shield_trim", cfg.get("trim", "d8b04a")), Vector3(0, 0.05, 0), Vector3.ONE, 6, 3)
 			rig.add_weapon(sh, mount, side, "shield")
 			return
 	rig.add_weapon(n, hand, side, w)

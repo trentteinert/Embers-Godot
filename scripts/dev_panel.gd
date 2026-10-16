@@ -60,6 +60,9 @@ func _build() -> void:
 	var box := VBoxContainer.new()
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sc.add_child(box)
+	if main.online != null:
+		_build_online(box)
+		return
 	_head(box, "START")
 	_btn(box, "Wanderer's Rest", w.camp_pos)
 	_head(box, "TOWNS AND CAMPS")
@@ -86,6 +89,44 @@ func _build() -> void:
 		b.text = String(World.LM_DEFS[kind]["name"])
 		b.pressed.connect(func() -> void: _next_landmark(kk))
 		box.add_child(b)
+
+
+## On a live server: free gold, levels and health (the server does them), and teleports to the people and places in your world.
+func _build_online(box: VBoxContainer) -> void:
+	var on: Node = main.online
+	if not on.server_dev:
+		var l := Label.new()
+		l.text = "This server has its development\ntools turned off (EMBERS_DEV=0)."
+		box.add_child(l)
+		return
+	_head(box, "SERVER TOOLS")
+	_action(box, "+10,000 gold", func() -> void: on.send({"t": "dev_gold", "n": 10000}))
+	_action(box, "Full health", func() -> void: on.send({"t": "dev_heal"}))
+	var lv := HBoxContainer.new()
+	box.add_child(lv)
+	for n in [5, 10, 15, 20]:
+		var b := Button.new()
+		b.text = "Lv %d" % n
+		var target: int = n
+		b.pressed.connect(func() -> void: on.send({"t": "dev_level", "level": target}))
+		lv.add_child(b)
+	_head(box, "PLACES")
+	var w: World = main.world
+	_btn(box, "Shrine", w.shrine_pos)
+	if w.camp_pos != Vector3.ZERO:
+		_btn(box, "Camp", w.camp_pos)
+	var ids: Array = on.npcs.keys()
+	ids.sort()
+	for id: String in ids:
+		var n: Dictionary = on.npcs[id]
+		_btn(box, "%s (%s)" % [n["name"], id], Vector3(float(n["pos"][0]) + 1.5, float(n["y"]), float(n["pos"][1])))
+
+
+func _action(p: Control, text: String, f: Callable) -> void:
+	var b := Button.new()
+	b.text = text
+	b.pressed.connect(f)
+	p.add_child(b)
 
 
 func _head(p: Control, text: String) -> void:

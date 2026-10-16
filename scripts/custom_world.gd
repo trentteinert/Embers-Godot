@@ -99,6 +99,7 @@ static func build(w: World) -> bool:
 	elif t3d != null:
 		# the ground you see is finer than the server's 2 m grid: follow it, or players would float above bumps
 		w.custom_ground = Callable(CustomWorld, "_terrain_height").bind(t3d)
+	w.build_custom_shrine()
 	w._build_map()
 	w.reset_fog()
 	print("CustomWorld ready: %s, data %s" % [path, dir])

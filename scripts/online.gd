@@ -187,6 +187,19 @@ func _fail(msg: String) -> void:
 	get_tree().reload_current_scene()
 
 
+## Back to the login screen (the server saves your character when you disconnect).
+func logout() -> void:
+	var keep := cfg.duplicate()
+	keep["auto"] = false
+	keep.erase("password")
+	keep.erase("error")
+	cfg = keep
+	if _ws != null:
+		_ws.close()
+	active = false
+	get_tree().reload_current_scene()
+
+
 func _login() -> void:
 	if account != "":
 		send({"t": "register" if register else "login", "name": account, "password": password, "class": guest_class})
@@ -198,6 +211,7 @@ func _on_message(m: Dictionary) -> void:
 	match str(m.get("t", "")):
 		"welcome":
 			my_id = int(m["you"])
+			server_dev = bool(m.get("dev", false))
 			var sb: int = int(m.get("build", 0))
 			if sb < SERVER_BUILD_NEEDED:
 				main.ui.toast("This server is out of date (build %d, the game needs %d): no work animations or smooth stops. Stop it and run ./start_server.command again." % [sb, SERVER_BUILD_NEEDED], Color("ff8a6a"))
@@ -860,6 +874,18 @@ func sync_player(p: Player, delta: float, move: Vector3, sprinting: bool, wanted
 	_sync_player_inner(p, delta, move, sprinting, wanted_h)
 	if _netlog_on:
 		_log_net(p, pre, move)
+
+
+var server_dev := false     # the server has its development tools on (Welcome says so)
+var _fly_t := 0.0
+
+
+## Development flight: the server just follows where we say we are.
+func fly_sync(p: Player, delta: float) -> void:
+	_fly_t -= delta
+	if _fly_t <= 0.0:
+		_fly_t = 0.1
+		send({"t": "dev_pos", "x": p.global_position.x, "y": p.global_position.y, "z": p.global_position.z})
 
 
 func _sync_player_inner(p: Player, delta: float, move: Vector3, sprinting: bool, wanted_h: Vector2) -> void:
