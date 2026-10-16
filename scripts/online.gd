@@ -744,6 +744,10 @@ func _on_event(e: Variant) -> void:
 		if int(su["player"]) == my_id:
 			Sfx.play("level_up", Vector3.INF, -4.0)
 			main.combat.ring(main.player.global_position, 2.2, Color(Data.SKILLS[str(su["skill"])]["color"]), 0.6)
+	elif d.has("QuestDone"):
+		var qd: Dictionary = d["QuestDone"]
+		if int(qd["player"]) == my_id:
+			QuestPopup.present(main.ui, qd["done"])
 	elif d.has("QuestNotice"):
 		var qn: Dictionary = d["QuestNotice"]
 		if int(qn["player"]) == my_id:

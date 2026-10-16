@@ -695,9 +695,9 @@ const SIDE_QUESTS := [
 				"give": {
 					"flint_steel": 1
 				},
-				"tip": "Open your bag (I). Right-click a log to make kindling, then right-click the kindling to light a fire (uses the flint and steel).",
-				"intro": "Take my flint and steel. Open your bag (I), right-click a log for kindling, then right-click the kindling.",
-				"nag": "Right-click a log, then the kindling.",
+				"tip": "Open your bag (I). Left-click your Flint and Steel, then click a log. A fire lights where you stand. (Right-click a log and choose Light fire works too.)",
+				"intro": "Take my flint and steel. Open your bag (I), left-click the flint and steel, then click a log.",
+				"nag": "Click the flint and steel, then a log.",
 				"done": "Warm already.",
 				"quest": "Cook a Meal",
 				"auto": true

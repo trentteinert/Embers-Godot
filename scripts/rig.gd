@@ -103,6 +103,12 @@ func add_weapon(n: Node3D, home: Node3D, side: int, w: String) -> void:
 	match w:
 		"dagger", "shortsword":
 			mount = Transform3D(Basis.from_euler(Vector3(0, 0, PI - 0.3 * side)), Vector3(0.3 * side, 0.03, 0.0))
+		"sword":
+			# hangs from the belt on the left hip, blade angled back and down; shrunk so the tip clears the ground
+			var d := Vector3(0.1 * side, -0.78, -0.62).normalized()
+			var zax := (Vector3(side, 0, 0) - d * d.x * side).normalized()
+			var xax := d.cross(zax).normalized()
+			mount = Transform3D(Basis(xax, d, zax).scaled(Vector3.ONE * 0.62), Vector3(-0.3 * side, 0.0, -0.02))
 		"shield":
 			mount = Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0, 0)), Vector3(0, 0.3, -0.24))
 		_:

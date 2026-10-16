@@ -2511,7 +2511,7 @@ func _open_ctx(sl: ItemSlot, at: Vector2) -> void:
 		elif id in ["minnow", "trout", "eel", "icefin"]:
 			opts.append(["Eat", func() -> void: m.use_mat(id)])
 		elif id in ["oak", "heartwood"]:
-			opts.append(["Cut kindling", func() -> void: m.use_mat(id)])
+			opts.append(["Light fire" if m.online != null else "Cut kindling", func() -> void: m.use_mat(id)])
 		elif id in ["kindling_oak", "kindling_heart"]:
 			opts.append(["Light fire", func() -> void: m.use_mat(id)])
 		if m.combo_item(id):

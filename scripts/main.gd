@@ -859,6 +859,16 @@ func cycle_target(dir := 1) -> void:
 	set_target(cands[idx]["e"])
 
 
+## Left-clicking a tool says what it is for (the tools work on the world, not in the bag).
+const TOOL_HINTS := {
+	"wooden_axe": "Stand next to an oak tree and press G to chop it.", "axe": "Stand next to a tree and press G to chop it.",
+	"bogiron_axe": "Stand next to a tree and press G to chop it (faster).", "frost_axe": "Stand next to a tree and press G to chop it (fastest).",
+	"wooden_pickaxe": "Stand next to a rock and press G to mine it.", "pickaxe": "Stand next to a rock and press G to mine it.",
+	"bogiron_pickaxe": "Stand next to a rock and press G to mine it (faster).", "frost_pickaxe": "Stand next to a rock and press G to mine it (fastest).",
+	"rod": "Stand at a fishing spot (the ripples in the water) and press G to fish.",
+}
+
+
 ## Right-click on a stack in the bag: drink, eat, cut kindling, light a fire.
 func use_mat(id: String) -> void:
 	if mode != "play" or player.dead:
@@ -870,6 +880,8 @@ func use_mat(id: String) -> void:
 			online.send({"t": "drink", "potion": id})
 		elif id in ["oak", "heartwood"]:
 			online.light_fire()
+		elif id in TOOL_HINTS:
+			ui.toast("%s: %s" % [Data.MATERIALS[id]["name"], TOOL_HINTS[id]])
 		else:
 			ui.toast("%s: use the Workshop (J) to make things from it" % Data.MATERIALS[id]["name"])
 		return
@@ -927,6 +939,8 @@ func combo_for(a: String, b: String) -> Dictionary:
 
 ## Does this material take part in any item-on-item recipe (so it gets a "Use" option)?
 func combo_item(id: String) -> bool:
+	if id == "flint_steel" or (online != null and id in ["oak", "heartwood"]):
+		return true   # a log and Flint and Steel make a fire (use one on the other)
 	for st: String in Data.COMBO_TOOLS:
 		if id in (Data.COMBO_TOOLS[st] as Array):
 			return true
@@ -939,6 +953,15 @@ func combo_item(id: String) -> bool:
 ## Use one bag item on another (knife on twigs, vial on a herb, hammer on a bar).
 func use_on(a: String, b: String) -> void:
 	if mode != "play" or player.dead:
+		return
+	if a == "flint_steel" or b == "flint_steel":
+		var other := b if a == "flint_steel" else a
+		if online != null and other in ["oak", "heartwood"]:
+			online.light_fire()
+		elif other in ["kindling_oak", "kindling_heart"]:
+			use_mat(other)
+		else:
+			ui.chat_say("Nothing interesting happens. Use the Flint and Steel on a log.", Color("a89cb8"))
 		return
 	var c := combo_for(a, b)
 	if c.is_empty():
