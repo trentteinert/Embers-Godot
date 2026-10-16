@@ -95,9 +95,15 @@ var _lit := 0
 var _t := 0.0
 
 
+static var _wind_added := false
+
+
 static func ensure_wind() -> void:
-	if not &"wind" in RenderingServer.global_shader_parameter_get_list():
-		RenderingServer.global_shader_parameter_add("wind", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 1.0)
+	# once per run (asking the renderer for its list of globals is an editor-only call and logs errors in a running game)
+	if _wind_added:
+		return
+	_wind_added = true
+	RenderingServer.global_shader_parameter_add("wind", RenderingServer.GLOBAL_VAR_TYPE_FLOAT, 1.0)
 
 
 func generate() -> void:
