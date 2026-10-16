@@ -41,7 +41,7 @@ func _on_chunk_loaded(c: Vector2i) -> void:
 			spot["ready_t"] = maxf(0.0, float(spot["respawn_at"]) - _t)
 			spot.erase("respawn_at")
 		var n := _make_node(spot["mat"], spot["pos"])
-		n.visible = float(spot["ready_t"]) <= 0.0
+		set_node_live(n, float(spot["ready_t"]) <= 0.0)
 		spot["node"] = n
 		_nodes.append(spot)
 
@@ -128,6 +128,7 @@ func _make_node(mat: String, pos: Vector3) -> Node3D:
 			var tm := StandardMaterial3D.new()
 			tm.vertex_color_use_as_albedo = true
 			tm.roughness = 1.0
+			tm.cull_mode = BaseMaterial3D.CULL_DISABLED   # the scenery meshes are wound for the flora shader, which draws both sides
 			tree.material_override = tm
 			tree.scale = Vector3.ONE * 1.25
 			root.add_child(tree)
@@ -163,7 +164,37 @@ func _make_node(mat: String, pos: Vector3) -> Node3D:
 			l.light_energy = 0.8
 			l.position.y = 0.8
 			root.add_child(l)
+	if Data.NODES[mat]["look"] == "tree":
+		# chopped dry, a tree leaves its stump behind until it grows back
+		var live := Node3D.new()
+		live.name = "Live"
+		for ch in root.get_children():
+			root.remove_child(ch)
+			live.add_child(ch)
+		root.add_child(live)
+		var stump := MeshInstance3D.new()
+		stump.name = "Stump"
+		stump.mesh = Models.scenery_mesh("stump", 0)
+		var sm2 := StandardMaterial3D.new()
+		sm2.vertex_color_use_as_albedo = true
+		sm2.roughness = 1.0
+		sm2.cull_mode = BaseMaterial3D.CULL_DISABLED
+		stump.material_override = sm2
+		stump.scale = Vector3.ONE * 1.25
+		stump.visible = false
+		root.add_child(stump)
 	return root
+
+
+## Show a gatherable as ready (live) or spent. Trees swap to a stump; everything else just hides.
+func set_node_live(root: Node3D, live: bool) -> void:
+	var stump := root.get_node_or_null("Stump")
+	if stump == null:
+		root.visible = live
+		return
+	root.visible = true
+	root.get_node("Live").visible = live
+	stump.visible = not live
 
 
 func _build_forge() -> void:
@@ -202,7 +233,7 @@ func _process(delta: float) -> void:
 		if float(n["ready_t"]) > 0.0:
 			n["ready_t"] = float(n["ready_t"]) - delta
 			if float(n["ready_t"]) <= 0.0:
-				(n["node"] as Node3D).visible = true
+				set_node_live(n["node"] as Node3D, true)
 	if not _smith.is_empty():
 		var s: Rig = _smith["sprite"]
 		# hammering at the anvil, turning to greet you when you come close
@@ -251,7 +282,7 @@ func prompt(it: Dictionary) -> String:
 func deplete(n: Dictionary) -> void:
 	n["ready_t"] = RESPAWN
 	n["charges"] = 0
-	(n["node"] as Node3D).visible = false
+	set_node_live(n["node"] as Node3D, false)
 	main.combat.burst(n["pos"] + Vector3(0, 0.6, 0), Color(Data.MATERIALS[n["mat"]]["color"]), 16, 4.0, 0.5)
 
 

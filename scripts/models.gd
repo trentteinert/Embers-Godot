@@ -1105,55 +1105,28 @@ static func scenery_mesh(kind: String, seed_v: int) -> ArrayMesh:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_v
 	match kind:
-		"oak", "dark_oak":
-			var dark := kind == "dark_oak"
-			_m_cyl(st, Vector3(0, 0, 0), 0.24, 0.17, 1.8, Color("6b4a2c"), 6)
-			var g1 := Color("2d5e33") if dark else Color("3f8a43")
-			var g2 := Color("21472a") if dark else Color("2e6b34")
-			var g3 := Color("3f7a44") if dark else Color("5fae58")
-			_m_blob(st, Vector3(0, 2.4, 0), Vector3(1.25, 1.0, 1.25), g1, rng)
-			_m_blob(st, Vector3(0.55, 2.0, 0.3), Vector3(0.85, 0.7, 0.85), g2, rng)
-			_m_blob(st, Vector3(-0.4, 2.9, -0.2), Vector3(0.8, 0.65, 0.8), g3, rng)
+		"oak", "dark_oak", "autumn":
+			_blk_oak(st, rng, kind, seed_v)
+		"birch":
+			_blk_birch(st, rng)
+		"willow":
+			_blk_willow(st, rng)
+		"tall_pine":
+			_blk_conifer(st, rng, 6 + (seed_v % 2), 2.0, 1.1, false)
+		"pine":
+			_blk_conifer(st, rng, 4, 1.7, 0.8, true)
+		"dead":
+			_blk_dead(st, rng)
+		"bush":
+			_blk_bush(st, rng, seed_v)
+		"stump":
+			_blk_stump(st)
 		"rockmass":
 			_m_blob(st, Vector3(0, 0, 0), Vector3(1.0, 1.0, 1.0), Color("6a6a72"), rng, 0.28)
 			_m_blob(st, Vector3(0.45, 0.35, 0.2), Vector3(0.6, 0.6, 0.6), Color("7a7a84"), rng, 0.25)
 		"stalag":
 			_m_cone(st, Vector3(0, 0, 0), 1.0, 3.0, Color("77757c"), 6)
 			_m_cone(st, Vector3(0.7, 0, 0.2), 0.55, 1.7, Color("66646b"), 5)
-		"autumn":
-			_m_cyl(st, Vector3(0, 0, 0), 0.24, 0.17, 1.7 + rng.randf() * 0.5, Color("5e4228"), 6)
-			var pal: Array = [[Color("c8641e"), Color("a8321e"), Color("e0a82e")], [Color("d98a22"), Color("b8481e"), Color("e8c040")], [Color("a8321e"), Color("c8641e"), Color("d8a030")]][seed_v % 3]
-			_m_blob(st, Vector3(0, 2.4, 0), Vector3(1.3, 1.0, 1.3), pal[0], rng)
-			_m_blob(st, Vector3(0.6, 2.0, 0.3), Vector3(0.85, 0.7, 0.85), pal[1], rng)
-			_m_blob(st, Vector3(-0.45, 2.9, -0.2), Vector3(0.8, 0.65, 0.8), pal[2], rng)
-		"birch":
-			var th: float = 2.4 + rng.randf() * 0.7
-			_m_cyl(st, Vector3(0, 0, 0), 0.15, 0.1, th, Color("e6e2d4"), 5)
-			for k in 4:
-				_m_beam(st, Vector3(0, 0.5 + k * 0.5, 0), Vector3(0, 0.5 + k * 0.5, 0) + Vector3(0.1, 0.0, 0.1), 0.045, Color("3a3630"))
-			_m_blob(st, Vector3(0, th + 0.3, 0), Vector3(0.75, 1.0, 0.75), Color("8cc063"), rng)
-			_m_blob(st, Vector3(0.25, th - 0.3, 0.1), Vector3(0.55, 0.7, 0.55), Color("a8d070"), rng)
-			_m_blob(st, Vector3(-0.2, th + 0.7, -0.1), Vector3(0.5, 0.6, 0.5), Color("77b055"), rng)
-		"willow":
-			_m_cyl(st, Vector3(0, 0, 0), 0.3, 0.2, 1.7, Color("5a4a34"), 6)
-			_m_blob(st, Vector3(0, 2.4, 0), Vector3(1.5, 0.8, 1.5), Color("7fa04e"), rng)
-			for k in 9:
-				var a2 := k * TAU / 9.0 + rng.randf() * 0.3
-				var top := Vector3(cos(a2) * 1.25, 2.3, sin(a2) * 1.25)
-				_m_beam(st, top, top + Vector3(cos(a2) * 0.15, -1.35 - rng.randf() * 0.4, sin(a2) * 0.15), 0.05, Color("6e9a46").darkened(rng.randf() * 0.15))
-		"tall_pine":
-			_m_cyl(st, Vector3(0, 0, 0), 0.2, 0.14, 1.6, Color("4a3524"), 6)
-			var tiers := 5 + (seed_v % 2)
-			for k in tiers:
-				var y3 := 1.0 + k * 0.78
-				var r3 := 1.5 - k * (1.1 / tiers)
-				_m_cone(st, Vector3(0, y3, 0), r3, 1.3, Color("1f3d2c").lightened(k * 0.025), 7)
-		"bush":
-			_m_blob(st, Vector3(0, 0.3, 0), Vector3(0.55, 0.38, 0.55), Color("3f7a3a"), rng, 0.15)
-			_m_blob(st, Vector3(0.35, 0.22, 0.1), Vector3(0.38, 0.28, 0.38), Color("4c8a44"), rng, 0.15)
-			if seed_v % 2 == 0:
-				_m_blob(st, Vector3(-0.15, 0.55, 0.1), Vector3(0.08, 0.08, 0.08), Color("d9483b"), rng, 0.0)
-				_m_blob(st, Vector3(0.1, 0.5, -0.2), Vector3(0.08, 0.08, 0.08), Color("d9483b"), rng, 0.0)
 		"fern":
 			for k in 7:
 				var a3 := k * TAU / 7.0 + rng.randf() * 0.4
@@ -1177,28 +1150,11 @@ static func scenery_mesh(kind: String, seed_v: int) -> ArrayMesh:
 			_m_beam(st, Vector3(-ln, 0.2, 0), Vector3(ln, 0.2, 0.1), 0.2, Color("5e4630"))
 			_m_beam(st, Vector3(ln, 0.2, 0.1), Vector3(ln + 0.02, 0.2, 0.1), 0.17, Color("c8a878"))
 			_m_blob(st, Vector3(-0.2, 0.42, 0.0), Vector3(0.3, 0.08, 0.14), Color("4c8a3c"), rng, 0.05)
-		"stump":
-			_m_cyl(st, Vector3(0, 0, 0), 0.34, 0.28, 0.45, Color("5e4630"), 6)
-			_m_cone(st, Vector3(0, 0.45, 0), 0.28, 0.03, Color("c8a878"), 6)
 		"spire":
 			var hh2 := 2.6 + rng.randf() * 1.6
 			_m_cone(st, Vector3(0, 0, 0), 0.95, hh2, Color("6a6f7a"), 5)
 			_m_cone(st, Vector3(0.7, 0, 0.3), 0.6, hh2 * 0.6, Color("7b808b"), 5)
 			_m_cone(st, Vector3(0, hh2 * 0.78, 0), 0.22, hh2 * 0.22, Color("e8f0f6"), 5)
-		"pine":
-			_m_cyl(st, Vector3(0, 0, 0), 0.18, 0.14, 1.0, Color("4a3524"), 6)
-			for k in 3:
-				var y := 0.8 + k * 0.85
-				var r := 1.15 - k * 0.3
-				_m_cone(st, Vector3(0, y, 0), r, 1.3, Color("2c4f3c").lightened(k * 0.06), 7)
-				_m_cone(st, Vector3(0, y + 0.85, 0), r * 0.35, 0.45, Color("e8f0f6"), 7)
-		"dead":
-			_m_cyl(st, Vector3(0, 0, 0), 0.17, 0.08, 2.8, Color("5b4d3d"), 5)
-			for k in 3:
-				var a := k * 2.2
-				var y2 := 1.2 + k * 0.5
-				var dir := Vector3(cos(a), 0.6, sin(a)).normalized()
-				_m_beam(st, Vector3(0, y2, 0), Vector3(0, y2, 0) + dir * 0.9, 0.06, Color("5b4d3d"))
 		"boulder":
 			_m_blob(st, Vector3(0, 0.45, 0), Vector3(1.0, 0.75, 0.9), Color("6f7480"), rng, 0.18)
 			_m_blob(st, Vector3(0.1, 0.85, 0.05), Vector3(0.75, 0.25, 0.65), Color("e8f0f6"), rng, 0.1)
@@ -1368,6 +1324,133 @@ static func scenery_mesh(kind: String, seed_v: int) -> ArrayMesh:
 			_m_blob(st, Vector3(0, 0.36, 0), Vector3(0.09, 0.06, 0.09), Color("f2d16b") if seed_v % 2 == 0 else Color("e88aa6"), rng, 0.0)
 	st.generate_normals()
 	return st.commit()
+
+
+
+# ---- blocky trees: chunky stacked boxes, flat-shaded (top faces lighter), a stepped foot under every trunk
+static func _blk_foot(st: SurfaceTool, w: float, col: Color) -> float:
+	## two steps of widening base under a trunk; returns the height the trunk starts at
+	_m_box(st, Vector3(0, 0.1, 0), Vector3(w * 1.75, 0.2, w * 1.75), col.darkened(0.1), 0.0)
+	_m_box(st, Vector3(0, 0.3, 0), Vector3(w * 1.35, 0.2, w * 1.35), col.darkened(0.04), 0.0)
+	return 0.4
+
+
+static func _blk_oak(st: SurfaceTool, rng: RandomNumberGenerator, kind: String, seed_v: int) -> void:
+	var bark := Color("6b4a2c") if kind != "autumn" else Color("5e4228")
+	var g1 := Color("3f8a43")
+	var g2 := Color("2e6b34")
+	var g3 := Color("5fae58")
+	if kind == "dark_oak":
+		g1 = Color("2d5e33")
+		g2 = Color("21472a")
+		g3 = Color("3f7a44")
+	elif kind == "autumn":
+		var pal: Array = [[Color("c8641e"), Color("a8321e"), Color("e0a82e")], [Color("d98a22"), Color("b8481e"), Color("e8c040")], [Color("a8321e"), Color("c8641e"), Color("d8a030")]][seed_v % 3]
+		g1 = pal[0]
+		g2 = pal[1]
+		g3 = pal[2]
+	var w := 0.46
+	var y0 := _blk_foot(st, w, bark)
+	var th := 1.45 + rng.randf() * 0.3
+	_m_box(st, Vector3(0, y0 + th * 0.5, 0), Vector3(w, th, w), bark, rng.randf() * 0.4)
+	var top := y0 + th
+	var r0 := rng.randf() * PI * 0.5
+	# the crown: a wide core slab and a skirt, with offset chunks stacked on and around it
+	_m_box(st, Vector3(0, top + 0.45, 0), Vector3(1.9, 1.0, 1.9), g1, r0)
+	_m_box(st, Vector3(0.12, top + 0.05, -0.1), Vector3(2.3, 0.55, 2.0), g2, r0 + 0.5)
+	_m_box(st, Vector3(-0.15, top + 1.25, 0.1), Vector3(1.35, 0.75, 1.35), g3, r0 + 0.9)
+	for k in 3:
+		var a := r0 + k * 2.1 + rng.randf() * 0.6
+		var d := 0.85 + rng.randf() * 0.25
+		var sz := 0.9 + rng.randf() * 0.45
+		_m_box(st, Vector3(cos(a) * d, top + 0.35 + rng.randf() * 0.7, sin(a) * d), Vector3(sz, sz * 0.85, sz), g3 if k % 2 == 0 else g1, a)
+
+
+static func _blk_birch(st: SurfaceTool, rng: RandomNumberGenerator) -> void:
+	var bark := Color("e6e2d4")
+	var w := 0.3
+	var y0 := _blk_foot(st, w, bark)
+	var th := 2.2 + rng.randf() * 0.6
+	_m_box(st, Vector3(0, y0 + th * 0.5, 0), Vector3(w, th, w), bark, 0.0)
+	for k in 4:
+		_m_box(st, Vector3(0, y0 + 0.5 + k * 0.5, 0), Vector3(w + 0.03, 0.1, w + 0.03), Color("3a3630"), k * 0.5)
+	var top := y0 + th
+	var r0 := rng.randf() * PI * 0.5
+	_m_box(st, Vector3(0, top + 0.15, 0), Vector3(1.3, 1.1, 1.3), Color("8cc063"), r0)
+	_m_box(st, Vector3(0.25, top - 0.5, 0.1), Vector3(1.0, 0.7, 1.0), Color("a8d070"), r0 + 0.6)
+	_m_box(st, Vector3(-0.15, top + 0.85, -0.1), Vector3(0.8, 0.7, 0.8), Color("77b055"), r0 + 1.1)
+
+
+static func _blk_willow(st: SurfaceTool, rng: RandomNumberGenerator) -> void:
+	var bark := Color("5a4a34")
+	var w := 0.55
+	var y0 := _blk_foot(st, w, bark)
+	_m_box(st, Vector3(0, y0 + 0.65, 0), Vector3(w, 1.3, w), bark, 0.0)
+	var top := y0 + 1.3
+	var r0 := rng.randf() * PI * 0.5
+	_m_box(st, Vector3(0, top + 0.3, 0), Vector3(2.6, 0.8, 2.6), Color("7fa04e"), r0)
+	_m_box(st, Vector3(0.1, top + 0.85, 0), Vector3(1.6, 0.5, 1.6), Color("8fb25a"), r0 + 0.6)
+	for k in 14:
+		var a := k * TAU / 14.0 + rng.randf() * 0.25
+		var h := 1.3 + rng.randf() * 0.6
+		var rr := 1.15 + rng.randf() * 0.15
+		_m_box(st, Vector3(cos(a) * rr, top + 0.1 - h * 0.5, sin(a) * rr), Vector3(0.3, h, 0.3), Color("6e9a46").darkened(rng.randf() * 0.15), a)
+	for k in 6:
+		var a2 := k * TAU / 6.0 + 0.3
+		var h2 := 0.8 + rng.randf() * 0.4
+		_m_box(st, Vector3(cos(a2) * 0.55, top + 0.1 - h2 * 0.5, sin(a2) * 0.55), Vector3(0.26, h2, 0.26), Color("7aa850").darkened(rng.randf() * 0.1), a2)
+
+
+static func _blk_conifer(st: SurfaceTool, rng: RandomNumberGenerator, tiers: int, base_w: float, tier_h: float, snow: bool) -> void:
+	## a stepped spruce: boxes that narrow towards the top, each nudged and turned a little
+	var bark := Color("4a3524")
+	var w := 0.4
+	var y0 := _blk_foot(st, w, bark)
+	var trunk := 0.9
+	_m_box(st, Vector3(0, y0 + trunk * 0.5, 0), Vector3(w, trunk, w), bark, 0.0)
+	var y := y0 + trunk - 0.2
+	var base := Color("2c4f3c") if snow else Color("1f3d2c")
+	for k in tiers:
+		var f := float(k) / maxf(tiers - 1, 1)
+		var ww := lerpf(base_w, base_w * 0.28, f)
+		var hh := tier_h * lerpf(1.0, 0.8, f)
+		var ang := rng.randf() * PI * 0.5
+		var off := Vector3(rng.randf_range(-0.08, 0.08), 0, rng.randf_range(-0.08, 0.08))
+		var col := base.lightened(0.03 * k + (0.04 if k % 2 == 1 else 0.0))
+		_m_box(st, Vector3(off.x, y + hh * 0.5, off.z), Vector3(ww, hh, ww), col, ang)
+		if snow:
+			_m_box(st, Vector3(off.x, y + hh + 0.03, off.z), Vector3(ww * 0.92, 0.1, ww * 0.92), Color("e8f0f6"), ang)
+		y += hh * 0.72
+
+
+static func _blk_dead(st: SurfaceTool, rng: RandomNumberGenerator) -> void:
+	var bark := Color("5b4d3d")
+	var y0 := _blk_foot(st, 0.38, bark)
+	_m_box(st, Vector3(0, y0 + 0.55, 0), Vector3(0.38, 1.1, 0.38), bark, 0.0)
+	_m_box(st, Vector3(0.04, y0 + 1.5, 0), Vector3(0.3, 0.9, 0.3), bark.darkened(0.05), 0.3)
+	_m_box(st, Vector3(-0.02, y0 + 2.25, 0.02), Vector3(0.22, 0.7, 0.22), bark.darkened(0.1), 0.6)
+	for k in 3:
+		var a := k * 2.2 + rng.randf() * 0.4
+		var y2 := 1.3 + k * 0.5
+		var dir := Vector3(cos(a), 0.55, sin(a)).normalized()
+		_m_beam(st, Vector3(0, y2, 0), Vector3(0, y2, 0) + dir * 0.9, 0.07, bark)
+
+
+static func _blk_bush(st: SurfaceTool, rng: RandomNumberGenerator, seed_v: int) -> void:
+	var r0 := rng.randf() * PI * 0.5
+	_m_box(st, Vector3(0, 0.2, 0), Vector3(0.95, 0.4, 0.8), Color("3f7a3a"), r0)
+	_m_box(st, Vector3(0.12, 0.55, -0.05), Vector3(0.65, 0.35, 0.6), Color("4c8a44"), r0 + 0.5)
+	_m_box(st, Vector3(-0.3, 0.38, 0.22), Vector3(0.45, 0.3, 0.4), Color("5fae58"), r0 + 1.0)
+	if seed_v % 2 == 0:
+		_m_box(st, Vector3(-0.18, 0.78, 0.1), Vector3(0.09, 0.09, 0.09), Color("d9483b"), 0.3)
+		_m_box(st, Vector3(0.3, 0.72, -0.12), Vector3(0.09, 0.09, 0.09), Color("d9483b"), 0.8)
+
+
+static func _blk_stump(st: SurfaceTool) -> void:
+	var bark := Color("5e4630")
+	_m_box(st, Vector3(0, 0.1, 0), Vector3(0.85, 0.2, 0.85), bark.darkened(0.1), 0.0)
+	_m_box(st, Vector3(0, 0.38, 0), Vector3(0.62, 0.36, 0.62), bark, 0.3)
+	_m_box(st, Vector3(0, 0.575, 0), Vector3(0.56, 0.04, 0.56), Color("c8a878"), 0.3)
 
 
 static func _tri(st: SurfaceTool, a: Vector3, b: Vector3, c: Vector3, col: Color) -> void:

@@ -1116,7 +1116,7 @@ func _sync_nodes(upsert: Array, gone: Array) -> void:
 		ent["data"] = v
 		ent["pos"] = pos
 		var root: Node3D = ent["root"]
-		root.visible = bool(v["live"])
+		main.crafting.set_node_live(root, bool(v["live"]))
 		if was_live and not bool(v["live"]) and Data.MATERIALS.has(str(v["kind"])):
 			main.combat.burst(pos + Vector3(0, 0.6, 0), Color(Data.MATERIALS[str(v["kind"])]["color"]), 16, 4.0, 0.5)
 		nodes[id] = ent
