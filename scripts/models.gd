@@ -327,11 +327,9 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 			"leather":
 				cfg["head"] = "hood"
 				cfg["hood"] = hc.to_html(false)
-				cfg["mask"] = hc.darkened(0.4).to_html(false)
 			"cloth":
 				cfg["head"] = "wizard"
-				cfg["hat"] = hc.to_html(false)
-				cfg["beard"] = "f4f2ea" if id == "mage" else "d8d0c0"
+				cfg["hat"] = hc.to_html(false)   # head gear only goes on top of the head: your face and beard come from your look
 		if a2 != "plate" and int(hh["rarity"]) > 0:
 			cfg["trim"] = Items.RARITY_COLORS[int(hh["rarity"])]
 	var am: Dictionary = equip.get("amulet", {})
@@ -580,8 +578,9 @@ static func _headwear(rig: Rig, head: Node3D, cfg: Dictionary) -> void:
 				match sv:
 					1:   # a ridge along the top
 						box(rig, head, Vector3(0.07, 0.07, 0.4), _c(m).lightened(0.15).to_html(false), Vector3(0, 0.47, 0))
-					2:   # a nose guard
-						box(rig, head, Vector3(0.05, 0.2, 0.03), _c(m).lightened(0.1).to_html(false), Vector3(0, 0.2, 0.23))
+					2:   # a plate on top
+						box(rig, head, Vector3(0.3, 0.04, 0.3), _c(m).lightened(0.15).to_html(false), Vector3(0, 0.455, 0.0))
+						box(rig, head, Vector3(0.06, 0.06, 0.06), cfg.get("trim", "d8b04a"), Vector3(0, 0.5, 0.0))
 					3:   # little horns
 						for sd in [-1, 1]:
 							box(rig, head, Vector3(0.06, 0.2, 0.06), "e8e0c8", Vector3(0.27 * sd, 0.5, 0), Vector3(0, 0, -0.5 * sd))
@@ -598,8 +597,8 @@ static func _headwear(rig: Rig, head: Node3D, cfg: Dictionary) -> void:
 						box(rig, head, Vector3(0.12, 0.14, 0.3), h, Vector3(0, 0.34, -0.42), Vector3(0.9, 0, 0))
 					2:   # a trim band
 						box(rig, head, Vector3(0.51, 0.04, 0.45), _c(h).lightened(0.25).to_html(false), Vector3(0, 0.36, -0.01))
-					3:   # a face wrap
-						box(rig, head, Vector3(0.43, 0.1, 0.06), _c(h).darkened(0.1).to_html(false), Vector3(0, 0.08, 0.185))
+					3:   # a tassel on top
+						box(rig, head, Vector3(0.08, 0.14, 0.08), cfg.get("trim", "d8b04a"), Vector3(0, 0.55, 0.0))
 			if cfg.has("hair") and cfg.get("hair_style", "short") != "bald":
 				box(rig, head, Vector3(0.38, 0.06, 0.03), cfg["hair"], Vector3(0, 0.34, 0.18))
 				_hair(rig, head, String(cfg.get("hair_style", "short")), cfg["hair"], false)
