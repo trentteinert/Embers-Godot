@@ -623,7 +623,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	# Esc closes whatever is open, or opens the menu tab. Nothing pauses the game.
 	if event.is_action_pressed("pause"):
-		if ui.map_open():
+		if BankWindow.is_open():
+			BankWindow.close()
+		elif ui.map_open():
 			ui.toggle_map(false)
 		elif shop_open:
 			toggle_shop()
@@ -1662,6 +1664,9 @@ func _nearest_interactable() -> Dictionary:
 		var sn: Dictionary = online.nearest_node()
 		if not sn.is_empty():
 			return sn
+		var bk: Dictionary = online.nearest_bank()
+		if not bk.is_empty():
+			return bk
 	if _flat_dist(p, world.slayer_pos) < 3.2:
 		return {"kind": "varka"}
 	if _flat_dist(p, world.rack_pos) < 3.0:
@@ -1707,6 +1712,8 @@ func _prompt_text(it: Dictionary) -> String:
 			return quests.prompt(it["id"])
 		"snode", "sfire":
 			return "[G] " + online.node_prompt(it)
+		"bank":
+			return "[G] Open the bank"
 		"forge", "node":
 			return crafting.prompt(it)
 		"varka":
@@ -1791,6 +1798,12 @@ func interact_with(it: Dictionary) -> void:
 			ui.chat_say("Use a hammer on a bar from your bag to forge here.", Color("e8c070"))
 		else:
 			toggle_window("furnace" if it["kind"] == "furnace" else "cooking")
+		return
+	if online != null and it["kind"] == "bank":
+		if BankWindow.is_open():
+			BankWindow.close()
+		else:
+			online.send({"t": "open_bank"})   # the window opens when the server sends the bank
 		return
 	if online != null and it["kind"] == "varka":
 		online.talk("varka")

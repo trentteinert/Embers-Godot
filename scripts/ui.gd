@@ -351,6 +351,11 @@ class ItemSlot extends Button:
 				gui.main.drop_from_bag(index, "", 0)
 
 	func _gui_input(event: InputEvent) -> void:
+		if kind == "bank":
+			if event is InputEventMouseButton and event.pressed and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):
+				accept_event()
+				BankWindow.cell_click(self, event.button_index == MOUSE_BUTTON_RIGHT, event.shift_pressed)
+			return
 		# bag slots act on release so that dragging one out to drop it doesn't also trigger it
 		if kind == "bag":
 			if event is InputEventMouseButton and (event.button_index == MOUSE_BUTTON_LEFT or event.button_index == MOUSE_BUTTON_RIGHT):

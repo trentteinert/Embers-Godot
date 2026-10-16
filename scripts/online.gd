@@ -206,6 +206,10 @@ func _on_message(m: Dictionary) -> void:
 		"npcs":
 			for n: Dictionary in m["list"]:
 				npcs[str(n["id"])] = n
+			_sync_bank_objects()
+		"bank":
+			var bp := nearest_bank()
+			BankWindow.present(main.ui, self, m, bp["pos"] if not bp.is_empty() else Vector3.INF)
 		"character":
 			chr = m
 			if started:
@@ -214,6 +218,7 @@ func _on_message(m: Dictionary) -> void:
 			inv = m
 			if started:
 				_apply_inventory()
+			BankWindow.changed()
 		"journal":
 			journal = m["entries"]
 			if started:
@@ -1135,10 +1140,75 @@ func _sync_nodes(upsert: Array, gone: Array) -> void:
 			nodes.erase(id2)
 
 
+# ---------------------------------------------------------------- the bank (a banker or a chest, placed in the editor)
+var bank_objs: Dictionary = {}      # npc id -> {pos, node}
+
+
+func _sync_bank_objects() -> void:
+	for id: String in npcs:
+		var n: Dictionary = npcs[id]
+		if str(n.get("kind", "")) != "bank" or bank_objs.has(id):
+			continue
+		var pos: Vector3 = _w3(n["pos"], float(n["y"]))
+		bank_objs[id] = {"pos": pos, "node": _make_bank_visual(n, pos)}
+
+
+func _make_bank_visual(n: Dictionary, pos: Vector3) -> Node3D:
+	var root := Node3D.new()
+	main.add_child(root)
+	root.global_position = pos
+	if str(n["sprite"]) == "chest":
+		var wood := Color("7a5230")
+		var trim := Color("d8b04a")
+		for part: Array in [[Vector3(1.1, 0.6, 0.7), Vector3(0, 0.3, 0), wood], [Vector3(1.14, 0.22, 0.74), Vector3(0, 0.71, 0), wood.darkened(0.15)], [Vector3(0.16, 0.34, 0.06), Vector3(0, 0.55, 0.37), trim], [Vector3(1.16, 0.08, 0.76), Vector3(0, 0.5, 0), trim.darkened(0.2)]]:
+			var mi := MeshInstance3D.new()
+			var bm := BoxMesh.new()
+			bm.size = part[0]
+			mi.mesh = bm
+			mi.position = part[1]
+			var mat := StandardMaterial3D.new()
+			mat.albedo_color = part[2]
+			mat.roughness = 1.0
+			mi.material_override = mat
+			root.add_child(mi)
+	else:
+		var hero: Rig = Models.hero(str(n["sprite"]))
+		hero.scale = Vector3.ONE * Player.MODEL_SCALE
+		root.add_child(hero)
+		hero.set_facing(Vector3(0, 0, 1), true)
+	var label := Label3D.new()
+	label.text = str(n["name"])
+	label.font = load("res://assets/fonts/Jersey10.ttf")
+	label.font_size = 38
+	label.pixel_size = 0.012
+	label.outline_size = 10
+	label.outline_modulate = Color("0a0810")
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	label.no_depth_test = true
+	label.position = Vector3(0, 2.75 if str(n["sprite"]) != "chest" else 1.6, 0)
+	root.add_child(label)
+	return root
+
+
+func nearest_bank() -> Dictionary:
+	var me: Vector3 = main.player.global_position
+	var best := {}
+	var bd := 3.8
+	for id: String in bank_objs:
+		var p: Vector3 = bank_objs[id]["pos"]
+		var d := Vector2(p.x - me.x, p.z - me.z).length()
+		if d < bd:
+			bd = d
+			best = {"kind": "bank", "id": id, "pos": p}
+	return best
+
+
 ## What the mouse can click on: live resources and fires near you.
 func click_candidates() -> Array:
 	var out: Array = []
 	var me: Vector3 = main.player.global_position
+	for id: String in bank_objs:
+		out.append({"kind": "bank", "id": id, "pos": bank_objs[id]["pos"], "h": 2.2, "r": 0.9, "range": 3.8})
 	for id: int in nodes:
 		var d: Dictionary = nodes[id]["data"]
 		if not bool(d["live"]):
