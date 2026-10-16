@@ -395,19 +395,12 @@ static func _style(item: Dictionary) -> int:
 
 ## The extra pieces a design has: Uncommon a sash-like piece, Rare another, Epic a third, Legendary two of them together.
 static func _style_parts(style: int) -> Array:
-	return [[], [1], [2], [3], [2, 3]][clampi(style, 0, 4)]
+	return Items.design_parts(style)
 
 
-## What colour a piece of armor is: its armor type's own base colour, tinted by its rarity (Common is the plain base).
-const ARMOR_BASE := {"plate": "9aa4b0", "mail": "7a8a82", "leather": "8a6038", "cloth": "6a5aa0"}
-const ARMOR_TINT := [0.0, 0.5, 0.55, 0.6, 0.6]
-
-
+## What colour a piece of armor is: its armor type's own base colour, tinted by its rarity (see Items.armor_col).
 static func _armor_col(item: Dictionary, armor: String) -> Color:
-	if not ARMOR_BASE.has(armor):
-		return Color(String(item.get("mat", "8a8a8e")))   # rags and anything else keep their own colour
-	var r := clampi(int(item.get("rarity", 0)), 0, 4)
-	return Color(String(ARMOR_BASE[armor])).lerp(Color(String(Items.RARITY_COLORS[r])), float(ARMOR_TINT[r]))
+	return Items.armor_col(item, armor)
 
 
 static func _tier_col(item: Dictionary, armor: String) -> Color:

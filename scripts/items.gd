@@ -312,6 +312,31 @@ const LEATHER_ROWS := {
 	"legs": {1: "..kwwwsswwk.", 2: "..kddddddk..", 5: "..kwk..kwk..", 6: "..kmk..kmk..", 8: "..kwk..kwk.."},
 	"feet": {3: "...kmlk.....", 4: "...kwwk.....", 5: "...kmmk.....", 6: "...kmmkkk...", 7: "..kmmwwwwk..", 8: "..kmmmmmmmk."},
 }
+## Distinct icons per armor type: plate = the generic rows above, leather = LEATHER_ROWS on top of them, and full rows for mail
+## (c = chain links) and cloth.
+const MAIL_ROWS := {
+	"head": ["............", "...kkkkkk...", ".kcccccccck.", ".kcccccccck.", ".kcckkkkcck.", ".kckddddkck.", ".kckddddkck.", ".kcccccccck.", ".kcccccccck.", "..kcccccck..", "...kkkkkk...", "............"],
+	"chest": ["............", ".kkkk..kkkk.", "kcccccccccck", "kcccccccccck", "kcccc..cccck", "kcckccccckck", "kcc.kccck.ck", ".kc.kcccck.k", "..kkcccccck.", "..kdccccccdk", "..kddddddddk", "...kkkkkkkk."],
+	"hands": ["............", "..k.k.k.....", ".kckckck....", ".kckckck.k..", ".kcccccckck.", ".kcdcccccck.", ".kcdccccck..", "..kccccck...", "..kdddddk...", "..kdddddk...", "...kkkkk....", "............"],
+	"legs": ["............", "..kkkkkkkk..", ".kcccccccck.", "..kccccccck.", "..kccllcck..", "..kcck.kcck.", "..kcck.kcck.", "..kcck.kcck.", "..kcck.kcck.", "..kdck.kdck.", "..kkkk.kkkk.", "............"],
+	"feet": ["............", "...kkkkk....", "...kcccck...", "...kccck....", "...kddck....", "...kcccck...", "...kccckkk..", "..kccccccck.", "..kcccccccck", "..kddddddddk", "...kkkkkkkk.", "............"],
+}
+const CLOTH_ROWS := {
+	"head": [".....kk.....", "....kmmk....", "....kmmk....", "...kmmmmk...", "...kmlmmk...", "..kmmmmmmk..", ".kmmmmmmmmk.", ".kggggggggk.", "kmmmmmmmmmmk", ".kddddddddk.", "..kkkkkkkk..", "............"],
+	"chest": ["............", "...kkkkkk...", "..kmmllmmk..", ".kmmmmmmmmk.", "kmmmmggmmmmk", "kmkmmmmmmkmk", "kmkmmmmmmkmk", "kmkmmmmmmkmk", "kkkmmmmmmkkk", "..kmmmmmmk..", "..kddddddk..", "...kkkkkk..."],
+	"hands": ["............", "...kkkk.....", "..kmmmmk.kk.", "..kllllkkmk.", "..kmmmmmmmk.", "..kllllmmk..", "..kmmmmmk...", "..kllllmk...", "..kmmmmmk...", "..kddddk....", "...kkkk.....", "............"],
+	"legs": ["............", "..kkkkkkkk..", "..kmmmmmmk..", "..kmlmmmmk..", "..kmmkkmmk..", "..kmk..kmk..", "..kmk..kmk..", "..kmk..kmk..", ".kmmk..kmmk.", ".kddk..kddk.", ".kkkk..kkkk.", "............"],
+	"feet": ["............", "...kkkk.....", "...kmmk.....", "...kmlk.....", "...kmmk.....", "...kmmk.....", "...kmmkkk...", "..kmmmmmmkk.", ".kmmmmmmmmmk", "kmmddddddmmk", ".kkkkkkkkkk.", "............"],
+}
+
+## The extra pieces of a rarity's design (the same ones the 3D armor gets, see Models._style_parts) as pixels per slot: [x, y, char]
+const DESIGN_PIXELS := {
+	"head": {1: [[5, 1, "g"], [6, 1, "g"], [5, 0, "g"], [6, 0, "g"]], 2: [[5, 5, "s"], [6, 5, "s"], [5, 6, "s"], [6, 6, "s"]], 3: [[1, 2, "e"], [1, 1, "e"], [10, 2, "e"], [10, 1, "e"], [0, 0, "e"], [11, 0, "e"]]},
+	"chest": {1: [[3, 2, "g"], [4, 3, "g"], [5, 4, "g"], [6, 5, "g"], [7, 6, "g"], [8, 7, "g"]], 2: [[4, 3, "s"], [5, 3, "s"], [6, 3, "s"], [7, 3, "s"], [4, 4, "s"], [5, 4, "s"], [6, 4, "s"], [7, 4, "s"]], 3: [[4, 2, "s"], [5, 2, "s"], [6, 2, "s"], [7, 2, "s"], [2, 8, "w"], [9, 8, "w"]]},
+	"hands": {1: [[2, 6, "g"], [3, 6, "g"], [4, 6, "g"], [5, 6, "g"]], 2: [[2, 8, "s"], [3, 8, "s"], [4, 8, "s"], [5, 8, "s"]], 3: [[3, 4, "g"], [5, 4, "g"], [7, 4, "g"]]},
+	"legs": {1: [[3, 5, "s"], [4, 5, "s"], [7, 5, "s"], [8, 5, "s"]], 2: [[2, 3, "g"], [2, 4, "g"], [2, 5, "g"], [2, 6, "g"], [9, 3, "g"], [9, 4, "g"]], 3: [[3, 9, "g"], [4, 9, "g"], [7, 9, "g"], [8, 9, "g"]]},
+	"feet": {1: [[3, 3, "g"], [4, 3, "g"], [5, 3, "g"]], 2: [[6, 8, "s"], [7, 8, "s"], [8, 8, "s"]], 3: [[3, 6, "g"], [4, 6, "g"], [5, 6, "g"]]},
+}
 const SHORTSWORD_ICON := ["............", "..........kk", ".........kmk", "........kmlk", ".......kmlk.", "......kmlk..",
 	"..k..kmlk...", "..kkkmlk....", "...kwkk.....", "..kwk.......", ".kgk........", "..k........."]
 
@@ -450,32 +475,69 @@ static func display_name(item: Dictionary) -> String:
 const SHIELD_ICON := ["............", "..kkkkkkkk..", ".kmmmmmmmmk.", ".kmllllllmk.", ".kmlmmmmlmk.", ".kmlmssmlmk.", ".kmlmssmlmk.", "..kmlmmlmk..", "..kmmllmmk..", "...kmmmmk...", "....kmmk....", ".....kk....."]
 
 
+## What colour a piece of armor is: its armor type's own base colour, tinted by its rarity (Common is the plain base).
+const ARMOR_BASE := {"plate": "9aa4b0", "mail": "7a8a82", "leather": "8a6038", "cloth": "6a5aa0"}
+const ARMOR_TINT := [0.0, 0.5, 0.55, 0.6, 0.6]
+
+
+static func armor_col(item: Dictionary, armor: String) -> Color:
+	if not ARMOR_BASE.has(armor):
+		return Color(String(item.get("mat", "8a8a8e")))   # rags and anything else keep their own colour
+	var r := clampi(int(item.get("rarity", 0)), 0, 4)
+	return Color(String(ARMOR_BASE[armor])).lerp(Color(String(RARITY_COLORS[r])), float(ARMOR_TINT[r]))
+
+
+## The extras a rarity's design has: Uncommon the first, Rare the second, Epic the third, Legendary the second and third.
+static func design_parts(rarity: int) -> Array:
+	return [[], [1], [2], [3], [2, 3]][clampi(rarity, 0, 4)]
+
+
 static func icon(item: Dictionary) -> ImageTexture:
 	var key := "%s_%s_%d_%s" % [item["type"], item["mat"], int(item["rarity"]), item.get("armor", "")]
 	if _icon_cache.has(key):
 		return _icon_cache[key]
-	var rows: Array = ICONS.get(item["type"], SHORTSWORD_ICON if item["type"] == "shortsword" else (SHIELD_ICON if item["type"] == "shield" else ICONS["ring"]))
-	if String(item.get("armor", "")) == "leather" and LEATHER_ROWS.has(item["type"]):
+	var armor := String(item.get("armor", ""))
+	var type := String(item["type"])
+	var rows: Array = ICONS.get(type, SHORTSWORD_ICON if type == "shortsword" else (SHIELD_ICON if type == "shield" else ICONS["ring"]))
+	if armor == "leather" and LEATHER_ROWS.has(type):
 		rows = (rows as Array).duplicate()
-		var ov: Dictionary = LEATHER_ROWS[item["type"]]
+		var ov: Dictionary = LEATHER_ROWS[type]
 		for ri: int in ov:
 			rows[ri] = ov[ri]
-	var m := Color(item["mat"])
-	if item["type"] in ["staff", "bow"]:
+	elif armor == "mail" and MAIL_ROWS.has(type):
+		rows = MAIL_ROWS[type]
+	elif armor == "cloth" and CLOTH_ROWS.has(type):
+		rows = CLOTH_ROWS[type]
+	var is_armor := ARMOR_BASE.has(armor) and ARMOR_SLOTS.has(type)
+	var m := armor_col(item, armor) if is_armor else Color(item["mat"])
+	if type in ["staff", "bow"]:
 		m = Color(item["mat"]).lerp(Color("8a5a30"), 0.4)
 	var metal := m
-	if String(item.get("armor", "")) == "leather":
-		m = Color("8a5a34").lerp(m, 0.18)
+	var rar := int(item["rarity"])
 	var pal := {"k": Color("1a1420"), "m": m, "l": m.lightened(0.4), "d": m.darkened(0.35), "s": metal.lightened(0.2),
-		"w": Color("4a3020") if String(item.get("armor", "")) == "leather" else Color("6b4a2c"), "g": color(item) if int(item["rarity"]) > 0 else Color("8a8a9a")}
+		"c": m.lightened(0.15), "e": Color("e8e0c8"),
+		"w": Color("4a3020") if armor == "leather" else Color("6b4a2c"), "g": color(item) if rar > 0 else Color("8a8a9a")}
+	if armor == "mail":
+		pal["c"] = m   # chain links: every other pixel a little lighter (set below)
 	var img := Image.create(12, 12, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
 	for y in 12:
 		var row: String = rows[y]
 		for x in mini(12, row.length()):
 			var ch := row[x]
-			if pal.has(ch):
+			if ch == "c":
+				img.set_pixel(x, y, m.lightened(0.28) if (x + y) % 2 == 0 else m.darkened(0.12))
+			elif pal.has(ch):
 				img.set_pixel(x, y, pal[ch])
+	# the rarity's design: the same extras the 3D armor gets (crest, plate, sash, horns, trim)
+	if is_armor and DESIGN_PIXELS.has(type):
+		for part: int in design_parts(rar):
+			for px: Array in DESIGN_PIXELS[type].get(part, []):
+				var pc: String = px[2]
+				if pc == "g":
+					img.set_pixel(px[0], px[1], pal["g"])
+				else:
+					img.set_pixel(px[0], px[1], pal[pc])
 	var tex := ImageTexture.create_from_image(img)
 	_icon_cache[key] = tex
 	return tex
