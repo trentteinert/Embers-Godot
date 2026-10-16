@@ -549,6 +549,8 @@ static func gear_recipes(cls: String) -> Array:
 	for master in [false, true]:
 		for ti in CRAFT_TIERS.size():
 			for slot: String in Items.SLOTS:
+				if slot == "cloak":
+					continue   # cloaks are found, not forged (yet)
 				var t: Dictionary = CRAFT_TIERS[ti]
 				var ty: String = Items.WEAPON_FOR[cls] if slot == "weapon" else slot
 				var armor: String = Items.ARMOR_FOR[cls] if ty in Items.ARMOR_SLOTS else ""

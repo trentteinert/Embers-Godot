@@ -2303,7 +2303,7 @@ func _build_inventory() -> void:
 	var rcol := VBoxContainer.new()
 	for c in [lcol, rcol]:
 		c.add_theme_constant_override("separation", 4)
-	for sname in ["head", "chest", "hands", "legs"]:
+	for sname in ["head", "chest", "cloak", "hands", "legs"]:
 		lcol.add_child(_equip_slot(sname))
 	for sname in ["feet", "ring", "amulet", "weapon", "offhand"]:
 		rcol.add_child(_equip_slot(sname))

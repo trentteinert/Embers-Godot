@@ -284,7 +284,6 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 				cfg["shirt"] = c.to_html(false)
 				cfg["shirt2"] = c.darkened(0.25).to_html(false)
 				cfg["sleeve"] = c.darkened(0.12).to_html(false)
-				cfg["cape"] = c.darkened(0.35).to_html(false)
 			"rags":
 				cfg["shirt"] = c.to_html(false)
 				cfg["shirt2"] = c.lightened(0.1).to_html(false)
@@ -298,6 +297,10 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 			cfg["trim"] = rc.to_html(false)
 	if not ch.is_empty():
 		cfg["style_chest"] = _style(ch)
+	var cl: Dictionary = equip.get("cloak", {})
+	if not cl.is_empty():
+		cfg["cape"] = _armor_col(cl, String(cl.get("armor", Items.ARMOR_FOR.get(id, "cloth")))).to_html(false)
+		cfg["cape_style"] = clampi(int(cl.get("rarity", 0)), 0, 4)
 	var lg: Dictionary = equip.get("legs", {})
 	if not lg.is_empty():
 		cfg["style_legs"] = _style(lg)
@@ -505,7 +508,19 @@ static func humanoid(cfg: Dictionary) -> Rig:
 			box(rig, q, Vector3(0.04, 0.1, 0.04), "e05a4a", Vector3(-0.03 + k * 0.03, 0.3, 0))
 	if cfg.has("cape"):
 		var cape := pivot(rig, torso, "cape", Vector3(0, 0.5, -0.15))
-		box(rig, cape, Vector3(0.44, 0.62, 0.04), cfg["cape"], Vector3(0, -0.31, 0))
+		var cs: int = int(cfg.get("cape_style", -1))   # -1: a plain cape that belongs to a character (not a cloak item)
+		var clen: float = 0.62 if cs < 0 else [0.55, 0.6, 0.7, 0.76, 0.92][cs]
+		var ccol: String = cfg["cape"]
+		box(rig, cape, Vector3(0.44, clen, 0.04), ccol, Vector3(0, -clen * 0.5, 0))
+		if cs >= 1:   # a trimmed hem
+			box(rig, cape, Vector3(0.45, 0.05, 0.05), cfg.get("trim", "d8b04a"), Vector3(0, -clen + 0.025, 0))
+		if cs == 2 or cs >= 4:   # a mantle over the shoulders
+			box(rig, torso, Vector3(0.64 * thin, 0.09, 0.3), _c(ccol).lightened(0.12).to_html(false), Vector3(0, 0.5, -0.02))
+		if cs == 3 or cs >= 4:   # a hood bunched at the back of the neck
+			box(rig, cape, Vector3(0.3, 0.17, 0.15), _c(ccol).darkened(0.12).to_html(false), Vector3(0, 0.0, -0.06))
+		if cs >= 4:   # trimmed edges
+			for sd in [-1, 1]:
+				box(rig, cape, Vector3(0.04, clen, 0.05), cfg.get("trim", "d8b04a"), Vector3(0.22 * sd, -clen * 0.5, 0))
 	# arms: shoulder block, upper arm, elbow block, forearm, cuff, hand
 	var long_sleeve: bool = cfg.get("longsleeve", false)
 	var scol: String = cfg.get("sleeve", "888888")

@@ -5,9 +5,9 @@ extends RefCounted
 ## An item is a plain Dictionary so it saves straight to JSON:
 ##   {uid, name, slot, type, rarity, ilvl, stats: {str, agi, int, sta, armor, crit, dmg}, mat}
 
-const SLOTS := ["head", "chest", "hands", "legs", "feet", "ring", "amulet", "weapon"]
+const SLOTS := ["head", "chest", "cloak", "hands", "legs", "feet", "ring", "amulet", "weapon"]
 const SLOT_NAMES := {"head": "Head", "chest": "Chest", "hands": "Hands", "legs": "Legs", "feet": "Feet",
-	"ring": "Ring", "amulet": "Amulet", "weapon": "Weapon", "offhand": "Off-hand"}
+	"ring": "Ring", "amulet": "Amulet", "weapon": "Weapon", "offhand": "Off-hand", "cloak": "Cloak"}
 const SLOT_WEIGHT := {
 	"weapon": 1.0,
 	"chest": 1.0,
@@ -17,9 +17,10 @@ const SLOT_WEIGHT := {
 	"feet": 0.6,
 	"ring": 0.55,
 	"amulet": 0.65,
-	"offhand": 0.8
+	"offhand": 0.8,
+	"cloak": 0.5
 }
-const ARMOR_SLOTS := ["head", "chest", "hands", "legs", "feet"]
+const ARMOR_SLOTS := ["head", "chest", "cloak", "hands", "legs", "feet"]
 
 const RARITY_NAMES := ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
 const RARITY_COLORS := ["c8c4d0", "6fd05a", "4a9ae8", "b06ae8", "f2994a"]
@@ -117,6 +118,13 @@ const BASE_NAMES := {
 		"Shield",
 		"Buckler",
 		"Aegis"
+	],
+	"cloak": [
+		"Cape",
+		"Mantle Cape",
+		"Battle Cloak",
+		"Warcloak",
+		"Kingsmantle"
 	]
 }
 ## Armor types by class. Weapons are class-bound already; armor now is too.
@@ -162,6 +170,13 @@ const ARMOR_NAMES := {
 			"Warboots",
 			"Ironshod Boots",
 			"Titan Treads"
+		],
+		"cloak": [
+			"Cape",
+			"Mantle Cape",
+			"Battle Cloak",
+			"Warcloak",
+			"Kingsmantle"
 		]
 	},
 	"mail": {
@@ -199,6 +214,13 @@ const ARMOR_NAMES := {
 			"Ringed Boots",
 			"Chain Sabatons",
 			"Warden Treads"
+		],
+		"cloak": [
+			"Wayfarer Cloak",
+			"Ranger Cloak",
+			"Warden Cloak",
+			"Greencloak",
+			"Wildmantle"
 		]
 	},
 	"leather": {
@@ -236,6 +258,13 @@ const ARMOR_NAMES := {
 			"Soft Boots",
 			"Riding Boots",
 			"Shadowsteps"
+		],
+		"cloak": [
+			"Cloak",
+			"Hooded Cloak",
+			"Shadow Cloak",
+			"Nightcloak",
+			"Wraith Mantle"
 		]
 	},
 	"cloth": {
@@ -273,6 +302,13 @@ const ARMOR_NAMES := {
 			"Cloth Boots",
 			"Shoes",
 			"Spellslippers"
+		],
+		"cloak": [
+			"Shawl",
+			"Wrap",
+			"Cape of Silk",
+			"Mage Cloak",
+			"Arch Mantle"
 		]
 	}
 }
@@ -300,6 +336,7 @@ const ICONS := {
 		"...kmmkkk...", "..kmmmmmmk..", "..kmmmmmmmk.", "..kddddddddk", "...kkkkkkkk.", "............"],
 	"ring": ["............", ".....kk.....", "....kggk....", "...kkggkk...", "..kmmkkmmk..", "..kmk..kmk..",
 		".kmk....kmk.", ".kmk....kmk.", "..kmk..kmk..", "..kmmkkmmk..", "...kkmmkk...", ".....kk....."],
+	"cloak": ["............", "...kkkkkk...", "..kmmggmmk..", ".kmmlmmmmmk.", ".kmlmdmmdmk.", "kmmlmdmmdmmk", "kmlmmdmmdmmk", "kmlmmdmmdmmk", "kmmmmdmmdmmk", "kmmdmmmmmdmk", "kdddmmmmdddk", "kkkkkkkkkkkk"],
 	"amulet": ["..k......k..", "...k....k...", "....k..k....", ".....kk.....", "....kmmk....", "...kmggmk...",
 		"..kmgllgmk..", "..kmggggmk..", "...kmggmk...", "....kmmk....", ".....kk.....", "............"],
 }
@@ -335,6 +372,7 @@ const DESIGN_PIXELS := {
 	"chest": {1: [[3, 2, "g"], [4, 3, "g"], [5, 4, "g"], [6, 5, "g"], [7, 6, "g"], [8, 7, "g"]], 2: [[4, 3, "s"], [5, 3, "s"], [6, 3, "s"], [7, 3, "s"], [4, 4, "s"], [5, 4, "s"], [6, 4, "s"], [7, 4, "s"]], 3: [[4, 2, "s"], [5, 2, "s"], [6, 2, "s"], [7, 2, "s"], [2, 8, "w"], [9, 8, "w"]]},
 	"hands": {1: [[2, 6, "g"], [3, 6, "g"], [4, 6, "g"], [5, 6, "g"]], 2: [[2, 8, "s"], [3, 8, "s"], [4, 8, "s"], [5, 8, "s"]], 3: [[3, 4, "g"], [5, 4, "g"], [7, 4, "g"]]},
 	"legs": {1: [[3, 5, "s"], [4, 5, "s"], [7, 5, "s"], [8, 5, "s"]], 2: [[2, 3, "g"], [2, 4, "g"], [2, 5, "g"], [2, 6, "g"], [9, 3, "g"], [9, 4, "g"]], 3: [[3, 9, "g"], [4, 9, "g"], [7, 9, "g"], [8, 9, "g"]]},
+	"cloak": {1: [[1, 10, "g"], [2, 10, "g"], [3, 10, "g"], [4, 10, "g"], [7, 10, "g"], [8, 10, "g"], [9, 10, "g"], [10, 10, "g"]], 2: [[2, 3, "s"], [3, 3, "s"], [4, 3, "s"], [7, 3, "s"], [8, 3, "s"], [9, 3, "s"]], 3: [[4, 1, "s"], [5, 1, "s"], [6, 1, "s"], [7, 1, "s"], [5, 0, "s"], [6, 0, "s"]]},
 	"feet": {1: [[3, 3, "g"], [4, 3, "g"], [5, 3, "g"]], 2: [[6, 8, "s"], [7, 8, "s"], [8, 8, "s"]], 3: [[3, 6, "g"], [4, 6, "g"], [5, 6, "g"]]},
 }
 const SHORTSWORD_ICON := ["............", "..........kk", ".........kmk", "........kmlk", ".......kmlk.", "......kmlk..",
