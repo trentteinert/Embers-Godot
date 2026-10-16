@@ -107,7 +107,7 @@ func _setup(ui_node: Node, online_node: Node, at: Vector3) -> void:
 	_dev_bar = HBoxContainer.new()
 	_dev_bar.add_theme_constant_override("separation", 6)
 	bar.add_child(_dev_bar)
-	_dev_bar.add_child(ui._label("Gear rarity", 14, ui.MUTED))
+	_dev_bar.add_child(ui._label("Gear rarity (not armor)", 14, ui.MUTED))
 	_rarity = OptionButton.new()
 	for r in Items.RARITY_NAMES:
 		_rarity.add_item(r)
@@ -277,8 +277,10 @@ func _fill_bank(words: PackedStringArray) -> void:
 
 
 func _fill_dev(words: PackedStringArray) -> void:
-	var r: int = _rarity.selected
+	var sel: int = _rarity.selected
 	for g: Dictionary in data.get("dev_gear", []):
+		var armor_piece: bool = str(g.get("armor", "")) != ""
+		var r: int = int(g.get("rarity", 0)) if armor_piece else sel   # an armor design is its rarity; the rest take the one you pick
 		var fake := {"uid": 0, "name": "%s (%s)" % [g["name"], Items.RARITY_NAMES[r]], "slot": g["slot"], "type": g["kind"], "rarity": r, "ilvl": 1, "stats": {}, "mat": "b0b4bc", "armor": g.get("armor", "")}
 		if not _hit(words, _item_text(fake) + " gear " + str(g.get("armor", ""))):
 			continue

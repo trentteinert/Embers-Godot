@@ -30,7 +30,12 @@ const WEAPON_FOR := {"warrior": "sword", "mage": "staff", "hunter": "bow"}
 const CLASS_FOR_WEAPON := {"sword": "warrior", "dagger": "warrior", "shortsword": "warrior", "staff": "mage", "bow": "hunter"}
 ## Weapon types each class finds. Rogues dual wield one-handers: a main hand and an off-hand.
 const WEAPON_TYPES_FOR := {"warrior": ["sword", "sword", "dagger", "shortsword"], "mage": ["staff"], "hunter": ["bow"]}
-const MAIN_STAT := {"warrior": "str", "mage": "int", "hunter": "agi"}
+const MAIN_STAT := {
+	"warrior": "str",
+	"mage": "int",
+	"hunter": "agi",
+	"rogue": "agi"
+}
 const STAT_NAMES := {"str": "Strength", "agi": "Agility", "int": "Intellect", "sta": "Stamina", "armor": "Armor", "crit": "Critical Strike", "dmg": "Weapon Damage"}
 const STAT_ORDER := ["dmg", "armor", "str", "agi", "int", "sta", "crit"]
 
@@ -65,33 +70,38 @@ const BASE_NAMES := {
 	],
 	"head": [
 		"Helm",
-		"Hood",
-		"Cap",
-		"Coif"
+		"Greathelm",
+		"Visor",
+		"Warhelm",
+		"Crownhelm"
 	],
 	"chest": [
-		"Chestguard",
-		"Tunic",
-		"Hauberk",
-		"Vest"
+		"Breastplate",
+		"Chestplate",
+		"Cuirass",
+		"Warplate",
+		"Kingsplate"
 	],
 	"hands": [
-		"Gloves",
 		"Gauntlets",
-		"Grips",
-		"Mitts"
+		"Plate Gloves",
+		"Vambraces",
+		"Handguards",
+		"Titan Fists"
 	],
 	"legs": [
-		"Leggings",
 		"Greaves",
-		"Trousers",
-		"Breeches"
+		"Plate Leggings",
+		"Cuisses",
+		"Tassets",
+		"Legplates"
 	],
 	"feet": [
-		"Boots",
-		"Treads",
 		"Sabatons",
-		"Shoes"
+		"Plate Boots",
+		"Warboots",
+		"Ironshod Boots",
+		"Titan Treads"
 	],
 	"ring": [
 		"Ring",
@@ -110,38 +120,48 @@ const BASE_NAMES := {
 	]
 }
 ## Armor types by class. Weapons are class-bound already; armor now is too.
-const ARMOR_FOR := {"warrior": "plate", "hunter": "mail", "mage": "cloth"}
+const ARMOR_FOR := {
+	"warrior": "plate",
+	"hunter": "mail",
+	"mage": "cloth",
+	"rogue": "leather"
+}
 const ARMOR_NAMES := {
 	"plate": {
 		"head": [
 			"Helm",
 			"Greathelm",
 			"Visor",
-			"Warhelm"
+			"Warhelm",
+			"Crownhelm"
 		],
 		"chest": [
 			"Breastplate",
 			"Chestplate",
 			"Cuirass",
-			"Warplate"
+			"Warplate",
+			"Kingsplate"
 		],
 		"hands": [
 			"Gauntlets",
 			"Plate Gloves",
 			"Vambraces",
-			"Handguards"
+			"Handguards",
+			"Titan Fists"
 		],
 		"legs": [
 			"Greaves",
 			"Plate Leggings",
 			"Cuisses",
-			"Tassets"
+			"Tassets",
+			"Legplates"
 		],
 		"feet": [
 			"Sabatons",
 			"Plate Boots",
 			"Warboots",
-			"Ironshod Boots"
+			"Ironshod Boots",
+			"Titan Treads"
 		]
 	},
 	"mail": {
@@ -149,31 +169,36 @@ const ARMOR_NAMES := {
 			"Coif",
 			"Mail Hood",
 			"Ringed Cap",
-			"Chain Helm"
+			"Chain Helm",
+			"Warden Coif"
 		],
 		"chest": [
 			"Hauberk",
 			"Mail Shirt",
 			"Chain Vest",
-			"Byrnie"
+			"Byrnie",
+			"Warden Hauberk"
 		],
 		"hands": [
 			"Mail Gloves",
 			"Chain Mitts",
 			"Ringed Grips",
-			"Chain Gauntlets"
+			"Chain Gauntlets",
+			"Warden Mitts"
 		],
 		"legs": [
 			"Mail Leggings",
 			"Chain Chausses",
 			"Ringed Trousers",
-			"Mail Skirt"
+			"Mail Skirt",
+			"Warden Chausses"
 		],
 		"feet": [
 			"Mail Boots",
 			"Chain Treads",
 			"Ringed Boots",
-			"Chain Sabatons"
+			"Chain Sabatons",
+			"Warden Treads"
 		]
 	},
 	"leather": {
@@ -181,63 +206,73 @@ const ARMOR_NAMES := {
 			"Hood",
 			"Leather Cap",
 			"Cowl",
-			"Skullcap"
+			"Skullcap",
+			"Shadow Cowl"
 		],
 		"chest": [
 			"Jerkin",
 			"Leather Tunic",
 			"Vest",
-			"Brigandine"
+			"Brigandine",
+			"Shadowcoat"
 		],
 		"hands": [
 			"Leather Gloves",
 			"Grips",
 			"Wraps",
-			"Bracers"
+			"Bracers",
+			"Nightgrips"
 		],
 		"legs": [
 			"Leather Trousers",
 			"Leggings",
 			"Breeches",
-			"Chaps"
+			"Chaps",
+			"Shadow Pants"
 		],
 		"feet": [
 			"Leather Boots",
 			"Treads",
 			"Soft Boots",
-			"Riding Boots"
+			"Riding Boots",
+			"Shadowsteps"
 		]
 	},
 	"cloth": {
 		"head": [
 			"Hat",
-			"Cap",
+			"Pointed Cap",
 			"Circlet",
-			"Witch Hat"
+			"Witch Hat",
+			"Archmage Hat"
 		],
 		"chest": [
 			"Robe",
 			"Vestments",
 			"Tunic",
-			"Mantle"
+			"Mantle",
+			"Archrobe"
 		],
 		"hands": [
 			"Cloth Wraps",
 			"Mitts",
 			"Gloves",
-			"Sleeves"
+			"Sleeves",
+			"Spellwraps"
 		],
 		"legs": [
 			"Cloth Pants",
 			"Skirt",
 			"Leggings",
-			"Kilt"
+			"Kilt",
+			"Spellskirt"
 		],
 		"feet": [
 			"Slippers",
 			"Sandals",
 			"Cloth Boots",
-			"Shoes"
+			"Shoes",
+			"Spellslippers"
 		]
 	}
 }
