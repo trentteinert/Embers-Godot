@@ -107,8 +107,9 @@ func _setup(ui_node: Node, online_node: Node, at: Vector3) -> void:
 	_dev_bar = HBoxContainer.new()
 	_dev_bar.add_theme_constant_override("separation", 6)
 	bar.add_child(_dev_bar)
-	_dev_bar.add_child(ui._label("Gear rarity (not armor)", 14, ui.MUTED))
+	_dev_bar.add_child(ui._label("Rarity", 14, ui.MUTED))
 	_rarity = OptionButton.new()
+	_rarity.add_item("All")
 	for r in Items.RARITY_NAMES:
 		_rarity.add_item(r)
 	_rarity.focus_mode = Control.FOCUS_NONE
@@ -276,17 +277,25 @@ func _fill_bank(words: PackedStringArray) -> void:
 		_bank_grid.add_child(l)
 
 
+func _gear_rarity() -> int:
+	## -1 = all rarities, else 0 (Common) .. 4 (Legendary)
+	return _rarity.selected - 1
+
+
 func _fill_dev(words: PackedStringArray) -> void:
-	var sel: int = _rarity.selected
+	var sel := _gear_rarity()
 	for g: Dictionary in data.get("dev_gear", []):
 		var armor_piece: bool = str(g.get("armor", "")) != ""
-		var r: int = int(g.get("rarity", 0)) if armor_piece else sel   # an armor design is its rarity; the rest take the one you pick
+		# armor has one design per rarity: show only the picked rarity's. Everything else takes the picked rarity (Common for "All").
+		if armor_piece and sel >= 0 and int(g.get("rarity", 0)) != sel:
+			continue
+		var r: int = int(g.get("rarity", 0)) if armor_piece else maxi(sel, 0)
 		var fake := {"uid": 0, "name": "%s (%s)" % [g["name"], Items.RARITY_NAMES[r]], "slot": g["slot"], "type": g["kind"], "rarity": r, "ilvl": 1, "stats": {}, "mat": "b0b4bc", "armor": g.get("armor", "")}
 		if not _hit(words, _item_text(fake) + " gear " + str(g.get("armor", ""))):
 			continue
 		var sl = _cell(_bank_grid, ["dev_gear", g])
 		sl.set_item(fake)
-		sl.tooltip_text = "New %s %s%s (free)\nClick: one · Set the rarity and level above" % [Items.RARITY_NAMES[r], (str(g["armor"]).capitalize() + " ") if str(g.get("armor", "")) != "" else "", g["name"]]
+		sl.tooltip_text = "New %s %s%s (free)\nClick: one · Pick the rarity and item level above" % [Items.RARITY_NAMES[r], (str(g["armor"]).capitalize() + " ") if armor_piece else "", g["name"]]
 	for m: Dictionary in data.get("dev_mats", []):
 		var id: String = str(m["id"])
 		if not Data.MATERIALS.has(id) or not _hit(words, _mat_text(id)):
@@ -316,5 +325,5 @@ static func cell_click(sl: Button, right: bool, shift: bool) -> void:
 			w.online.send({"t": "bank_dev_give", "mat": sl.ref[1], "n": n})
 		"dev_gear":
 			var g: Dictionary = sl.ref[1]
-			w.online.send({"t": "bank_dev_give", "slot": g["slot"], "kind": g["kind"], "armor": g.get("armor", ""), "base": g["name"], "rarity": w._rarity.selected, "ilvl": int(w._level.value)})
+			w.online.send({"t": "bank_dev_give", "slot": g["slot"], "kind": g["kind"], "armor": g.get("armor", ""), "base": g["name"], "rarity": maxi(w._gear_rarity(), 0), "ilvl": int(w._level.value)})
 	Sfx.play("ui_click", Vector3.INF, -8.0)
