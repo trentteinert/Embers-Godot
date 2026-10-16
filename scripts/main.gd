@@ -45,6 +45,7 @@ var _act_block := 0.0
 var _save_t := 0.0
 var _death_t := 0.0
 var _last_biome := -1
+var online: Online          # set when the game was started with --online (see online.gd)
 
 
 func _ready() -> void:
@@ -91,6 +92,9 @@ func _ready() -> void:
 	daynight.process_mode = Node.PROCESS_MODE_PAUSABLE
 	daynight.setup(_env, sun, world, player, ATMOS)
 	show_title()
+	online = Online.try_start(self)
+	if online == null:
+		OnlineLogin.attach(self)   # the login screen for online play (launch arguments still work)
 
 
 # ================================================================ environment
@@ -478,6 +482,9 @@ func collect(kind: String) -> void:
 func drink_potion() -> void:
 	if mode != "play" or paused or player.dead:
 		return
+	if online != null:
+		online.send({"t": "use_potion"})
+		return
 	var greater := crafting.count("greater") > 0
 	if int(state.get("potions", 0)) <= 0 and not greater:
 		ui.toast("No potions left")
@@ -506,6 +513,10 @@ func player_died() -> void:
 
 
 func _respawn() -> void:
+	if online != null:
+		online.request_respawn()   # the server revives you; Online switches back to play mode
+		_death_t = 1.5
+		return
 	ui.show_dead(false)
 	state["xp"] = int(float(state["xp"]) * 0.75)
 	if combat.boss:
@@ -576,6 +587,8 @@ func _place_trophy() -> void:
 
 # ================================================================ save
 func save_game() -> void:
+	if online != null:
+		return
 	if (mode != "play" and mode != "dead") or state.is_empty():
 		return
 	var d := state.duplicate(true)
@@ -850,6 +863,16 @@ func cycle_target(dir := 1) -> void:
 func use_mat(id: String) -> void:
 	if mode != "play" or player.dead:
 		return
+	if online != null and id not in ["hpot", "greater"]:
+		if id in ["minnow", "trout", "eel", "icefin"]:
+			online.send({"t": "eat"})
+		elif id in ["might", "swift"]:
+			online.send({"t": "drink", "potion": id})
+		elif id in ["oak", "heartwood"]:
+			online.light_fire()
+		else:
+			ui.toast("%s: use the Workshop (J) to make things from it" % Data.MATERIALS[id]["name"])
+		return
 	match id:
 		"hpot", "greater":
 			drink_potion()
@@ -985,6 +1008,9 @@ func talent_block(id: String) -> String:
 
 
 func learn_talent(id: String) -> void:
+	if online != null:
+		online.send({"t": "learn_talent", "id": id})
+		return
 	var why := talent_block(id)
 	if why != "":
 		ui.toast(why)
@@ -1002,6 +1028,9 @@ func learn_talent(id: String) -> void:
 
 ## Take one point back out of a talent (right-click). Refused if another talent still depends on it.
 func unlearn_talent(id: String) -> void:
+	if online != null:
+		online.send({"t": "unlearn_talent", "id": id})
+		return
 	var node: Dictionary = Data.talent_node(id)
 	var r := talent_rank(id)
 	if node.is_empty() or r <= 0:
@@ -1034,6 +1063,9 @@ func unlearn_talent(id: String) -> void:
 
 
 func reset_talents() -> void:
+	if online != null:
+		online.send({"t": "respec"})
+		return
 	state["talents"] = {}
 	player.refresh_stats()
 	_prune_bar()
@@ -1153,7 +1185,7 @@ func has_target() -> bool:
 
 
 func set_target(e: Enemy) -> void:
-	target = e
+	target = e   # online: Online notices and tells the server
 
 
 func set_dev_mode(on: bool) -> void:
@@ -1264,6 +1296,9 @@ func can_hold(add: Dictionary, extra_free := 0) -> bool:
 func drop_from_bag(idx: int, mat: String, n: int) -> void:
 	if mode != "play" or player.dead:
 		return
+	if online != null:
+		online.send({"t": "drop_mat", "mat": mat, "n": n} if mat != "" else {"t": "drop_item", "idx": idx})
+		return
 	var pos := player.global_position + player.forward_vec() * 1.3
 	if mat != "":
 		var have := crafting.held(mat)
@@ -1309,7 +1344,7 @@ func _usable_equipment() -> Dictionary:
 	var eq: Dictionary = state.get("equip", {})
 	for slot: String in eq:
 		var it: Dictionary = eq[slot]
-		if slot == "offhand" and talent_rank("sh_dual") <= 0:
+		if slot == "offhand" and talent_rank("sh_dual") <= 0 and String(it.get("type", "")) != "shield":
 			continue
 		if not it.is_empty() and Items.can_equip(it, state["cls"]):
 			out[slot] = it
@@ -1318,14 +1353,21 @@ func _usable_equipment() -> Dictionary:
 
 func _apply_gear(refresh := true) -> void:
 	var eq := _usable_equipment()
+	# online, this runs on every inventory update: only rebuild the character model when what you wear changed, or it flickers
+	# and restarts the gathering pose each time you pick something up
+	var same: bool = online != null and player.equipped == eq
 	player.gear = Items.totals(eq)
 	player.equipped = eq
 	if refresh:
 		player.refresh_stats()
-		player.refresh_look()
+		if not same:
+			player.refresh_look()
 
 
 func equip_from_bag(idx: int) -> void:
+	if online != null:
+		online.send({"t": "equip", "idx": idx})
+		return
 	var bag: Array = state["bag"]
 	if idx < 0 or idx >= bag.size():
 		return
@@ -1357,6 +1399,9 @@ func equip_from_bag(idx: int) -> void:
 
 
 func unequip(slot: String) -> void:
+	if online != null:
+		online.send({"t": "unequip", "slot": slot})
+		return
 	var eq: Dictionary = state["equip"]
 	if not eq.has(slot):
 		return
@@ -1371,6 +1416,9 @@ func unequip(slot: String) -> void:
 
 
 func discard(idx: int) -> void:
+	if online != null:
+		online.send({"t": "discard", "idx": idx})
+		return
 	var bag: Array = state["bag"]
 	if idx < 0 or idx >= bag.size():
 		return
@@ -1382,6 +1430,9 @@ func discard(idx: int) -> void:
 
 
 func sort_bag() -> void:
+	if online != null:
+		online.send({"t": "sort_bag"})
+		return
 	state.erase("bag_pos")
 	var bag: Array = state["bag"]
 	bag.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -1468,6 +1519,9 @@ func _restock_shop() -> void:
 func toggle_shop() -> void:
 	if mode != "play" or paused:
 		return
+	if online != null and not shop_open:
+		online.send({"t": "open_shop"})   # the shop window opens when the server sends the stock
+		return
 	shop_open = not shop_open
 	if shop_open:
 		ui.close_side()
@@ -1489,6 +1543,9 @@ func _spend(cost: int) -> bool:
 
 
 func buy_item(idx: int) -> void:
+	if online != null:
+		online.send({"t": "buy_item", "idx": idx})
+		return
 	var stock: Array = state["shop"]
 	if idx < 0 or idx >= stock.size():
 		return
@@ -1505,6 +1562,9 @@ func buy_item(idx: int) -> void:
 
 
 func buy_potion() -> void:
+	if online != null:
+		online.send({"t": "buy_potion"})
+		return
 	if mat_room("hpot") < 1:
 		ui.toast("Your bag is full", Color("e0a080"))
 		return
@@ -1516,6 +1576,9 @@ func buy_potion() -> void:
 
 
 func sell_item(idx: int) -> void:
+	if online != null:
+		online.send({"t": "sell", "idx": idx})
+		return
 	var bag: Array = state["bag"]
 	if idx < 0 or idx >= bag.size():
 		return
@@ -1527,6 +1590,9 @@ func sell_item(idx: int) -> void:
 
 
 func sell_commons() -> void:
+	if online != null:
+		online.send({"t": "sell_commons"})
+		return
 	var bag: Array = state["bag"]
 	var total := 0
 	for i in range(bag.size() - 1, -1, -1):
@@ -1543,6 +1609,9 @@ func sell_commons() -> void:
 
 
 func paid_restock() -> void:
+	if online != null:
+		online.send({"t": "restock"})
+		return
 	if not _spend(Data.restock_price(int(state["lvl"]))):
 		return
 	_restock_shop()
@@ -1566,6 +1635,10 @@ func _nearest_interactable() -> Dictionary:
 	var cr := crafting.nearest()
 	if not cr.is_empty():
 		return cr
+	if online != null:
+		var sn: Dictionary = online.nearest_node()
+		if not sn.is_empty():
+			return sn
 	if _flat_dist(p, world.slayer_pos) < 3.2:
 		return {"kind": "varka"}
 	if _flat_dist(p, world.rack_pos) < 3.0:
@@ -1609,6 +1682,8 @@ func _prompt_text(it: Dictionary) -> String:
 			return "[G] Leave the cave"
 		"npc":
 			return quests.prompt(it["id"])
+		"snode", "sfire":
+			return "[G] " + online.node_prompt(it)
 		"forge", "node":
 			return crafting.prompt(it)
 		"varka":
@@ -1683,6 +1758,22 @@ func click_label(it: Dictionary) -> String:
 
 func interact_with(it: Dictionary) -> void:
 	if it.is_empty() or not player.can_act or player.dead:
+		return
+	if online != null and it["kind"] in ["snode", "sfire"]:
+		online.use_node(it)
+		return
+	if online != null and it["kind"] in ["furnace", "anvil", "fire"]:
+		# the game's own windows, in the chat box (the server does the making)
+		if it["kind"] == "anvil":
+			ui.chat_say("Use a hammer on a bar from your bag to forge here.", Color("e8c070"))
+		else:
+			toggle_window("furnace" if it["kind"] == "furnace" else "cooking")
+		return
+	if online != null and it["kind"] == "varka":
+		online.talk("varka")
+		return
+	if online != null and it["kind"] in ["node", "fish", "rack", "cave", "cave_exit"]:
+		ui.toast("That isn't available in the online version yet", Color("e0a080"))
 		return
 	var b := _boss()
 	var step := int(state["step"])

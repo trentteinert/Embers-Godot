@@ -1,3 +1,4 @@
+@tool
 class_name Building
 extends Node3D
 ## A walk-in building. While you are inside, its roof and ceiling disappear so you can see

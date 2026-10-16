@@ -103,6 +103,9 @@ func _physics_process(delta: float) -> void:
 	for i in cooldowns.size():
 		cooldowns[i] = maxf(0.0, cooldowns[i] - delta)
 	_cloak_cd = maxf(0.0, _cloak_cd - delta)
+	if Online.active and main.online != null and main.online.started:
+		_update_pickups(delta)      # everything else (spawns, damage, projectiles) happens on the server
+		return
 	if main.mode == "play" and player.can_act and _attack_held():
 		_try_attack()
 	_dash_hits()
@@ -475,6 +478,10 @@ func cast_ability(i: int, slot := -1) -> void:
 	# pressing an offensive ability at an enemy starts auto attack, even if it is on cooldown or you lack the resource
 	if main.has_target() and not (a["id"] in ["stand", "barrier", "blink", "disengage", "stealth", "smoke", "shout", "poison", "flurry", "wolf", "trap"]):
 		auto_attack = true
+	if Online.active and main.online != null:
+		if cooldowns[i] <= 0.0:
+			main.online.cast(String(Data.ABILITIES[player.class_id][i]["id"]))
+		return
 	if cooldowns[i] > 0.0 or not player.dash.is_empty():
 		return
 	if player.res < float(a["cost"]):
@@ -1060,6 +1067,9 @@ func nearest_pickup(max_d := PICKUP_RANGE) -> Dictionary:
 ## Pick up a pile or an item. Returns false if it couldn't be taken (bag full).
 func take(k: Dictionary) -> bool:
 	if not _pickups.has(k):
+		return false
+	if Online.active and main.online != null:
+		main.online.pickup(int(k["server_id"]))   # the server decides (range, loot rights, bag space)
 		return false
 	if k["kind"] == "item":
 		if not main.can_take_item():

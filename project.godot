@@ -31,6 +31,10 @@ window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/embers_world/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

@@ -330,6 +330,9 @@ func start_job(skill: String, req: int, times: int, step: Callable, label := "",
 
 
 func make(station: String, r: Dictionary, times := 1) -> void:
+	if main.online != null:
+		main.online.craft_local(station, r, times)   # online: the server makes things
+		return
 	var why := can_make(station, r)
 	if why != "":
 		main.ui.toast(why)
@@ -413,6 +416,9 @@ func food_count() -> int:
 
 
 func eat(only := "") -> void:
+	if main.online != null:
+		main.online.send({"t": "eat"})
+		return
 	var p: Player = main.player
 	if p.dead or _eat_cd > 0.0:
 		return
@@ -431,6 +437,9 @@ func eat(only := "") -> void:
 
 
 func drink(id: String) -> void:
+	if main.online != null:
+		main.online.send({"t": "drink", "potion": id})
+		return
 	var p: Player = main.player
 	if p.dead:
 		return
@@ -450,6 +459,9 @@ func task() -> Dictionary:
 
 
 func talk_varka() -> void:
+	if main.online != null:
+		main.online.talk("varka")
+		return
 	main.quests.notify("talk", "varka")
 	var t := task()
 	var who := Data.SLAYER_NAME.to_upper()
@@ -630,7 +642,7 @@ func _work_hit() -> void:
 # ================================================================ per frame
 func _process(delta: float) -> void:
 	_t += delta
-	if action.is_empty() and main and main.player and main.player.model and main.player.model.work_kind != "":
+	if action.is_empty() and main and main.player and main.player.model and main.player.model.work_kind != "" and (main.online == null or main.online.work_pose == ""):
 		main.player.model.set_work("")
 	for s: Dictionary in fish_spots:
 		var n: Node3D = s["node"]
@@ -706,6 +718,8 @@ func _label(parent: Node3D, text: String, y: float, col := Color("f1e8d4")) -> v
 
 
 func _build_fish_spots() -> void:
+	if Online.requested():
+		return   # online: the server places fishing spots
 	var ripple := TorusMesh.new()
 	ripple.inner_radius = 0.55
 	ripple.outer_radius = 0.66
@@ -781,6 +795,9 @@ func all_fires() -> Array[Vector3]:
 
 
 func make_kindling(log_id: String) -> void:
+	if main.online != null:
+		main.online.light_fire()   # online: a log and Flint and Steel make a fire
+		return
 	if not Data.FIRE_LOGS.has(log_id) or main.player.dead:
 		return
 	var d: Dictionary = Data.FIRE_LOGS[log_id]
@@ -804,6 +821,9 @@ func make_kindling(log_id: String) -> void:
 
 
 func light_fire(kindling_id: String) -> void:
+	if main.online != null:
+		main.online.light_fire()
+		return
 	var log_id := ""
 	for k: String in Data.FIRE_LOGS:
 		if Data.FIRE_LOGS[k]["kindling"] == kindling_id:

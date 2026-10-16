@@ -234,6 +234,8 @@ func _build_ground(root: Node3D, x0: int, y0: int, x1: int, y1: int, rng: Random
 				base = Color(World.PATH_COL[world.biome[i]])
 			else:
 				base = Color(World.GROUND_COL[g][(x + y) % 2])
+				if world.has_meta("smooth_ground"):
+					base = _smooth_ground(x, y, g, base, int(world.get_meta("smooth_ground")))
 			var s := world._shade.get_noise_2d(x, y)
 			base = base.lightened(s * 0.08) if s > 0.0 else base.darkened(-s * 0.12)
 			var lx := (x - x0) * TEX
@@ -603,3 +605,32 @@ func _merge(root: Node3D, inst: Array) -> void:
 		mi.mesh = mesh
 		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON if shadow == 1 else GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		root.add_child(mi)
+
+
+## Smooth biome borders: a land cell's colour is the weighted average of the land cells around it (Embers world builder).
+func _smooth_ground(x: int, y: int, g: int, base: Color, r: int) -> Color:
+	var land := [G.GRASS, G.FOREST, G.MUD, G.BOG, G.SNOW]
+	if not (g in land):
+		return base
+	var N := World.N
+	var acc := Vector3.ZERO
+	var wsum := 0.0
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			var cx := x + dx
+			var cy := y + dy
+			if cx < 0 or cy < 0 or cx >= N or cy >= N:
+				continue
+			var d := Vector2(dx, dy).length()
+			if d > r:
+				continue
+			var gg: int = world.ground[cy * N + cx]
+			if not (gg in land):
+				continue
+			var wgt := 1.0 - d / (r + 1.0)
+			var c := Color(World.GROUND_COL[gg][(cx + cy) % 2])
+			acc += Vector3(c.r, c.g, c.b) * wgt
+			wsum += wgt
+	if wsum <= 0.0:
+		return base
+	return Color(acc.x / wsum, acc.y / wsum, acc.z / wsum)

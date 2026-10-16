@@ -1,0 +1,48 @@
+{
+ "npcs": [
+  "aldric",
+  "alpha",
+  "barrowking",
+  "champion",
+  "corwin",
+  "dunn",
+  "hollis",
+  "king",
+  "maren",
+  "oswin",
+  "peg",
+  "rowan",
+  "tam",
+  "ysolt"
+ ],
+ "materials": [
+  "twig",
+  "copper",
+  "oak",
+  "greenleaf",
+  "heartwood",
+  "thornbud",
+  "bogiron",
+  "marshroot",
+  "frost",
+  "frostbloom"
+ ],
+ "required_npcs": [
+  "tam",
+  "king",
+  "rowan"
+ ],
+ "sprites": {
+  "tam": "tam",
+  "king": "king",
+  "rowan": "elder",
+  "hollis": "farmer",
+  "maren": "ranger",
+  "oswin": "hermit",
+  "aldric": "pilgrim",
+  "peg": "farmer",
+  "corwin": "ranger",
+  "dunn": "slayer",
+  "ysolt": "elder"
+ }
+}

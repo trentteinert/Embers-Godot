@@ -1,3 +1,4 @@
+@tool
 class_name TownKit
 extends RefCounted
 ## Low-poly building kit for towns, villages and camps. Every asset is built from simple shapes

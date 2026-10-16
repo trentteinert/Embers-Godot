@@ -663,7 +663,7 @@ void fragment() {
 			_ov.draw_colored_polygon(_drop(pp, fd, 5.2, 10.5), Color.BLACK)
 			_ov.draw_colored_polygon(_drop(pp, fd, 3.8, 8.6), Color.WHITE)
 		if interactive and _hover.x >= 0.0 and _hover.x < World.N and _hover.y >= 0.0 and _hover.y < World.N and world.explored_at(_hover) > 0.6:
-			var zi := world.lay.zone_at(_hover.x, _hover.y)
+			var zi := world.zone_at_cell(_hover.x, _hover.y)
 			var txt: String = String(Data.ZONES[zi]["name"]) if zi >= 0 else Data.BIOME_NAMES[int(world.biome[int(_hover.y) * World.N + int(_hover.x)])]
 			var font := ThemeDB.fallback_font
 			_ov.draw_string_outline(font, Vector2(8, size.y - 8), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, 5, Color(0.04, 0.03, 0.06))
@@ -2588,7 +2588,7 @@ func refresh_inventory() -> void:
 	for sname: String in _inv_slots:
 		(_inv_slots[sname] as ItemSlot).set_item(eq.get(sname, {}), Items.SLOT_NAMES[sname].to_upper())
 	if _inv_slots.has("offhand"):
-		(_inv_slots["offhand"] as ItemSlot).visible = main.talent_rank("sh_dual") > 0   # the Dual Wield talent opens it
+		(_inv_slots["offhand"] as ItemSlot).visible = true   # shields go here (the Dual Wield talent also uses it)
 	var bag: Array = main.state.get("bag", [])
 	var stacks: Array = main.mat_stacks()
 	var shown := mini(MAX_BAG, maxi(main.bag_size(), bag.size() + stacks.size()))
@@ -3378,28 +3378,51 @@ func _fill_book() -> void:
 		var b: Dictionary = Data.BOSSES[bi]
 		var q: Dictionary = main.quest_info(false)
 		_book_entry(b["name"], "WARDEN %d OF 4 · LV %d" % [bi + 1, b["rec"]], EMBER_HI, q["text"])
-	_section("SIDE QUESTS")
-	var q2 = main.quests
+	_section("QUESTS YOU HAVE")
 	var shown := 0
-	for sq: Dictionary in Data.SIDE_QUESTS:
-		var id: String = sq["id"]
-		var stage := int(q2._qs(id)["stage"])
-		var chain: Array = sq["quests"]
-		if stage >= chain.size():
-			continue
-		var c: Dictionary = chain[stage]
-		var where: String = sq["name"]
-		shown += 1
-		match q2.status(id):
-			"available":
-				_book_entry(c["title"], "AVAILABLE", Color("ffd27a"), "Talk to %s" % where)
-			"active":
-				var prog := "" if int(c["count"]) <= 1 else " %d/%d" % [int(q2._qs(id)["progress"]), int(c["count"])]
-				_book_entry(c["title"], "IN PROGRESS", Color("9fd0ff"), "%s%s" % [c.get("tip", c["label"]), prog])
-			"ready":
-				_book_entry(c["title"], "COMPLETE", Color("8ad07a"), "Return to %s" % where)
+	if main.online != null:
+		for e: Dictionary in main.online.journal:
+			if not bool(e["active"]):
+				continue   # only the quests you have taken, not every quest in the world
+			shown += 1
+			var ready: bool = str(e["status"]) == "ready"
+			var body := PackedStringArray()
+			var tip := ""
+			for stp: Dictionary in e["steps"]:
+				var prog := "" if int(stp["count"]) <= 1 else " (%d/%d)" % [int(stp["progress"]), int(stp["count"])]
+				if bool(stp["done"]):
+					body.append("[x] %s" % stp["title"])
+				elif bool(stp["current"]):
+					body.append("[>] %s: %s%s" % [stp["title"], stp["label"], prog])
+					tip = str(stp["tip"])
+				else:
+					body.append("[ ] %s" % stp["title"])
+			var text := "\n".join(body)
+			if tip != "":
+				text += "\n\nHow: %s" % tip
+			if ready:
+				text += "\n\nGo back to %s to hand it in." % e["npc_name"]
+			_book_entry(str(e["quest"]), ("READY TO HAND IN" if ready else "IN PROGRESS") + " - " + str(e["npc_name"]), Color("8ad07a") if ready else Color("9fd0ff"), text)
+	else:
+		var q2 = main.quests
+		for sq: Dictionary in Data.SIDE_QUESTS:
+			var id: String = sq["id"]
+			var stage := int(q2._qs(id)["stage"])
+			var chain: Array = sq["quests"]
+			if stage >= chain.size():
+				continue
+			var c: Dictionary = chain[stage]
+			var where: String = sq["name"]
+			match q2.status(id):
+				"active":
+					shown += 1
+					var prog2 := "" if int(c["count"]) <= 1 else " %d/%d" % [int(q2._qs(id)["progress"]), int(c["count"])]
+					_book_entry(c["title"], "IN PROGRESS", Color("9fd0ff"), "%s%s" % [c.get("tip", c["label"]), prog2])
+				"ready":
+					shown += 1
+					_book_entry(c["title"], "COMPLETE", Color("8ad07a"), "Return to %s" % where)
 	if shown == 0:
-		_win_body.add_child(_label("Nothing new right now.", 14, MUTED))
+		_win_body.add_child(_label("No quests yet. Talk to the people around you: look for the ! above their heads.", 14, MUTED))
 
 
 func _fill_settings() -> void:

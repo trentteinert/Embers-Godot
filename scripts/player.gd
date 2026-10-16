@@ -305,6 +305,11 @@ func _physics_process(delta: float) -> void:
 			move = to.normalized()
 	if walk_to == Vector3.INF:
 		_walk_t = 0.0
+	var net: Node = get_parent().get("online") if Online.active else null
+	if net != null and not net.started:
+		net = null
+	if net != null and net.typing():
+		move = Vector3.ZERO   # online chat: typing must not walk you around
 	var moving := move.length() > 0.1
 	_input_active = _input_active or walk_to != Vector3.INF
 	moving_forward = moving_forward or walk_to != Vector3.INF
@@ -315,6 +320,8 @@ func _physics_process(delta: float) -> void:
 	if has_buff("swift"):
 		speed *= 1.2
 	speed *= 1.0 + 0.04 * tal("sh_nimble") + 0.03 * tal("ve_agile")
+	if net != null and net.server_speed > 0.0:
+		speed = net.server_speed   # online: walk at the pace the server uses, so we agree on where we are
 
 	for k: String in buffs.keys():
 		buffs[k] = buffs[k] - delta
@@ -386,6 +393,8 @@ func _physics_process(delta: float) -> void:
 			sta -= JUMP_COST
 			_sta_delay = 0.5
 			velocity.y = JUMP_SPEED * 0.9
+			if net != null:
+				net.send({"t": "jump"})
 			_double_used = true
 			Sfx.play("dodge", Vector3.INF, -8.0, 0.2)
 			sk.on_jump()
@@ -397,6 +406,8 @@ func _physics_process(delta: float) -> void:
 			sta -= JUMP_COST
 			_sta_delay = 0.5
 			velocity.y = JUMP_SPEED
+			if net != null:
+				net.send({"t": "jump"})
 			_jumping = true
 			_double_used = false
 			if sk:
@@ -410,8 +421,11 @@ func _physics_process(delta: float) -> void:
 		# let go of jump early for a shorter hop
 		if _jumping and velocity.y > 0.0 and not Input.is_action_pressed("jump"):
 			velocity.y -= GRAVITY * delta * 1.5
+	var wanted_h := Vector2(velocity.x, velocity.z)
 	move_and_slide()
 	_unstick(delta, move)
+	if net != null:
+		net.sync_player(self, delta, move, sprinting, wanted_h)   # online: tell the server, ease back to its position if we drifted
 
 	if global_position.y < -8.0:
 		teleport(_last_safe + Vector3(0, 1, 0))
@@ -500,21 +514,25 @@ func _update_aim(_move: Vector3, _moving: bool) -> void:
 	aim_point = global_position + aim_dir * 7.0
 
 
-func anim_attack(dur := 0.25) -> void:
-	_face_aim_t = 0.45
+func anim_attack(dur := 0.25, face := true) -> void:
+	if face:
+		_face_aim_t = 0.45
 	armed_t = 6.0
 	if model:
 		model.set_armed(true, true)
-		model.set_facing(aim_dir)
+		if face:
+			model.set_facing(aim_dir)
 		model.attack(dur)
 
 
-func anim_cast(dur := 0.4) -> void:
-	_face_aim_t = 0.5
+func anim_cast(dur := 0.4, face := true) -> void:
+	if face:
+		_face_aim_t = 0.5
 	armed_t = 6.0
 	if model:
 		model.set_armed(true, true)
-		model.set_facing(aim_dir)
+		if face:
+			model.set_facing(aim_dir)
 		model.cast(dur)
 
 
@@ -557,6 +575,8 @@ func _animate(delta: float, moving: bool, sprinting: bool) -> void:
 					break
 	model.set_armed(armed_t > 0.0)
 	model.walk_speed = 12.0 if sprinting else 9.0
+	var main_node := get_parent()
+	model.look_target = (main_node.target.global_position + Vector3(0, 1.2, 0)) if (main_node != null and main_node.has_method("has_target") and main_node.has_target()) else Vector3.INF
 	model.tick(delta, move_amt)
 	# visibility effects
 	var stealth := has_buff("stealth")

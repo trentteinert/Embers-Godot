@@ -1,3 +1,4 @@
+@tool
 # Generated from the Thornvale map images by tools/layout/export.py. Do not edit by hand.
 class_name LayoutData
 

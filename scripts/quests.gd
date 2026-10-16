@@ -27,7 +27,7 @@ func setup(m: Node) -> void:
 	for q: Dictionary in Data.SIDE_QUESTS:
 		var npc := _make_npc(q["sprite"], world.npc_pos[q["id"]], q["name"])
 		# the ones standing in town stroll about their spot
-		if q.has("town") and not q.get("still", false):
+		if q.has("town") and not q.get("still", false) and not Online.requested():   # online NPCs stand still, like the server's
 			npc["wander"] = Wanderer.new(world.npc_pos[q["id"]], 3.2, 100 + si)
 		_npcs[q["id"]] = npc
 		si += 1
@@ -225,6 +225,9 @@ func _pick_line(options: Array) -> String:
 
 
 func talk(id: String) -> void:
+	if Online.active and main.online != null:
+		main.online.talk(id)
+		return
 	var q := _def(id)
 	var who: String = String(q["name"]).to_upper()
 	notify("talk", id)
@@ -354,6 +357,8 @@ func _complete(id: String) -> void:
 
 # ================================================================ progress
 func on_kill(e: Enemy) -> void:
+	if Online.active:
+		return
 	for q: Dictionary in Data.SIDE_QUESTS:
 		var id: String = q["id"]
 		if status(id) != "active":
@@ -371,6 +376,8 @@ func on_kill(e: Enemy) -> void:
 ## Progress for the newer goal types: talk (target = smith / merchant / varka / wisp / giver id),
 ## obtain (target = material id), craft (any forge craft).
 func notify(goal: String, target: String, n := 1) -> void:
+	if Online.active:
+		return
 	for q: Dictionary in Data.SIDE_QUESTS:
 		var id: String = q["id"]
 		if status(id) != "active":
@@ -394,6 +401,8 @@ func _advance(id: String, cur: Dictionary, n := 1) -> void:
 
 
 func _ensure_gather(id: String) -> void:
+	if Online.active:
+		return
 	if status(id) != "active":
 		return
 	var cur := current(id)
@@ -467,6 +476,8 @@ func _process(delta: float) -> void:
 	for a: Dictionary in _ambient:
 		_idle(a, p, cam_right)
 		_chatter(a, p, delta)
+	if Online.active:
+		return          # plants, elites and the practice monster are the server's job online
 	# the practice Mosslet for the abilities lesson
 	if main.mode == "play" and status("tam") == "active" and current("tam").get("spawn", false):
 		if _practice == null or not is_instance_valid(_practice) or _practice.dead:

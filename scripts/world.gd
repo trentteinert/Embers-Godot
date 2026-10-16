@@ -101,6 +101,10 @@ static func ensure_wind() -> void:
 
 
 func generate() -> void:
+	if CustomWorld.requested():
+		if not CustomWorld.build(self):   # a world built with the Embers World addon
+			get_tree().quit(1)
+		return
 	ensure_wind()
 	add_to_group("world")
 	var t0 := Time.get_ticks_msec()
@@ -172,6 +176,15 @@ func world_to_cell(p: Vector3) -> Vector2:
 
 
 func height_at(x: float, z: float) -> float:
+	if custom_ground.is_valid() and x <= Caves.X0 - 150.0:
+		var vh: float = custom_ground.call(x, z)
+		if not is_nan(vh):
+			return vh
+	return grid_height_at(x, z)
+
+
+## The height from the world's grid (what the server uses).
+func grid_height_at(x: float, z: float) -> float:
 	if x > Caves.X0 - 150.0:
 		return Caves.FLOOR_Y
 	var fx := clampf((x + HALF) / CELL, 0.0, N - 0.001)
@@ -185,7 +198,10 @@ func height_at(x: float, z: float) -> float:
 	var h10 := heights[iz * w + ix + 1]
 	var h01 := heights[(iz + 1) * w + ix]
 	var h11 := heights[(iz + 1) * w + ix + 1]
-	return lerpf(lerpf(h00, h10, tx), lerpf(h01, h11, tx), tz)
+	# the ground is drawn as two flat triangles per cell, cut from (x+1, z) to (x, z+1): the height is on whichever one the point is in
+	if tx + tz <= 1.0:
+		return h00 + (h10 - h00) * tx + (h01 - h00) * tz
+	return h11 + (h01 - h11) * (1.0 - tx) + (h10 - h11) * (1.0 - tz)
 
 
 func _cell_index(p: Vector3) -> int:
@@ -213,7 +229,14 @@ func zone_at(p: Vector3) -> int:
 	if p.x > Caves.X0 - 150.0:
 		return -1
 	var c := world_to_cell(p)
-	return lay.zone_at(c.x, c.y)
+	return zone_at_cell(c.x, c.y)
+
+
+func zone_at_cell(cx: float, cy: float) -> int:
+	if not custom_zone.is_empty():
+		var v: int = custom_zone[clampi(int(cy), 0, N - 1) * N + clampi(int(cx), 0, N - 1)]
+		return -1 if v == 255 else v
+	return lay.zone_at(cx, cy)
 
 
 func zone_name(p: Vector3) -> String:
@@ -665,6 +688,8 @@ var _hsh := PackedFloat32Array()      # coarse "shallow water" weight (fen and d
 var _hrk := PackedFloat32Array()      # coarse rock weight
 var _hsn := PackedFloat32Array()      # coarse snow weight
 var lay: LayoutMap
+var custom_ground := Callable()   # --world: the real height of your terrain (Terrain3D), finer than the 2 m export grid
+var custom_zone := PackedByteArray()   # --world: zone per cell from the exported world (255 = none)
 const ZONE_BASE := [0.8, 1.1, 0.9, 1.5, 2.0, 0.28, 0.25, 3.0, 5.0]
 const ZONE_AMP := [0.6, 0.9, 0.8, 1.8, 2.6, 0.12, 0.1, 2.2, 3.0]
 const ZONE_MTN := [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 1.0]

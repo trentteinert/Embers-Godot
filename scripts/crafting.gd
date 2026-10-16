@@ -19,6 +19,10 @@ func setup(m: Node) -> void:
 	main = m
 	world = m.world
 	# the opening camp's twigs and logs are fixed; everything else comes and goes with the map chunks
+	# (online: the server places every resource, see Online._sync_nodes)
+	if Online.requested():
+		_build_forge()
+		return
 	for spot: Dictionary in world.resource_spots:
 		var n := _make_node(spot["mat"], spot["pos"])
 		_nodes.append({"node": n, "pos": spot["pos"], "mat": spot["mat"], "ready_t": 0.0})
@@ -347,6 +351,9 @@ func tier_unlocked(tier: int, slot := "weapon") -> bool:
 
 
 func craft(tier: int, slot: String, masterwork: bool) -> void:
+	if main.online != null:
+		main.online.send({"t": "craft", "id": "gear:%d:%s:%d" % [tier, slot, 1 if masterwork else 0], "qty": 1})
+		return
 	var cost0 := Data.craft_cost(tier, slot, masterwork)
 	var sk0 := skill_for_slot(slot)
 	if not tier_unlocked(tier, slot) or not can_afford(cost0) or not main.can_take_item():
@@ -403,6 +410,9 @@ func make_gear(tier: int, slot: String, masterwork: bool) -> void:
 
 
 func brew_potion() -> void:
+	if main.online != null:
+		main.ui.toast("Brew potions in the Workshop (J)")
+		return
 	var cost := {"mossgel": 2, "gold": 5}
 	if not can_afford(cost):
 		main.ui.toast("Brewing needs 2 Mossgel and 5 gold")
@@ -415,6 +425,9 @@ func brew_potion() -> void:
 
 
 func upgrade(ref: Array) -> void:
+	if main.online != null:
+		main.online.send({"t": "upgrade", "bag": int(ref[1])} if ref[0] == "bag" else {"t": "upgrade", "slot": str(ref[1])})
+		return
 	var item: Dictionary = main.item_ref(ref)
 	if item.is_empty():
 		return
@@ -450,6 +463,9 @@ func _upgrade_now(ref: Array) -> void:
 
 
 func salvage(idx: int) -> void:
+	if main.online != null:
+		main.online.send({"t": "salvage", "idx": idx})
+		return
 	var bag: Array = main.state["bag"]
 	if idx < 0 or idx >= bag.size():
 		return
@@ -464,6 +480,12 @@ func salvage(idx: int) -> void:
 
 
 func salvage_commons() -> void:
+	if main.online != null:
+		var b: Array = main.state["bag"]
+		for i in range(b.size() - 1, -1, -1):
+			if int((b[i] as Dictionary).get("rarity", 0)) == 0:
+				main.online.send({"t": "salvage", "idx": i})
+		return
 	var bag: Array = main.state["bag"]
 	var n := 0
 	var skipped := 0

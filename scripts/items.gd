@@ -1,3 +1,4 @@
+@tool
 class_name Items
 extends RefCounted
 ## Gear: random item generation, names, pixel icons, stat totals and tooltip text.
@@ -7,7 +8,17 @@ extends RefCounted
 const SLOTS := ["head", "chest", "hands", "legs", "feet", "ring", "amulet", "weapon"]
 const SLOT_NAMES := {"head": "Head", "chest": "Chest", "hands": "Hands", "legs": "Legs", "feet": "Feet",
 	"ring": "Ring", "amulet": "Amulet", "weapon": "Weapon", "offhand": "Off-hand"}
-const SLOT_WEIGHT := {"weapon": 1.0, "chest": 1.0, "legs": 0.9, "head": 0.8, "hands": 0.6, "feet": 0.6, "ring": 0.55, "amulet": 0.65}
+const SLOT_WEIGHT := {
+	"weapon": 1.0,
+	"chest": 1.0,
+	"legs": 0.9,
+	"head": 0.8,
+	"hands": 0.6,
+	"feet": 0.6,
+	"ring": 0.55,
+	"amulet": 0.65,
+	"offhand": 0.8
+}
 const ARMOR_SLOTS := ["head", "chest", "hands", "legs", "feet"]
 
 const RARITY_NAMES := ["Common", "Uncommon", "Rare", "Epic", "Legendary"]
@@ -27,10 +38,71 @@ const TIER_MATERIAL := [["Copper", "b87333"], ["Iron", "9aa4b0"], ["Steel", "c8d
 const PREFIX := [["Worn", "Plain", "Sturdy"], ["Fine", "Tempered", "Keen"], ["Gleaming", "Runed", "Valiant"],
 	["Ember-touched", "Wardenbound", "Starforged"], ["Hearthfire", "Ancient", "Kingsworn"]]
 const BASE_NAMES := {
-	"sword": ["Sword", "Blade", "Longsword"], "shortsword": ["Shortsword", "Gladius", "Cutlass"], "dagger": ["Dagger", "Dirk", "Stiletto"], "staff": ["Staff", "Rod", "Stave"],
-	"bow": ["Bow", "Longbow", "Recurve"], "head": ["Helm", "Hood", "Cap"], "chest": ["Chestguard", "Tunic", "Hauberk"],
-	"hands": ["Gloves", "Gauntlets", "Grips"], "legs": ["Leggings", "Greaves", "Trousers"], "feet": ["Boots", "Treads", "Sabatons"],
-	"ring": ["Ring", "Band", "Signet"], "amulet": ["Amulet", "Pendant", "Talisman"],
+	"sword": [
+		"Sword",
+		"Blade",
+		"Longsword"
+	],
+	"shortsword": [
+		"Shortsword",
+		"Gladius",
+		"Cutlass"
+	],
+	"dagger": [
+		"Dagger",
+		"Dirk",
+		"Stiletto"
+	],
+	"staff": [
+		"Staff",
+		"Rod",
+		"Stave"
+	],
+	"bow": [
+		"Bow",
+		"Longbow",
+		"Recurve"
+	],
+	"head": [
+		"Helm",
+		"Hood",
+		"Cap"
+	],
+	"chest": [
+		"Chestguard",
+		"Tunic",
+		"Hauberk"
+	],
+	"hands": [
+		"Gloves",
+		"Gauntlets",
+		"Grips"
+	],
+	"legs": [
+		"Leggings",
+		"Greaves",
+		"Trousers"
+	],
+	"feet": [
+		"Boots",
+		"Treads",
+		"Sabatons"
+	],
+	"ring": [
+		"Ring",
+		"Band",
+		"Signet"
+	],
+	"amulet": [
+		"Amulet",
+		"Pendant",
+		"Talisman"
+	],
+	"shield": [
+		"Shield",
+		"Buckler",
+		"Aegis"
+	]
 }
 ## Armor types by class. Weapons are class-bound already; armor now is too.
 const ARMOR_FOR := {"warrior": "plate", "hunter": "mail", "mage": "cloth"}
@@ -215,11 +287,14 @@ static func display_name(item: Dictionary) -> String:
 	return "%s +%d" % [item["name"], u] if u > 0 else String(item["name"])
 
 
+const SHIELD_ICON := ["............", "..kkkkkkkk..", ".kmmmmmmmmk.", ".kmllllllmk.", ".kmlmmmmlmk.", ".kmlmssmlmk.", ".kmlmssmlmk.", "..kmlmmlmk..", "..kmmllmmk..", "...kmmmmk...", "....kmmk....", ".....kk....."]
+
+
 static func icon(item: Dictionary) -> ImageTexture:
 	var key := "%s_%s_%d_%s" % [item["type"], item["mat"], int(item["rarity"]), item.get("armor", "")]
 	if _icon_cache.has(key):
 		return _icon_cache[key]
-	var rows: Array = ICONS.get(item["type"], SHORTSWORD_ICON if item["type"] == "shortsword" else ICONS["ring"])
+	var rows: Array = ICONS.get(item["type"], SHORTSWORD_ICON if item["type"] == "shortsword" else (SHIELD_ICON if item["type"] == "shield" else ICONS["ring"]))
 	if String(item.get("armor", "")) == "leather" and LEATHER_ROWS.has(item["type"]):
 		rows = (rows as Array).duplicate()
 		var ov: Dictionary = LEATHER_ROWS[item["type"]]

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bqyhuvgu3o7cw"]
+
+[ext_resource type="Script" uid="uid://cbla5s8bk7v8r" path="res://addons/embers_world/embers_world.gd" id="1_noarx"]
+[ext_resource type="PackedScene" uid="uid://cneipdq8ab4l" path="res://scenes/demo_world.tscn" id="2_a0tk4"]
+
+[node name="Node3D" type="Node3D" unique_id=803566122]
+
+[node name="EmbersWorld" type="Node3D" parent="." unique_id=116138248]
+script = ExtResource("1_noarx")
+metadata/_custom_type_script = "uid://cbla5s8bk7v8r"
+
+[node name="Node3D" parent="." unique_id=189426020 instance=ExtResource("2_a0tk4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.07024741, 1.1920929e-07, 2.3250527)

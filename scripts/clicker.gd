@@ -60,6 +60,8 @@ func candidates() -> Array:
 	for id: String in q._npcs:
 		out.append({"kind": "npc", "id": id, "pos": (q._npcs[id] as Dictionary)["pos"], "h": 2.2, "r": 0.7, "range": q.TALK_RANGE})
 	out.append({"kind": "forge", "pos": w.forge_pos, "h": 2.2, "r": 1.4, "range": 3.6})
+	if main.online != null:
+		out.append_array(main.online.click_candidates())   # resources and fires come from the server
 	for n: Dictionary in main.crafting._nodes:
 		if float(n["ready_t"]) <= 0.0:
 			out.append({"kind": "node", "node": n, "pos": n["pos"], "h": 1.4, "r": 0.8, "range": main.crafting.GATHER_RANGE})

@@ -13,6 +13,10 @@ const BOSS_HP_MULT := 3.0
 const BOSS_DMG_MULT := 2.4
 
 var combat: Combat
+## Online mode: a puppet of a server-side monster. Position and health come from snapshots.
+var proxy := false
+var server_id := -1
+var net_pos := Vector3.ZERO
 var type_id := ""
 var is_boss := false
 var is_elite := false
@@ -217,6 +221,9 @@ func apply_poison(dps: float, dur := 4.0) -> void:
 func _physics_process(delta: float) -> void:
 	if dead or combat == null:
 		return
+	if proxy:
+		_proxy_tick(delta)
+		return
 	flash -= delta
 	hit_cd -= delta
 	slow -= delta
@@ -265,6 +272,18 @@ func _flat_to_player() -> Vector3:
 	var to := combat.player.global_position - global_position
 	to.y = 0.0
 	return to
+
+
+func _proxy_tick(delta: float) -> void:
+	flash -= delta
+	var prev := global_position
+	if prev.distance_to(net_pos) > 12.0:
+		global_position = net_pos
+	else:
+		global_position = prev.lerp(net_pos, clampf(delta * 12.0, 0.0, 1.0))
+	var hv := (global_position - prev) / maxf(delta, 0.001)
+	hv.y = 0.0
+	_visuals(delta, hv)
 
 
 func _tick(delta: float) -> Vector3:

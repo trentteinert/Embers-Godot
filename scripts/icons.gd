@@ -1,3 +1,4 @@
+@tool
 class_name Icons
 extends RefCounted
 ## Hand-drawn 16x16 pixel icons for materials, tools and skills.

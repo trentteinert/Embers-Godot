@@ -1,3 +1,4 @@
+@tool
 class_name Door
 extends Node3D
 ## A hinged door. "auto" doors swing open when anyone (the player or a villager) walks up and

@@ -1,3 +1,4 @@
+@tool
 class_name Models
 extends RefCounted
 ## Low-poly 3D models built from simple shapes: heroes, NPCs, every creature and Warden,
@@ -250,6 +251,8 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 		cfg["weapon_l"] = ""
 	else:
 		cfg["wmetal"] = _tier_col(wep, "plate").to_html(false)
+	if cfg.get("weapon_l", "") == "shield":
+		cfg["weapon_l"] = "shield" if String(off.get("type", "")) == "shield" else ""
 	var ch: Dictionary = equip.get("chest", {})
 	if not ch.is_empty():
 		var a: String = ch.get("armor", Items.ARMOR_FOR[id])
@@ -273,6 +276,10 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 				cfg["shirt2"] = c.darkened(0.25).to_html(false)
 				cfg["sleeve"] = c.darkened(0.12).to_html(false)
 				cfg["cape"] = c.darkened(0.35).to_html(false)
+			"rags":
+				cfg["shirt"] = c.to_html(false)
+				cfg["shirt2"] = c.lightened(0.1).to_html(false)
+				cfg["sleeve"] = c.darkened(0.06).to_html(false)
 			"cloth":
 				cfg["robe"] = c.to_html(false)
 				cfg["shirt"] = c.to_html(false)
@@ -317,6 +324,14 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 		cfg["amulet"] = Items.RARITY_COLORS[int(am["rarity"])]
 	if not look.is_empty():
 		_apply_look(cfg, look, equip)
+	cfg["bare_top"] = ch.is_empty()
+	cfg["bare_legs"] = lg.is_empty()
+	cfg["bare_feet"] = ft.is_empty()
+	if ch.is_empty():
+		cfg["cuff"] = ""
+	var skinned: Rig = CharRig.try_build(cfg)   # the skinned character, when its files are in the game
+	if skinned != null:
+		return skinned
 	return humanoid(cfg)
 
 
@@ -374,6 +389,15 @@ static func humanoid(cfg: Dictionary) -> Rig:
 	var b := rig.body
 	var thin: float = cfg.get("thin", 1.0)
 	var skin: String = cfg.get("skin", "e8b48a")
+	if cfg.get("bare_top", false):
+		cfg["shirt"] = skin
+		cfg["shirt2"] = _c(skin).lightened(0.05).to_html(false)
+		cfg["sleeve"] = skin
+		cfg["belt"] = skin
+	if cfg.get("bare_legs", false):
+		cfg["pants"] = skin
+	if cfg.get("bare_feet", false):
+		cfg["boots"] = skin
 	var robe: String = cfg.get("robe", "")
 	var pants: String = cfg.get("pants", "4a3a4a")
 	var pants_d := _c(pants).darkened(0.1)
@@ -384,7 +408,8 @@ static func humanoid(cfg: Dictionary) -> Rig:
 		var shin := pivot(rig, leg, "shin_l" if side < 0 else "shin_r", Vector3(0, -0.27, 0))
 		box(rig, shin, Vector3(0.176 * thin, 0.1, 0.208 * thin), pants_d, Vector3(0, 0.0, 0))
 		box(rig, shin, Vector3(0.16 * thin, 0.24, 0.19 * thin), pants, Vector3(0, -0.12, 0))
-		box(rig, shin, Vector3(0.19, 0.13, 0.27), cfg.get("boots", "3a3446"), Vector3(0, -0.285, 0.03))
+		var foot := pivot(rig, shin, "foot_l" if side < 0 else "foot_r", Vector3(0, -0.22, 0))
+		box(rig, foot, Vector3(0.19, 0.13, 0.27), cfg.get("boots", "3a3446"), Vector3(0, -0.065, 0.03))
 		leg.visible = robe == ""
 	if robe != "":
 		cyl(rig, b, 0.24, 0.36, 0.64, robe, Vector3(0, 0.32, 0), Vector3.ZERO, 8)
@@ -392,7 +417,7 @@ static func humanoid(cfg: Dictionary) -> Rig:
 			cyl(rig, b, 0.365, 0.37, 0.05, cfg["trim"], Vector3(0, 0.03, 0), Vector3.ZERO, 8)
 	else:
 		var hip_w := 0.43 * thin if not cfg.get("femme", false) else 0.44
-		box(rig, b, Vector3(hip_w, 0.13, 0.27 * thin), pants, Vector3(0, 0.62, 0))   # hips tie the legs to the body
+		box(rig, b, Vector3(hip_w, 0.13, 0.27 * thin), "e6e0d4" if cfg.get("bare_legs", false) else pants, Vector3(0, 0.62, 0))   # hips tie the legs to the body
 	# torso
 	var torso := pivot(rig, b, "torso", Vector3(0, 0.62, 0))
 	torso.rotation.x = cfg.get("hunch", 0.0)
@@ -405,7 +430,8 @@ static func humanoid(cfg: Dictionary) -> Rig:
 		box(rig, torso, Vector3(0.46 * thin, 0.5, 0.28 * thin), cfg.get("shirt", "888888"), Vector3(0, 0.27, 0))
 	box(rig, torso, Vector3(0.2, 0.42, 0.02), cfg.get("shirt2", "666666"), Vector3(0, 0.27, 0.141 * thin))
 	box(rig, torso, Vector3(0.48 * thin, 0.07, 0.3 * thin), cfg.get("belt", "5a3a24"), Vector3(0, 0.05, 0))
-	box(rig, torso, Vector3(0.08, 0.07, 0.02), cfg.get("trim", "d8b04a"), Vector3(0, 0.05, 0.151 * thin))
+	if not cfg.get("bare_top", false):
+		box(rig, torso, Vector3(0.08, 0.07, 0.02), cfg.get("trim", "d8b04a"), Vector3(0, 0.05, 0.151 * thin))
 	box(rig, torso, Vector3(0.14, 0.1, 0.14), skin, Vector3(0, 0.55, 0))   # neck
 	box(rig, torso, Vector3(0.58 * thin, 0.12, 0.27 * thin), cfg.get("sleeve", "888888"), Vector3(0, 0.46, 0))   # shoulder line joins the arms to the chest
 	if cfg.has("amulet"):
@@ -720,13 +746,15 @@ static func _weapon(rig: Rig, hand: Node3D, arm: Node3D, w: String, cfg: Diction
 		"shield":
 			n.queue_free()
 			var sh := Node3D.new()
-			sh.position = Vector3(-0.1, -0.26, 0.04)
+			var fa: Node3D = arm.get_node_or_null("forearm_" + ("l" if side < 0 else "r"))
+			var mount: Node3D = fa if fa != null else arm
+			sh.position = Vector3(-0.16, -0.12, 0.05) if fa != null else Vector3(-0.1, -0.26, 0.04)
 			sh.rotation.z = PI * 0.5
-			arm.add_child(sh)
+			mount.add_child(sh)
 			cyl(rig, sh, 0.3, 0.3, 0.06, cfg.get("metal", "8c96a3"), Vector3.ZERO, Vector3.ZERO, 8)
-			cyl(rig, sh, 0.22, 0.22, 0.07, cfg.get("plume", "b8342c"), Vector3(0, -0.005, 0), Vector3.ZERO, 8)
-			ball(rig, sh, 0.06, cfg.get("trim", "d8b04a"), Vector3(0, -0.05, 0), Vector3.ONE, 6, 3)
-			rig.add_weapon(sh, arm, side, "shield")
+			cyl(rig, sh, 0.22, 0.22, 0.07, cfg.get("plume", "b8342c"), Vector3(0, 0.013, 0), Vector3.ZERO, 8)
+			ball(rig, sh, 0.06, cfg.get("trim", "d8b04a"), Vector3(0, 0.05, 0), Vector3.ONE, 6, 3)
+			rig.add_weapon(sh, mount, side, "shield")
 			return
 	rig.add_weapon(n, hand, side, w)
 

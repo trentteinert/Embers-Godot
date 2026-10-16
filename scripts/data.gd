@@ -1,3 +1,4 @@
+@tool
 extends Node
 ## Shared game data (autoloaded as "Data"): classes, abilities, story text, sprites and key bindings.
 ## Most tuning lives here, so you can tweak numbers and text without touching game logic.
@@ -596,180 +597,676 @@ static func salvage_yield(item: Dictionary) -> Dictionary:
 ## varka, wisp, or a quest giver id), "obtain" (pick up / gather / make a material), "craft" (anything at the forge).
 ## "town": [x, z] puts the giver in Hearthmoor's square (metres from the shrine) instead of out in the wilds.
 const SIDE_QUESTS := [
-	{"id": "tam", "name": "Old Tam", "sprite": "tam", "biome": 0, "ang": 0.0, "dist": 0, "town": [0.0, 0.0], "still": true, "tutorial": true,
-	 "greet": "Hello, wanderer! I'm Tam. Stick around and I'll teach you the basics.",
-	 "thanks": "Safe travels. My fire's always lit.",
-	 "quests": [
-		{"title": "Gather Twigs", "goal": "obtain", "target": "twig", "label": "Twigs", "count": 12, "xp": 30, "gold": 5, "reward_mats": {"twig": 12}, "give": {"wooden_knife": 1},
-		 "tip": "Click brush to gather twigs.",
-		 "intro": "Take my old knife. Click the brush around camp to gather 12 twigs.",
-		 "nag": "Brush is all around camp.", "done": "Good. Here are 12 more from my stash."},
-		{"title": "Wooden Tools", "goal": "obtain", "target": "wooden_axe|rod", "label": "Tools made", "count": 2, "xp": 45, "gold": 5, "head": "Craft",
-		 "checks": [{"label": "Wooden Axe", "item": "wooden_axe"}, {"label": "Fishing Rod", "item": "rod"}],
-		 "tip": "Bag (I): click the knife, then the twigs.",
-		 "intro": "Open your bag (I), click the knife, then click your twigs. Make a Wooden Axe and a Fishing Rod.",
-		 "nag": "Click the knife, then the twigs.", "done": "Good tools. Next, wood."},
-		{"title": "Chop a Log", "goal": "obtain", "target": "oak", "label": "Oak Logs", "count": 2, "xp": 45, "gold": 5,
-		 "tip": "Click an oak tree. Stand still.",
-		 "intro": "Click an oak and stand still. Bring me 2 logs.",
-		 "nag": "Oaks are past the brush.", "done": "Nice logs."},
-		{"title": "Light a Fire", "goal": "fire", "target": "lit", "label": "Fires lit", "count": 1, "xp": 60, "gold": 5, "give": {"flint_steel": 1},
-		 "tip": "Bag (I): right-click a log, then the kindling.",
-		 "intro": "Take my flint and steel. Open your bag (I), right-click a log for kindling, then right-click the kindling.",
-		 "nag": "Right-click a log, then the kindling.", "done": "Warm already."},
-		{"title": "Catch Supper", "goal": "obtain", "target": "raw_minnow", "label": "Raw Minnows", "count": 2, "xp": 60, "gold": 5, "give": {"bait_0": 8},
-		 "tip": "Click the ripples in the pond.",
-		 "intro": "Click the ripples in the pond to fish. Here's bait. Catch 2 minnows.",
-		 "nag": "Stand still by the pond.", "done": "Fine minnows."},
-		{"title": "Cook It", "goal": "obtain", "target": "minnow", "label": "Cooked Minnows", "count": 2, "xp": 70, "gold": 10,
-		 "tip": "Click a fire and cook minnows.",
-		 "intro": "Click a fire and cook 2 minnows. Some may burn, keep trying.",
-		 "nag": "Click a fire, pick Cooked Minnow.", "done": "Smells great."},
-		{"title": "Set Your Abilities", "goal": "bar", "target": "any", "label": "Abilities on bar", "count": 2, "xp": 0, "gold": 5, "pulse": "abilities",
-		 "tip": "Press N and click two abilities to put them on your bar.",
-		 "intro": "Press N to open Abilities. Click two abilities to put them on your bar.",
-		 "nag": "Press N, then click abilities.", "done": "Now they're one key press away (1-6)."},
-		{"title": "Try Them Out", "goal": "kill", "target": "mosslet", "label": "Mosslets", "count": 1, "xp": 40, "gold": 5, "spawn": true, "end_safe": true,
-		 "tip": "Hit the Mosslet with your abilities (keys 1-6). Right-click it to auto-attack.",
-		 "intro": "A Mosslet wandered into camp. Use your abilities on it with keys 1-6. Right-click it to auto-attack.",
-		 "nag": "The Mosslet's near camp. Use keys 1-6.", "done": "Nice. There is a rack by my tent with a bow and a staff, take them if you like. The wilds are open, so stay sharp."},
-		{"title": "The Road to Hearthmoor", "goal": "talk", "target": "king", "label": "Meet the King", "count": 1, "xp": 0, "gold": 60, "auto": true, "reward_rarity": 1,
-		 "tip": "Follow the road north. Speak to the King.",
-		 "intro": "Follow the road north to Hearthmoor and speak to the King. Tell him Tam sent you.",
-		 "nag": "North along the road.", "done": ""},
-	]},
-	{"id": "king", "name": "King Aldren", "sprite": "king", "biome": 0, "ang": 0.0, "dist": 0, "town": [0.0, 0.0], "still": true,
-	 "greet": "So Tam sent another wanderer. Welcome to Hearthmoor.",
-	 "thanks": "Rowan will see you right. Go well, keeper of the Ember.",
-	 "quests": [
-		{"title": "The King's Charge", "goal": "talk", "target": "rowan", "label": "Find Elder Rowan", "count": 1, "xp": 80, "gold": 30, "auto": true,
-		 "tip": "Find Elder Rowan in the square.",
-		 "intro": "The Ember is dying and the four Wardens have turned. Find Elder Rowan in the square. He'll prepare you.",
-		 "nag": "Elder Rowan is in the square.", "done": ""},
-	]},
-	{"id": "rowan", "name": "Elder Rowan", "sprite": "elder", "biome": 0, "ang": 0.0, "dist": 0, "town": [-3.0, -10.5],
-	 "greet": "Ah, the new keeper. Welcome to Hearthmoor.",
-	 "thanks": "You've grown into the work, keeper. Hearthmoor is proud of you.",
-	 "quests": [
-		{"title": "Meet the Smith", "goal": "talk", "target": "smith", "label": "Visit Hilde's forge", "count": 1, "xp": 25, "gold": 10,
-		 "intro": "Visit Hilde at her smithy, the open-sided shed with the stone forge.",
-		 "nag": "Look for the smithy with the glowing forge.", "done": "Hilde doesn't like anyone. You're doing well."},
-		{"title": "A Wooden Pick", "goal": "obtain", "target": "wooden_pickaxe", "label": "Make a Wooden Pickaxe", "count": 1, "xp": 50, "gold": 10,
-		 "intro": "Use your knife on 6 twigs to make a Wooden Pickaxe.",
-		 "nag": "Click the knife, then the twigs.", "done": "Crude, but it'll crack copper."},
-		{"title": "Ore for the Furnace", "goal": "obtain", "target": "copper", "label": "Copper Ore", "count": 5, "xp": 60, "gold": 15,
-		 "intro": "Mine 5 copper ore from the rocks past the gate.",
-		 "nag": "Orange-flecked rocks, past the gate.", "done": "Honest ore."},
-		{"title": "Smelt and Strike", "goal": "obtain", "target": "copper_bar", "label": "Smelt Copper Bars", "count": 3, "xp": 80, "gold": 20,
-		 "intro": "Smelt 3 copper bars at the furnace in the square.",
-		 "nag": "Furnace in the square.", "done": "Bars. Now you're getting somewhere."},
-		{"title": "Pests at the Gate", "goal": "kill", "target": "mosslet", "label": "Mosslets", "count": 5, "xp": 80, "gold": 20,
-		 "intro": "Kill 5 Mosslets outside the gate. Press N to set up your abilities.",
-		 "nag": "Just past the gates.", "done": "The gardens are safe again."},
-		{"title": "Forged in Hearthmoor", "goal": "craft", "target": "any", "label": "Forge a piece of gear", "count": 1, "xp": 100, "gold": 25,
-		 "intro": "Make a piece of gear. Metal: click the hammer, then a bar, at an anvil. Leather and cloth: click the knife, then herbs or creature parts.",
-		 "nag": "Metal at the anvil, soft gear with the knife.", "done": "Look at you, all kitted out."},
-		{"title": "The Slayer's Mark", "goal": "talk", "target": "varka", "label": "Speak with Varka", "count": 1, "xp": 60, "gold": 20,
-		 "intro": "Meet Varka. She keeps to her own house in town.",
-		 "nag": "Look for her name over a doorstep in town.", "done": "She'll keep you busy."},
-		{"title": "The Ember's Keeper", "goal": "talk", "target": "wisp", "label": "Speak with the Wisp", "count": 1, "xp": 120, "gold": 50, "reward_rarity": 2,
-		 "intro": "Speak with the Wisp at the shrine. Take this, my hunting days are done.",
-		 "nag": "The Wisp floats above the shrine.", "done": "Go well, keeper. Hearthmoor will be here."},
-	]},
-	{"id": "hollis", "name": "Farmer Hollis", "sprite": "farmer", "biome": 0, "ang": 2.6, "dist": 13,
-	 "greet": "Morning, keeper. Mind the turnips.",
-	 "thanks": "Wren's up and about again. You're always welcome at our table.",
-	 "quests": [
-		{"title": "Pests in the Pasture", "goal": "kill", "target": "mosslet", "label": "Mosslets", "count": 8, "xp": 60, "gold": 40,
-		 "intro": "Those Mosslets have eaten half my turnips. Squash eight of them and I'll pay you what I can.",
-		 "nag": "Still hearing them squelch in the rows.", "done": "Quiet at last! Here, for your trouble."},
-		{"title": "Sunpetals for Wren", "goal": "gather", "target": "sunpetal", "label": "Sunpetals", "count": 5, "xp": 90, "gold": 60, "reward_rarity": 2,
-		 "intro": "My girl Wren's been poorly since the Ember dimmed. Sunpetals grow wild around my fields. They glow a little. Bring me five?",
-		 "nag": "They glow gold. You can't miss them once the sun's low.", "done": "She'll be smiling by supper. Take this. It was my father's."},
-	]},
-	{"id": "maren", "name": "Ranger Maren", "sprite": "ranger", "biome": 1, "ang": 0.9, "dist": 30,
-	 "greet": "Keep your voice down. The trees listen.",
-	 "thanks": "The Thornwood breathes easier. So do I.",
-	 "quests": [
-		{"title": "Thinning the Pack", "goal": "kill", "target": "wolf", "label": "Grey Wolves", "count": 6, "xp": 250, "gold": 120,
-		 "intro": "The wolves have gone bold since the Rootfather turned. Cull six and the trails will be safer.",
-		 "nag": "The pack's still out there. I can hear them.", "done": "Good work. The trails are quieter already."},
-		{"title": "Old Greymaw", "goal": "elite", "target": "alpha", "label": "Old Greymaw", "count": 1, "xp": 400, "gold": 200, "reward_rarity": 2,
-		 "intro": "Their leader, Old Greymaw, dens east of here. Bigger than any wolf has a right to be. End it.",
-		 "nag": "Greymaw's den is marked on your map. Go carefully.", "done": "Greymaw's gone. You've earned more than thanks. Take this."},
-	]},
-	{"id": "oswin", "name": "Hermit Oswin", "sprite": "hermit", "biome": 2, "ang": 2.2, "dist": 50,
-	 "greet": "Eh? Oh. A visitor. How rare.",
-	 "thanks": "My lanterns burn and the chanting's stopped. I may even sleep tonight.",
-	 "quests": [
-		{"title": "Lights in the Bog", "goal": "gather", "target": "lantern", "label": "Lantern-caps", "count": 4, "xp": 600, "gold": 260,
-		 "intro": "Lantern-caps grow on the drowned logs round my hut. I need four to see by. Mind the Lurkers.",
-		 "nag": "Glowing mushrooms, keeper. Big ones.", "done": "Ah, light! Wonderful. Here, take some coin."},
-		{"title": "The Shamans' Chant", "goal": "kill", "target": "shaman", "label": "Mire Shamans", "count": 6, "xp": 900, "gold": 380, "reward_rarity": 3,
-		 "intro": "Hear that chanting at night? The Mire Shamans are calling something up. Silence six of them.",
-		 "nag": "Still chanting. Still not sleeping.", "done": "Silence. Blessed silence. This trinket's yours. I never liked it."},
-	]},
-	{"id": "aldric", "name": "Brother Aldric", "sprite": "pilgrim", "biome": 3, "ang": 5.6, "dist": 63,
-	 "greet": "Peace on the road, traveler.",
-	 "thanks": "The pilgrim road is open once more. The Ember's light be with you.",
-	 "quests": [
-		{"title": "Rime and Ruin", "goal": "kill", "target": "cultist", "label": "Rime Cultists", "count": 6, "xp": 1300, "gold": 500,
-		 "intro": "The Rime Cultists defile the old pilgrim road. Drive them off, six at the least.",
-		 "nag": "They still walk the road in their frost-masks.", "done": "The road is quieter. Bless you."},
-		{"title": "The Frostbound Champion", "goal": "elite", "target": "champion", "label": "Frostbound Champion", "count": 1, "xp": 2000, "gold": 800, "reward_rarity": 3,
-		 "intro": "Their champion guards the high pass north of here. Bring him down and the road is ours again.",
-		 "nag": "The high pass is marked on your map.", "done": "You've done what an army couldn't. Take this, with the Order's thanks."},
-	]},
-	{"id": "peg", "name": "Net-mender Peg", "sprite": "farmer", "biome": 0, "ang": 0.0, "dist": 0,
-	 "greet": "Mind the nets, love. The tide leaves all sorts behind.",
-	 "thanks": "The boats go out easier now. Come back for a cuppa any time.",
-	 "quests": [
-		{"title": "Beetles in the Nets", "goal": "kill", "target": "beetle", "label": "Thornbeetles", "count": 6, "xp": 70, "gold": 45,
-		 "intro": "Thornbeetles chew through my nets faster than I can mend them. Six of them gone and I'll sleep easy.",
-		 "nag": "I can hear them clicking along the dunes.", "done": "Quiet nets. Bless you."},
-		{"title": "Thrift for the Boats", "goal": "gather", "target": "thrift", "label": "Sea Thrift", "count": 5, "xp": 100, "gold": 65, "reward_rarity": 1,
-		 "intro": "The old sailors tie sea thrift to the bows for luck. Pink flowers, they glow a little at dusk. Five, please.",
-		 "nag": "Along the dunes by the water. Pink and glowing.", "done": "Luck for the whole fleet. Take this, it was my husband's."},
-	]},
-	{"id": "corwin", "name": "Huntsman Corwin", "sprite": "ranger", "biome": 1, "ang": 0.0, "dist": 0,
-	 "greet": "Quiet now. The briars have ears.",
-	 "thanks": "The lodge sleeps safe tonight. You've a place by the fire.",
-	 "quests": [
-		{"title": "Brood in the Briars", "goal": "kill", "target": "spider", "label": "Thicket Spiders", "count": 8, "xp": 300, "gold": 130,
-		 "intro": "Something's driven the spiders out of their den. They're in the briars, in the rafters. Kill eight.",
-		 "nag": "Listen for the clicking in the thorns.", "done": "Fewer eyes in the dark. Good."},
-		{"title": "Berries for the Salve", "goal": "gather", "target": "briarberry", "label": "Briarberries", "count": 5, "xp": 380, "gold": 160, "reward_rarity": 2,
-		 "intro": "My salve needs briarberries, the dark red ones. They grow where the thorns are thickest. Five.",
-		 "nag": "Dark red, deep in the thorns. Watch your step.", "done": "That'll mend a hunter's hide. Here, take my spare."},
-	]},
-	{"id": "dunn", "name": "Wharfmaster Dunn", "sprite": "slayer", "biome": 2, "ang": 0.0, "dist": 0,
-	 "greet": "Tide's out and the leeches are in. Welcome to Bellwharf.",
-	 "thanks": "The wharf's working again. The bell rings true.",
-	 "quests": [
-		{"title": "Leeches on the Pilings", "goal": "kill", "target": "leech", "label": "Bog Leeches", "count": 6, "xp": 500, "gold": 220,
-		 "intro": "Bog Leeches have burrowed into the mudflats and rotted my pilings. Dig six of them out for good.",
-		 "nag": "They burrow, so watch the mud ripple.", "done": "The pilings hold. I owe you."},
-		{"title": "Brinecaps for the Cure", "goal": "gather", "target": "brinecap", "label": "Brinecaps", "count": 5, "xp": 600, "gold": 260,
-		 "intro": "The sick need brinecap broth. Teal mushrooms, they grow on the wrecks. Five should do.",
-		 "nag": "Teal mushrooms on the wrecks and posts.", "done": "That will save a few lives. Take this for the road."},
-		{"title": "The Crones of the Delta", "goal": "kill", "target": "crone", "label": "Bog Crones", "count": 3, "xp": 800, "gold": 340, "reward_rarity": 2,
-		 "intro": "Bog Crones are brewing something out in the reeds. It drifts in at night and the wharf folk dream wrong. Three of them.",
-		 "nag": "Out in the reeds past the wrecks.", "done": "No more bad dreams. This was my father's."},
-	]},
-	{"id": "ysolt", "name": "Shepherd Ysolt", "sprite": "elder", "biome": 3, "ang": 0.0, "dist": 0,
-	 "greet": "Wind's up. Keep your hood close, traveller.",
-	 "thanks": "The flock is safe and the cairns are quiet. The Downs remember kindness.",
-	 "quests": [
-		{"title": "Hounds on the Ridge", "goal": "kill", "target": "downhound", "label": "Downs Hounds", "count": 6, "xp": 1000, "gold": 420,
-		 "intro": "Downs Hounds took three of my flock last night. Pale things, fast. Put six of them down.",
-		 "nag": "They hunt along the ridge, near the stones.", "done": "My sheep thank you. So do I."},
-		{"title": "Heather for the Dead", "goal": "gather", "target": "heather", "label": "Downs Heather", "count": 5, "xp": 1100, "gold": 460,
-		 "intro": "We lay heather on the old cairns so the dead rest. Purple, faintly glowing. Bring me five.",
-		 "nag": "Purple, on the high ground near the stones.", "done": "Rest easy, old ones. Thank you."},
-		{"title": "The Barrow-King", "goal": "elite", "target": "barrowking", "label": "The Barrow-King", "count": 1, "xp": 1800, "gold": 700, "reward_rarity": 3,
-		 "intro": "Something has woken in the ruined keep. The shepherds call him the Barrow-King. Lay him down.",
-		 "nag": "The ruined keep is marked on your map.", "done": "He walks no more. Take this, with the Downs' thanks."},
-	]},
+	{
+		"id": "tam",
+		"name": "Old Tam",
+		"sprite": "tam",
+		"biome": 0,
+		"ang": 0.0,
+		"dist": 0,
+		"town": [
+			0.0,
+			0.0
+		],
+		"still": true,
+		"tutorial": true,
+		"greet": "Hello, wanderer! I'm Tam. Stick around and I'll teach you the basics.",
+		"thanks": "Safe travels. My fire's always lit.",
+		"quests": [
+			{
+				"title": "Gather Twigs",
+				"goal": "obtain",
+				"target": "twig",
+				"label": "Twigs",
+				"count": 12,
+				"xp": 30,
+				"gold": 5,
+				"reward_mats": {
+					"twig": 12
+				},
+				"give": {
+					"wooden_knife": 1
+				},
+				"tip": "Click the small bushes (brush) around camp to pick twigs. You need 12. A hand icon shows over things you can click.",
+				"intro": "Take my old knife. I need a Wooden Axe and a Fishing Rod made. First, click the brush around camp to gather 12 twigs, then open your bag (I) and use the knife on them.",
+				"nag": "Brush is all around camp.",
+				"done": "Good. Here are 12 more from my stash.",
+				"quest": "Make a Fishing Rod and an Axe",
+				"auto": true
+			},
+			{
+				"title": "Wooden Tools",
+				"goal": "obtain",
+				"target": "wooden_axe|rod",
+				"label": "Tools made",
+				"count": 2,
+				"xp": 45,
+				"gold": 5,
+				"head": "Craft",
+				"checks": [
+					{
+						"label": "Wooden Axe",
+						"item": "wooden_axe"
+					},
+					{
+						"label": "Fishing Rod",
+						"item": "rod"
+					}
+				],
+				"tip": "Open your bag (I). Click the knife, then click your twigs, and choose Wooden Axe. Do it again and choose Fishing Rod.",
+				"intro": "Open your bag (I), click the knife, then click your twigs. Make a Wooden Axe and a Fishing Rod.",
+				"nag": "Bag (I): click the knife, then the twigs. Make an axe and a rod.",
+				"done": "Good tools. Take these rags, they'll keep the wind off. Next, wood.",
+				"quest": "Make a Fishing Rod and an Axe",
+				"reward_items": [
+					{
+						"name": "Ragged Tunic",
+						"slot": "chest"
+					},
+					{
+						"name": "Ragged Trousers",
+						"slot": "legs"
+					}
+				]
+			},
+			{
+				"title": "Chop a Log",
+				"goal": "obtain",
+				"target": "oak",
+				"label": "Oak Logs",
+				"count": 2,
+				"xp": 45,
+				"gold": 5,
+				"tip": "Click an oak tree and stand still while you chop (you need the axe you made). Gather 2 oak logs.",
+				"intro": "Click an oak and stand still. Bring me 2 logs.",
+				"nag": "Oaks are past the brush.",
+				"done": "Nice logs.",
+				"quest": "Cook a Meal",
+				"auto": true
+			},
+			{
+				"title": "Light a Fire",
+				"goal": "fire",
+				"target": "lit",
+				"label": "Fires lit",
+				"count": 1,
+				"xp": 60,
+				"gold": 5,
+				"give": {
+					"flint_steel": 1
+				},
+				"tip": "Open your bag (I). Right-click a log to make kindling, then right-click the kindling to light a fire (uses the flint and steel).",
+				"intro": "Take my flint and steel. Open your bag (I), right-click a log for kindling, then right-click the kindling.",
+				"nag": "Right-click a log, then the kindling.",
+				"done": "Warm already.",
+				"quest": "Cook a Meal",
+				"auto": true
+			},
+			{
+				"title": "Catch Supper",
+				"goal": "obtain",
+				"target": "raw_minnow",
+				"label": "Raw Minnows",
+				"count": 2,
+				"xp": 60,
+				"gold": 5,
+				"give": {
+					"bait_0": 8
+				},
+				"tip": "Walk to the pond and click the ripples in the water, then stand still. Catch 2 raw minnows (your rod and the bait you were given do the work).",
+				"intro": "Click the ripples in the pond to fish. Here's bait. Catch 2 minnows.",
+				"nag": "Stand still by the pond.",
+				"done": "Fine minnows.",
+				"quest": "Cook a Meal",
+				"auto": true
+			},
+			{
+				"title": "Cook It",
+				"goal": "obtain",
+				"target": "minnow",
+				"label": "Cooked Minnows",
+				"count": 2,
+				"xp": 70,
+				"gold": 10,
+				"tip": "Click your fire and choose Cooked Minnow. Some may burn, keep trying. Bring 2 cooked minnows to Tam.",
+				"intro": "Click a fire and cook 2 minnows. Some may burn, keep trying.",
+				"nag": "Click a fire, pick Cooked Minnow.",
+				"done": "Smells great.",
+				"quest": "Cook a Meal"
+			},
+			{
+				"title": "Set Your Abilities",
+				"goal": "bar",
+				"target": "any",
+				"label": "Abilities on bar",
+				"count": 1,
+				"xp": 0,
+				"gold": 5,
+				"pulse": "abilities",
+				"tip": "Press N and click an ability to put it on your bar.",
+				"intro": "Press N to open Abilities. Click an ability to put it on your bar.",
+				"nag": "Press N, then click abilities.",
+				"done": "Now they're one key press away (1-6).",
+				"quest": "Ready for a Fight",
+				"auto": true
+			},
+			{
+				"title": "Try Them Out",
+				"goal": "kill",
+				"target": "mosslet",
+				"label": "Mosslets",
+				"count": 1,
+				"xp": 40,
+				"gold": 5,
+				"spawn": true,
+				"end_safe": true,
+				"tip": "Hit the Mosslet with your abilities (keys 1-6). Right-click it to auto-attack.",
+				"intro": "A Mosslet wandered into camp. Use your abilities on it with keys 1-6. Right-click it to auto-attack.",
+				"nag": "The Mosslet's near camp. Use keys 1-6.",
+				"done": "Nice. There is a rack by my tent with a bow and a staff, take them if you like. The wilds are open, so stay sharp.",
+				"quest": "Ready for a Fight"
+			},
+			{
+				"title": "The Road to Hearthmoor",
+				"goal": "talk",
+				"target": "king",
+				"label": "Meet the King",
+				"count": 1,
+				"xp": 0,
+				"gold": 60,
+				"auto": true,
+				"reward_rarity": 1,
+				"tip": "Follow the road north. Speak to the King.",
+				"intro": "Follow the road north to Hearthmoor and speak to the King. Tell him Tam sent you.",
+				"nag": "North along the road.",
+				"done": ""
+			}
+		]
+	},
+	{
+		"id": "king",
+		"name": "King Aldren",
+		"sprite": "king",
+		"biome": 0,
+		"ang": 0.0,
+		"dist": 0,
+		"town": [
+			0.0,
+			0.0
+		],
+		"still": true,
+		"greet": "So Tam sent another wanderer. Welcome to Hearthmoor.",
+		"thanks": "Rowan will see you right. Go well, keeper of the Ember.",
+		"quests": [
+			{
+				"title": "The King's Charge",
+				"goal": "talk",
+				"target": "rowan",
+				"label": "Find Elder Rowan",
+				"count": 1,
+				"xp": 80,
+				"gold": 30,
+				"auto": true,
+				"tip": "Find Elder Rowan in the square.",
+				"intro": "The Ember is dying and the four Wardens have turned. Find Elder Rowan in the square. He'll prepare you.",
+				"nag": "Elder Rowan is in the square.",
+				"done": ""
+			}
+		]
+	},
+	{
+		"id": "rowan",
+		"name": "Elder Rowan",
+		"sprite": "elder",
+		"biome": 0,
+		"ang": 0.0,
+		"dist": 0,
+		"town": [
+			-3.0,
+			-10.5
+		],
+		"greet": "Ah, the new keeper. Welcome to Hearthmoor.",
+		"thanks": "You've grown into the work, keeper. Hearthmoor is proud of you.",
+		"quests": [
+			{
+				"title": "Meet the Smith",
+				"goal": "talk",
+				"target": "smith",
+				"label": "Visit Hilde's forge",
+				"count": 1,
+				"xp": 25,
+				"gold": 10,
+				"intro": "Visit Hilde at her smithy, the open-sided shed with the stone forge.",
+				"nag": "Look for the smithy with the glowing forge.",
+				"done": "Hilde doesn't like anyone. You're doing well.",
+				"quest": "Learn the Forge",
+				"auto": true,
+				"tip": "Walk to the smithy (the open shed with the glowing forge) and speak to Hilde."
+			},
+			{
+				"title": "A Wooden Pick",
+				"goal": "obtain",
+				"target": "wooden_pickaxe",
+				"label": "Make a Wooden Pickaxe",
+				"count": 1,
+				"xp": 50,
+				"gold": 10,
+				"intro": "Use your knife on 6 twigs to make a Wooden Pickaxe.",
+				"nag": "Click the knife, then the twigs.",
+				"done": "Crude, but it'll crack copper.",
+				"quest": "Learn the Forge",
+				"auto": true,
+				"tip": "Bag (I): click the knife, then 6 twigs, and choose Wooden Pickaxe."
+			},
+			{
+				"title": "Ore for the Furnace",
+				"goal": "obtain",
+				"target": "copper",
+				"label": "Copper Ore",
+				"count": 5,
+				"xp": 60,
+				"gold": 15,
+				"intro": "Mine 5 copper ore from the rocks past the gate.",
+				"nag": "Orange-flecked rocks, past the gate.",
+				"done": "Honest ore.",
+				"quest": "Learn the Forge",
+				"auto": true,
+				"tip": "Click the orange-flecked rocks past the gate to mine copper (needs the pickaxe)."
+			},
+			{
+				"title": "Smelt and Strike",
+				"goal": "obtain",
+				"target": "copper_bar",
+				"label": "Smelt Copper Bars",
+				"count": 3,
+				"xp": 80,
+				"gold": 20,
+				"intro": "Smelt 3 copper bars at the furnace in the square.",
+				"nag": "Furnace in the square.",
+				"done": "Bars. Now you're getting somewhere.",
+				"quest": "Learn the Forge",
+				"tip": "Click the furnace in the square and smelt copper ore into bars. 3 bars."
+			},
+			{
+				"title": "Pests at the Gate",
+				"goal": "kill",
+				"target": "mosslet",
+				"label": "Mosslets",
+				"count": 5,
+				"xp": 80,
+				"gold": 20,
+				"intro": "Kill 5 Mosslets outside the gate. Press N to set up your abilities.",
+				"nag": "Just past the gates.",
+				"done": "The gardens are safe again.",
+				"tip": "Fight the Mosslets just outside the gate. Use keys 1-6, or right-click to auto-attack."
+			},
+			{
+				"title": "Forged in Hearthmoor",
+				"goal": "craft",
+				"target": "any",
+				"label": "Forge a piece of gear",
+				"count": 1,
+				"xp": 100,
+				"gold": 25,
+				"intro": "Make a piece of gear. Metal: click the hammer, then a bar, at an anvil. Leather and cloth: click the knife, then herbs or creature parts.",
+				"nag": "Metal at the anvil, soft gear with the knife.",
+				"done": "Look at you, all kitted out.",
+				"quest": "Hearthmoor's Ways",
+				"auto": true,
+				"tip": "Metal gear: click the hammer, then a bar, at an anvil. Soft gear: click the knife, then herbs or creature parts."
+			},
+			{
+				"title": "The Slayer's Mark",
+				"goal": "talk",
+				"target": "varka",
+				"label": "Speak with Varka",
+				"count": 1,
+				"xp": 60,
+				"gold": 20,
+				"intro": "Meet Varka. She keeps to her own house in town.",
+				"nag": "Look for her name over a doorstep in town.",
+				"done": "She'll keep you busy.",
+				"quest": "Hearthmoor's Ways",
+				"auto": true,
+				"tip": "Varka lives in her own house in town. Look for her name over the door."
+			},
+			{
+				"title": "The Ember's Keeper",
+				"goal": "talk",
+				"target": "wisp",
+				"label": "Speak with the Wisp",
+				"count": 1,
+				"xp": 120,
+				"gold": 50,
+				"reward_rarity": 2,
+				"intro": "Speak with the Wisp at the shrine. Take this, my hunting days are done.",
+				"nag": "The Wisp floats above the shrine.",
+				"done": "Go well, keeper. Hearthmoor will be here.",
+				"quest": "Hearthmoor's Ways",
+				"tip": "The Wisp floats above the shrine. Speak with it, then come back to Rowan."
+			}
+		]
+	},
+	{
+		"id": "hollis",
+		"name": "Farmer Hollis",
+		"sprite": "farmer",
+		"biome": 0,
+		"ang": 2.6,
+		"dist": 13,
+		"greet": "Morning, keeper. Mind the turnips.",
+		"thanks": "Wren's up and about again. You're always welcome at our table.",
+		"quests": [
+			{
+				"title": "Pests in the Pasture",
+				"goal": "kill",
+				"target": "mosslet",
+				"label": "Mosslets",
+				"count": 8,
+				"xp": 60,
+				"gold": 40,
+				"intro": "Those Mosslets have eaten half my turnips. Squash eight of them and I'll pay you what I can.",
+				"nag": "Still hearing them squelch in the rows.",
+				"done": "Quiet at last! Here, for your trouble."
+			},
+			{
+				"title": "Sunpetals for Wren",
+				"goal": "gather",
+				"target": "sunpetal",
+				"label": "Sunpetals",
+				"count": 5,
+				"xp": 90,
+				"gold": 60,
+				"reward_rarity": 2,
+				"intro": "My girl Wren's been poorly since the Ember dimmed. Sunpetals grow wild around my fields. They glow a little. Bring me five?",
+				"nag": "They glow gold. You can't miss them once the sun's low.",
+				"done": "She'll be smiling by supper. Take this. It was my father's."
+			}
+		]
+	},
+	{
+		"id": "maren",
+		"name": "Ranger Maren",
+		"sprite": "ranger",
+		"biome": 1,
+		"ang": 0.9,
+		"dist": 30,
+		"greet": "Keep your voice down. The trees listen.",
+		"thanks": "The Thornwood breathes easier. So do I.",
+		"quests": [
+			{
+				"title": "Thinning the Pack",
+				"goal": "kill",
+				"target": "wolf",
+				"label": "Grey Wolves",
+				"count": 6,
+				"xp": 250,
+				"gold": 120,
+				"intro": "The wolves have gone bold since the Rootfather turned. Cull six and the trails will be safer.",
+				"nag": "The pack's still out there. I can hear them.",
+				"done": "Good work. The trails are quieter already."
+			},
+			{
+				"title": "Old Greymaw",
+				"goal": "elite",
+				"target": "alpha",
+				"label": "Old Greymaw",
+				"count": 1,
+				"xp": 400,
+				"gold": 200,
+				"reward_rarity": 2,
+				"intro": "Their leader, Old Greymaw, dens east of here. Bigger than any wolf has a right to be. End it.",
+				"nag": "Greymaw's den is marked on your map. Go carefully.",
+				"done": "Greymaw's gone. You've earned more than thanks. Take this."
+			}
+		]
+	},
+	{
+		"id": "oswin",
+		"name": "Hermit Oswin",
+		"sprite": "hermit",
+		"biome": 2,
+		"ang": 2.2,
+		"dist": 50,
+		"greet": "Eh? Oh. A visitor. How rare.",
+		"thanks": "My lanterns burn and the chanting's stopped. I may even sleep tonight.",
+		"quests": [
+			{
+				"title": "Lights in the Bog",
+				"goal": "gather",
+				"target": "lantern",
+				"label": "Lantern-caps",
+				"count": 4,
+				"xp": 600,
+				"gold": 260,
+				"intro": "Lantern-caps grow on the drowned logs round my hut. I need four to see by. Mind the Lurkers.",
+				"nag": "Glowing mushrooms, keeper. Big ones.",
+				"done": "Ah, light! Wonderful. Here, take some coin."
+			},
+			{
+				"title": "The Shamans' Chant",
+				"goal": "kill",
+				"target": "shaman",
+				"label": "Mire Shamans",
+				"count": 6,
+				"xp": 900,
+				"gold": 380,
+				"reward_rarity": 3,
+				"intro": "Hear that chanting at night? The Mire Shamans are calling something up. Silence six of them.",
+				"nag": "Still chanting. Still not sleeping.",
+				"done": "Silence. Blessed silence. This trinket's yours. I never liked it."
+			}
+		]
+	},
+	{
+		"id": "aldric",
+		"name": "Brother Aldric",
+		"sprite": "pilgrim",
+		"biome": 3,
+		"ang": 5.6,
+		"dist": 63,
+		"greet": "Peace on the road, traveler.",
+		"thanks": "The pilgrim road is open once more. The Ember's light be with you.",
+		"quests": [
+			{
+				"title": "Rime and Ruin",
+				"goal": "kill",
+				"target": "cultist",
+				"label": "Rime Cultists",
+				"count": 6,
+				"xp": 1300,
+				"gold": 500,
+				"intro": "The Rime Cultists defile the old pilgrim road. Drive them off, six at the least.",
+				"nag": "They still walk the road in their frost-masks.",
+				"done": "The road is quieter. Bless you."
+			},
+			{
+				"title": "The Frostbound Champion",
+				"goal": "elite",
+				"target": "champion",
+				"label": "Frostbound Champion",
+				"count": 1,
+				"xp": 2000,
+				"gold": 800,
+				"reward_rarity": 3,
+				"intro": "Their champion guards the high pass north of here. Bring him down and the road is ours again.",
+				"nag": "The high pass is marked on your map.",
+				"done": "You've done what an army couldn't. Take this, with the Order's thanks."
+			}
+		]
+	},
+	{
+		"id": "peg",
+		"name": "Net-mender Peg",
+		"sprite": "farmer",
+		"biome": 0,
+		"ang": 0.0,
+		"dist": 0,
+		"greet": "Mind the nets, love. The tide leaves all sorts behind.",
+		"thanks": "The boats go out easier now. Come back for a cuppa any time.",
+		"quests": [
+			{
+				"title": "Beetles in the Nets",
+				"goal": "kill",
+				"target": "beetle",
+				"label": "Thornbeetles",
+				"count": 6,
+				"xp": 70,
+				"gold": 45,
+				"intro": "Thornbeetles chew through my nets faster than I can mend them. Six of them gone and I'll sleep easy.",
+				"nag": "I can hear them clicking along the dunes.",
+				"done": "Quiet nets. Bless you."
+			},
+			{
+				"title": "Thrift for the Boats",
+				"goal": "gather",
+				"target": "thrift",
+				"label": "Sea Thrift",
+				"count": 5,
+				"xp": 100,
+				"gold": 65,
+				"reward_rarity": 1,
+				"intro": "The old sailors tie sea thrift to the bows for luck. Pink flowers, they glow a little at dusk. Five, please.",
+				"nag": "Along the dunes by the water. Pink and glowing.",
+				"done": "Luck for the whole fleet. Take this, it was my husband's."
+			}
+		]
+	},
+	{
+		"id": "corwin",
+		"name": "Huntsman Corwin",
+		"sprite": "ranger",
+		"biome": 1,
+		"ang": 0.0,
+		"dist": 0,
+		"greet": "Quiet now. The briars have ears.",
+		"thanks": "The lodge sleeps safe tonight. You've a place by the fire.",
+		"quests": [
+			{
+				"title": "Brood in the Briars",
+				"goal": "kill",
+				"target": "spider",
+				"label": "Thicket Spiders",
+				"count": 8,
+				"xp": 300,
+				"gold": 130,
+				"intro": "Something's driven the spiders out of their den. They're in the briars, in the rafters. Kill eight.",
+				"nag": "Listen for the clicking in the thorns.",
+				"done": "Fewer eyes in the dark. Good."
+			},
+			{
+				"title": "Berries for the Salve",
+				"goal": "gather",
+				"target": "briarberry",
+				"label": "Briarberries",
+				"count": 5,
+				"xp": 380,
+				"gold": 160,
+				"reward_rarity": 2,
+				"intro": "My salve needs briarberries, the dark red ones. They grow where the thorns are thickest. Five.",
+				"nag": "Dark red, deep in the thorns. Watch your step.",
+				"done": "That'll mend a hunter's hide. Here, take my spare."
+			}
+		]
+	},
+	{
+		"id": "dunn",
+		"name": "Wharfmaster Dunn",
+		"sprite": "slayer",
+		"biome": 2,
+		"ang": 0.0,
+		"dist": 0,
+		"greet": "Tide's out and the leeches are in. Welcome to Bellwharf.",
+		"thanks": "The wharf's working again. The bell rings true.",
+		"quests": [
+			{
+				"title": "Leeches on the Pilings",
+				"goal": "kill",
+				"target": "leech",
+				"label": "Bog Leeches",
+				"count": 6,
+				"xp": 500,
+				"gold": 220,
+				"intro": "Bog Leeches have burrowed into the mudflats and rotted my pilings. Dig six of them out for good.",
+				"nag": "They burrow, so watch the mud ripple.",
+				"done": "The pilings hold. I owe you."
+			},
+			{
+				"title": "Brinecaps for the Cure",
+				"goal": "gather",
+				"target": "brinecap",
+				"label": "Brinecaps",
+				"count": 5,
+				"xp": 600,
+				"gold": 260,
+				"intro": "The sick need brinecap broth. Teal mushrooms, they grow on the wrecks. Five should do.",
+				"nag": "Teal mushrooms on the wrecks and posts.",
+				"done": "That will save a few lives. Take this for the road."
+			},
+			{
+				"title": "The Crones of the Delta",
+				"goal": "kill",
+				"target": "crone",
+				"label": "Bog Crones",
+				"count": 3,
+				"xp": 800,
+				"gold": 340,
+				"reward_rarity": 2,
+				"intro": "Bog Crones are brewing something out in the reeds. It drifts in at night and the wharf folk dream wrong. Three of them.",
+				"nag": "Out in the reeds past the wrecks.",
+				"done": "No more bad dreams. This was my father's."
+			}
+		]
+	},
+	{
+		"id": "ysolt",
+		"name": "Shepherd Ysolt",
+		"sprite": "elder",
+		"biome": 3,
+		"ang": 0.0,
+		"dist": 0,
+		"greet": "Wind's up. Keep your hood close, traveller.",
+		"thanks": "The flock is safe and the cairns are quiet. The Downs remember kindness.",
+		"quests": [
+			{
+				"title": "Hounds on the Ridge",
+				"goal": "kill",
+				"target": "downhound",
+				"label": "Downs Hounds",
+				"count": 6,
+				"xp": 1000,
+				"gold": 420,
+				"intro": "Downs Hounds took three of my flock last night. Pale things, fast. Put six of them down.",
+				"nag": "They hunt along the ridge, near the stones.",
+				"done": "My sheep thank you. So do I."
+			},
+			{
+				"title": "Heather for the Dead",
+				"goal": "gather",
+				"target": "heather",
+				"label": "Downs Heather",
+				"count": 5,
+				"xp": 1100,
+				"gold": 460,
+				"intro": "We lay heather on the old cairns so the dead rest. Purple, faintly glowing. Bring me five.",
+				"nag": "Purple, on the high ground near the stones.",
+				"done": "Rest easy, old ones. Thank you."
+			},
+			{
+				"title": "The Barrow-King",
+				"goal": "elite",
+				"target": "barrowking",
+				"label": "The Barrow-King",
+				"count": 1,
+				"xp": 1800,
+				"gold": 700,
+				"reward_rarity": 3,
+				"intro": "Something has woken in the ruined keep. The shepherds call him the Barrow-King. Lay him down.",
+				"nag": "The ruined keep is marked on your map.",
+				"done": "He walks no more. Take this, with the Downs' thanks."
+			}
+		]
+	}
 ]
 ## Named elites for "elite" quests: base enemy, multipliers, and where their lair is (angle/distance from the shrine, in cells).
 const ELITES := {
@@ -838,6 +1335,8 @@ const BINDINGS := {
 
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		return   # embers world builder: only the tables are needed in the editor
 	var audio := Sfx.new()
 	audio.name = "Audio"
 	add_child(audio)
@@ -946,10 +1445,45 @@ static func level_for_xp(xp: int) -> int:
 
 ## Fishing spots: which fish swims where, and what you need.
 const FISH := [
-	{"raw": "raw_minnow", "bait": "bait_0", "biomes": [0, 4], "lvl": 1, "xp": 20},
-	{"raw": "raw_trout", "bait": "bait_1", "biomes": [1], "lvl": 8, "xp": 40},
-	{"raw": "raw_eel", "bait": "bait_2", "biomes": [2, 4], "lvl": 16, "xp": 62},
-	{"raw": "raw_icefin", "bait": "bait_3", "biomes": [3, 4], "lvl": 24, "xp": 90},   # cold deep water off the shore
+	{
+		"raw": "raw_minnow",
+		"bait": "bait_0",
+		"biomes": [
+			0,
+			4
+		],
+		"lvl": 1,
+		"xp": 20
+	},
+	{
+		"raw": "raw_trout",
+		"bait": "bait_1",
+		"biomes": [
+			1
+		],
+		"lvl": 8,
+		"xp": 40
+	},
+	{
+		"raw": "raw_eel",
+		"bait": "bait_2",
+		"biomes": [
+			2,
+			4
+		],
+		"lvl": 16,
+		"xp": 62
+	},
+	{
+		"raw": "raw_icefin",
+		"bait": "bait_3",
+		"biomes": [
+			3,
+			4
+		],
+		"lvl": 24,
+		"xp": 90
+	}
 ]
 ## Recipes at the cooking fire, furnace and anvil, and by using items (knife, vial, hammer) on materials.
 ## out: material made (or "potion" / "bag:N" / "tool:<skill>"), cost: materials, burn: can fail at low level, once: one-time upgrade.

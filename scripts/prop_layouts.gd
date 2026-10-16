@@ -1,3 +1,4 @@
+@tool
 class_name PropLayouts
 extends RefCounted
 ## Hand-made furniture layouts. One JSON file per building kind in res://layouts/ (shop.json, tavern.json ...).
