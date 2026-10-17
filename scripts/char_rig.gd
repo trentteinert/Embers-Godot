@@ -226,8 +226,8 @@ func _clip(base: String) -> String:
 	return base
 
 
-func attack(dur := 0.25) -> void:
-	super.attack(dur)
+func attack(dur := 0.25, left := false, fast := false) -> void:
+	super.attack(dur, left, fast)
 	if _is_armed():
 		var n := 0
 		for c: String in ATTACKS_ARMED:

@@ -377,25 +377,34 @@ func float_text(pos: Vector3, text: String, col: Color) -> void:
 
 
 # ================================================================ attacks
+var _off_swing := false
+
+
 func _try_attack() -> void:
 	if player.attack_t > 0.0 or player.dead or not player.dash.is_empty():
 		return
 	var cc: Dictionary = Data.CLASS_COMBAT[player.class_id]
-	player.attack_t = float(cc["cd"]) * (0.5 if player.has_buff("flurry") else 1.0) * maxf(0.4, 1.0 - 0.08 * main.talent_rank("sh_quick") - 0.06 * (main.talent_rank("ve_quick") + main.talent_rank("bw_quick")))
+	# dual wielding: quicker swings that each hit for less, alternating hands
+	var off: Dictionary = main.state.get("equip", {}).get("offhand", {})
+	var dual: bool = main.talent_rank("sh_dual") > 0 and not off.is_empty() and String(off.get("type", "")) != "shield"
+	if dual:
+		_off_swing = not _off_swing
+	player.attack_t = float(cc["cd"]) * (0.5 if player.has_buff("flurry") else 1.0) * (0.6 if dual else 1.0) * maxf(0.4, 1.0 - 0.08 * main.talent_rank("sh_quick") - 0.06 * (main.talent_rank("ve_quick") + main.talent_rank("bw_quick")))
+	var basic_mult: float = BASIC_MULT * (0.5 if dual else 1.0)
 	if cc["attack"] == "bolt":
 		player.anim_cast(0.25)
 	else:
-		player.anim_attack(minf(0.3, player.attack_t * 0.9))
+		player.anim_attack(minf(0.3, player.attack_t * 0.9), true, dual and _off_swing, dual)
 	match cc["attack"]:
 		"melee":
 			Sfx.play("swing_heavy" if player.class_id == "warrior" else "swing", Vector3.INF, -6.0)
-			_melee(cc["range"], cc["arc"], BASIC_MULT, cc["knock"], Color("fff4d8"))
+			_melee(cc["range"], cc["arc"], basic_mult, cc["knock"], Color("fff4d8"))
 		"bolt":
 			Sfx.play("bolt", Vector3.INF, -8.0)
-			_player_shot(player.aim_dir, cc["speed"], _pd(BASIC_MULT), "bolt", Color("c49bff"), cc["life"])
+			_player_shot(player.aim_dir, cc["speed"], _pd(basic_mult), "bolt", Color("c49bff"), cc["life"])
 		"arrow":
 			Sfx.play("bow", Vector3.INF, -6.0)
-			_player_shot(player.aim_dir, cc["speed"], _pd(BASIC_MULT), "arrow", Color("e8d8b0"), cc["life"])
+			_player_shot(player.aim_dir, cc["speed"], _pd(basic_mult), "arrow", Color("e8d8b0"), cc["life"])
 
 
 func _melee(rng: float, arc: float, mult: float, knock: float, col: Color, o := {}) -> int:

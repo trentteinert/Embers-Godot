@@ -21,6 +21,7 @@ var _phase := 0.0
 var _move := 0.0
 var _attack_t := 0.0
 var _attack_dur := 0.25
+var _attack_left := false
 var _cast_t := 0.0
 var _cast_dur := 0.4
 var _flash_t := 0.0
@@ -197,9 +198,12 @@ func _work_period() -> float:
 			return 0.85
 
 
-func attack(dur := 0.25) -> void:
-	_attack_t = maxf(dur, 0.5)
-	_attack_dur = maxf(dur, 0.5)
+## `left`: swing with the left hand (dual wielding alternates). `fast`: a quick flurry swing, not the full-length one.
+func attack(dur := 0.25, left := false, fast := false) -> void:
+	var least := 0.26 if fast else 0.5
+	_attack_t = maxf(dur, least)
+	_attack_dur = maxf(dur, least)
+	_attack_left = left
 
 
 func cast(dur := 0.4) -> void:
@@ -508,9 +512,25 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 				knee_l = 0.55 * strike
 				knee_r = 0.2 * strike
 				push = 0.2 * strike
-		arm_l = lerpf(arm_l, -1.05, 0.7)         # the other arm guards
-		elb_l = -1.1
-		arm_lz = 0.1
+		if _attack_left:
+			# off-hand swing: the same move mirrored onto the left arm, the right arm guards
+			arm_l = arm_r
+			elb_l = elb_r
+			arm_lz = -arm_rz
+			torso_y = -torso_y
+			var t_leg := leg_l
+			leg_l = leg_r
+			leg_r = t_leg
+			var t_knee := knee_l
+			knee_l = knee_r
+			knee_r = t_knee
+			arm_r = lerpf(arm_r, -1.05, 0.7)
+			elb_r = -1.1
+			arm_rz = -0.1
+		else:
+			arm_l = lerpf(arm_l, -1.05, 0.7)         # the other arm guards
+			elb_l = -1.1
+			arm_lz = 0.1
 		_ba["atk"] = _attack_t
 		arm_r = lerpf(float(base_pose["arm_r"]), arm_r, aw)
 		arm_l = lerpf(float(base_pose["arm_l"]), arm_l, aw)

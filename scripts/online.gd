@@ -778,14 +778,18 @@ func _on_event(e: Variant) -> void:
 ## An auto attack (the class basic attack) by player `pid`: swing, shoot or cast, with the game's own sound and white slash.
 func _on_basic_attack(pid: int, n: Node3D, ab: String) -> void:
 	var cls: String = main.player.class_id if pid == my_id else (n as RemotePlayer).class_id
+	# dual wielders announce each swing as basic_melee_main / basic_melee_off (they alternate hands, and swing faster)
+	var left := ab.ends_with("_off")
+	var dual := left or ab.ends_with("_main")
+	ab = ab.trim_suffix("_off").trim_suffix("_main")
 	var bolt: bool = ab == "basic_bolt"
 	if pid == my_id:
 		if bolt:
 			main.player.anim_cast(0.25, false)   # false: do not turn the character toward the enemy
 		else:
-			main.player.anim_attack(0.3, false)
+			main.player.anim_attack(0.28 if dual else 0.3, false, left, dual)
 	else:
-		(n as RemotePlayer).play_attack(bolt)
+		(n as RemotePlayer).play_attack(bolt, left, dual)
 	match ab:
 		"basic_melee":
 			Sfx.play("swing_heavy" if cls == "warrior" else "swing", n.global_position, -6.0)

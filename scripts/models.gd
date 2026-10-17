@@ -239,7 +239,7 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 	cfg["metal"] = "a3adba"
 	var wep: Dictionary = equip.get("weapon", {})
 	var off: Dictionary = equip.get("offhand", {})
-	if id == "rogue":
+	if id == "rogue" or (not off.is_empty() and String(off.get("type", "")) != "shield"):
 		# dual wield: main hand right, off-hand left, whatever one-handers they are
 		cfg["weapon_r"] = String(wep.get("type", "")) if not wep.is_empty() else ""
 		cfg["weapon_l"] = String(off.get("type", "")) if not off.is_empty() else ""

@@ -531,7 +531,7 @@ func _update_aim(_move: Vector3, _moving: bool) -> void:
 	aim_point = global_position + aim_dir * 7.0
 
 
-func anim_attack(dur := 0.25, face := true) -> void:
+func anim_attack(dur := 0.25, face := true, left := false, fast := false) -> void:
 	if face:
 		_face_aim_t = 0.45
 	armed_t = 6.0
@@ -539,7 +539,7 @@ func anim_attack(dur := 0.25, face := true) -> void:
 		model.set_armed(true, true)
 		if face:
 			model.set_facing(aim_dir)
-		model.attack(dur)
+		model.attack(dur, left, fast)
 
 
 func anim_cast(dur := 0.4, face := true) -> void:
