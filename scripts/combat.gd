@@ -513,7 +513,7 @@ func cast_ability(i: int, slot := -1) -> void:
 	var cdm: float = 1.0
 	if a["id"] in ["stealth", "smoke"]:
 		cdm = 1.0 - 0.2 * main.talent_rank("sh_prep")
-	cooldowns[i] = float(a["cd"]) * cdm
+	cooldowns[i] = float(a["cd"]) * cdm * maxf(0.5, 1.0 - player.tfx("cd") / 100.0)
 	player.combat_t = 0.0
 	# using an offensive ability on an enemy starts auto attacking it
 	if main.has_target() and not (a["id"] in ["stand", "barrier", "blink", "disengage", "stealth", "smoke"]):

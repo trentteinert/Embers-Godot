@@ -181,6 +181,21 @@ func refresh_stats() -> void:
 
 
 ## Level, Warden lights (tier) and gear -> health, damage, crit, armor, resource.
+## Sum of a passive-talent effect ("dmg", "crit", "hp", "armor", "res", "move", "cd") over the ranks you hold.
+func tfx(kind: String) -> float:
+	var total := 0.0
+	for n: Dictionary in Data.TALENTS.get(class_id, []):
+		if not n.has("effects"):
+			continue
+		var r := tal(String(n["id"]))
+		if r == 0:
+			continue
+		for e: Dictionary in n["effects"]:
+			if e["kind"] == kind:
+				total += float(e["per"]) * r
+	return total
+
+
 func tal(id: String) -> int:
 	var m := get_parent()
 	if m and m.has_method("talent_rank"):
@@ -197,15 +212,15 @@ func _compute() -> void:
 		var growth := 4.0 if k == main_stat else (2.0 if k == "sta" else 0.5)
 		attrs[k] = 10.0 + growth * (level - 1) + float(gear.get(k, 0.0))
 	var base_hp := float(c["hp"])
-	max_hp = round((base_hp * (1.0 + 0.1 * tier) + (float(attrs["sta"]) - 10.0) * base_hp * 0.06) * (1.0 + 0.04 * (tal("sh_hard") + tal("ve_resil")) + 0.05 * (tal("bw_vital") + tal("bw_titan"))))
+	max_hp = round((base_hp * (1.0 + 0.1 * tier) + (float(attrs["sta"]) - 10.0) * base_hp * 0.06) * (1.0 + 0.04 * (tal("sh_hard") + tal("ve_resil")) + 0.05 * (tal("bw_vital") + tal("bw_titan")) + tfx("hp") / 100.0))
 	dmg = (float(cc["dmg"]) + float(gear.get("dmg", 0.0))) * (1.0 + 0.06 * tier) * (1.0 + (float(attrs[main_stat]) - 10.0) * 0.025)
-	dmg *= 1.0 + 0.05 * (tal("sh_edge") + tal("ve_sharp") + tal("bw_heavy") + tal("bw_titan"))
-	crit = 0.05 * tal("sh_opp") + 0.03 * (tal("ve_keen") + tal("bw_crit")) + float(cc["crit"]) + float(gear.get("crit", 0.0)) / 100.0 + (float(attrs["agi"]) - 10.0) * 0.001
+	dmg *= 1.0 + 0.05 * (tal("sh_edge") + tal("ve_sharp") + tal("bw_heavy") + tal("bw_titan")) + tfx("dmg") / 100.0
+	crit = 0.05 * tal("sh_opp") + 0.03 * (tal("ve_keen") + tal("bw_crit")) + float(cc["crit"]) + tfx("crit") / 100.0 + float(gear.get("crit", 0.0)) / 100.0 + (float(attrs["agi"]) - 10.0) * 0.001
 	var ba: Array = Data.BASE_ARMOR[class_id]
 	armor = float(ba[0]) + float(ba[1]) * (level - 1) + float(gear.get("armor", 0.0))
-	armor *= 1.0 + 0.1 * (tal("sh_thick") + tal("ve_thick") + tal("bw_thick") + tal("bw_unbreak"))
+	armor *= 1.0 + 0.1 * (tal("sh_thick") + tal("ve_thick") + tal("bw_thick") + tal("bw_unbreak")) + tfx("armor") / 100.0
 	armor_red = minf(0.6, armor / (armor + 60.0 + 15.0 * level))
-	res_max = 100.0 + ((float(attrs["int"]) - 10.0) * 2.0 if class_id == "mage" else 0.0)
+	res_max = 100.0 + ((float(attrs["int"]) - 10.0) * 2.0 if class_id == "mage" else 0.0) + tfx("res")
 	res = minf(res, res_max)
 
 
@@ -319,7 +334,7 @@ func _physics_process(delta: float) -> void:
 		speed *= sk.speed_mult()
 	if has_buff("swift"):
 		speed *= 1.2
-	speed *= 1.0 + 0.04 * tal("sh_nimble") + 0.03 * tal("ve_agile")
+	speed *= 1.0 + 0.04 * tal("sh_nimble") + 0.03 * tal("ve_agile") + tfx("move") / 100.0
 	if net != null and net.server_speed > 0.0:
 		speed = net.server_speed   # online: walk at the pace the server uses, so we agree on where we are
 

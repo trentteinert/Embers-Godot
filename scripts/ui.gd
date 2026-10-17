@@ -3998,6 +3998,10 @@ func refresh_talents() -> void:
 		soon.custom_minimum_size = Vector2(420, 0)
 		_tal_body.add_child(soon)
 		return
+	var own_cid := cid
+	if not TAL_STYLES.has(_tal_view):
+		_tal_view = cid
+	cid = _tal_view
 	var trees: Array = Data.TALENT_TREES[cid]
 	var left: int = main.talent_points_left()
 	var total: int = main.talent_points_total()
@@ -4021,12 +4025,32 @@ func refresh_talents() -> void:
 	reset.pressed.connect(func() -> void: main.reset_talents())
 	head.add_child(reset)
 	head.add_child(close)
-	_tal_body.add_child(_label("Put points into more than one tree for a hybrid build.   Round icons are passives, square icons teach an ability.   Left-click adds a point, right-click takes one back. You earn one every 2 levels (15 total). Each row opens after 2 more points in that tree, and the bottom ability needs 10, so a true hybrid cannot reach it.", 12, MUTED, null, true))
+	var tabs := HBoxContainer.new()
+	tabs.add_theme_constant_override("separation", 8)
+	_tal_body.add_child(tabs)
+	for sid: String in TAL_STYLES:
+		var tb := Button.new()
+		tb.toggle_mode = true
+		tb.button_pressed = sid == cid
+		tb.focus_mode = Control.FOCUS_NONE
+		tb.text = "%s%s" % [TAL_STYLES[sid], "  (yours)" if sid == own_cid else ""]
+		tb.custom_minimum_size = Vector2(150, 30)
+		tb.pressed.connect(func() -> void:
+			_tal_view = sid
+			refresh_talents())
+		tabs.add_child(tb)
+	if cid != own_cid:
+		_tal_body.add_child(_label("You fight as a %s, so this tree is just a preview. Talents are earned from your own combat level (one point every 2 levels)." % Data.CLASSES[own_cid]["name"], 13, MUTED, null, true))
+	_tal_body.add_child(_label("Put points into more than one tree for a hybrid build.   Round icons are passives, square icons teach an ability.   Left-click adds a point, right-click takes one back. You earn one every 2 levels (15 total). Each row opens after 2 more points in that tree." + (" The bottom ability needs 10, so a true hybrid cannot reach it." if cid == "warrior" else " These trees are passives; your abilities unlock with level."), 12, MUTED, null, true))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
 	_tal_body.add_child(row)
 	for t: Dictionary in trees:
 		row.add_child(_talent_tree_panel(cid, t))
+
+
+const TAL_STYLES := {"warrior": "Melee", "mage": "Magic", "hunter": "Ranged"}
+var _tal_view := ""
 
 
 func _talent_tree_panel(cid: String, tree: Dictionary) -> Control:
@@ -4083,6 +4107,9 @@ func _talent_tree_panel(cid: String, tree: Dictionary) -> Control:
 func _talent_node(n: Dictionary, tcol: Color, center: Vector2) -> Control:
 	var rank: int = main.talent_rank(n["id"])
 	var block: String = main.talent_block(n["id"])
+	var own: bool = Data.talent_owner(String(n["id"])) == main.player.class_id
+	if not own:
+		block = "Preview only: not your combat style"
 	var is_ab: bool = n.has("ability")
 	var can: bool = block == ""
 	var maxed: bool = rank >= int(n["max"])

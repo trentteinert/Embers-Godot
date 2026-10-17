@@ -1027,7 +1027,7 @@ func talent_points_left() -> int:
 ## "" if you can put a point in it, otherwise why not.
 func talent_block(id: String) -> String:
 	var node: Dictionary = Data.talent_node(id)
-	if node.is_empty() or not has_talents():
+	if node.is_empty() or not has_talents() or Data.talent_owner(id) != player.class_id:
 		return "Not available"
 	if talent_rank(id) >= int(node["max"]):
 		return "Maxed"
