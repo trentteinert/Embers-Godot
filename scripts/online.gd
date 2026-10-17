@@ -796,7 +796,7 @@ const ABILITY_SOUND := {
 	"cleave": "swing_heavy", "charge": "dash", "whirl": "swing_heavy", "shout": "buff", "slam": "slam", "stand": "shield",
 	"backstab": "swing", "step": "dash", "fan": "swing", "poison": "buff", "smoke": "smoke", "flurry": "buff", "stealth": "smoke", "assassinate": "swing", "venomburst": "buff",
 	"fireball": "fire_cast", "blink": "blink", "nova": "frost", "barrier": "shield", "chain": "lightning", "meteor": "meteor_fall",
-	"power": "bow", "disengage": "dodge", "volley": "bow", "trap": "ui_click", "rain": "bow", "wolf": "howl", "strike": "swing_heavy",
+	"power": "bow", "disengage": "dodge", "volley": "bow", "trap": "ui_click", "rain": "bow", "wolf": "howl", "combustion": "buff", "iceblock": "shield", "bestial": "buff", "turtle": "shield", "strike": "swing_heavy",
 }
 ## ability -> [kind, size, colour]; "ring" = area burst around the caster, "melee" = a swing arc, "burst" = self effect
 const ABILITY_FX := {
@@ -805,7 +805,8 @@ const ABILITY_FX := {
 	"shout": ["burst", 3.6, "ff8a5a"], "stand": ["burst", 1.5, "c0c8d4"], "poison": ["burst", 1.5, "6ab040"], "flurry": ["burst", 1.5, "ffd27a"],
 	"stealth": ["burst", 1.5, "3a3458"], "barrier": ["burst", 1.2, "c0a0ff"], "wolf": ["burst", 2.0, "7ac8f0"], "blink": ["burst", 1.5, "b080ff"],
 	"charge": ["burst", 1.5, "c0802e"], "step": ["burst", 1.5, "7a1e2c"], "assassinate": ["burst", 1.5, "7a1e2c"], "disengage": ["burst", 1.2, "507a44"],
-	"venomburst": ["ring", 3.0, "6ac040"],
+	"venomburst": ["ring", 3.0, "6ac040"], "combustion": ["burst", 3.0, "ff8a3a"], "iceblock": ["burst", 1.5, "8ae0ff"],
+	"bestial": ["burst", 3.0, "ff9a4a"], "turtle": ["burst", 1.5, "7ad84a"],
 }
 
 
@@ -911,7 +912,7 @@ func _on_cast_event(pid: int, ev: Variant) -> void:
 			Sfx.play(snd, n.global_position, -3.0)
 		var spell: bool = main.player.class_id == "mage" if pid == my_id else (n as RemotePlayer).style_class == "mage"
 		if pid == my_id:
-			if spell or ab in ["shout", "poison", "smoke", "trap", "wolf", "stand", "flurry", "stealth", "venomburst"]:
+			if spell or ab in ["shout", "poison", "smoke", "trap", "wolf", "stand", "flurry", "stealth", "venomburst", "combustion", "iceblock", "bestial", "turtle"]:
 				main.player.anim_cast(0.45)
 			else:
 				main.player.anim_attack(0.3)

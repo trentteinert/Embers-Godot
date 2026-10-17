@@ -21,7 +21,7 @@ const ABILITY_SOUND := {
 	"cleave": "swing_heavy", "charge": "dash", "whirl": "swing_heavy", "shout": "buff", "slam": "slam", "stand": "shield",
 	"backstab": "swing", "step": "dash", "fan": "swing", "poison": "buff", "smoke": "smoke", "flurry": "buff", "stealth": "smoke", "assassinate": "swing", "venomburst": "buff",
 	"fireball": "fire_cast", "blink": "blink", "nova": "frost", "barrier": "shield", "chain": "lightning", "meteor": "meteor_fall",
-	"power": "bow", "disengage": "dodge", "volley": "bow", "trap": "ui_click", "rain": "bow", "wolf": "howl",
+	"power": "bow", "disengage": "dodge", "volley": "bow", "trap": "ui_click", "rain": "bow", "wolf": "howl", "combustion": "buff", "iceblock": "shield", "bestial": "buff", "turtle": "shield",
 }
 
 var main: Node
@@ -509,7 +509,7 @@ func cast_ability(i: int, slot := -1) -> void:
 			return
 	if not _do(a["id"]):
 		return
-	if player.class_id == "mage" or a["id"] in ["shout", "poison", "smoke", "trap", "wolf", "stand", "flurry", "stealth", "venomburst"]:
+	if player.class_id == "mage" or a["id"] in ["shout", "poison", "smoke", "trap", "wolf", "stand", "flurry", "stealth", "venomburst", "combustion", "iceblock", "bestial", "turtle"]:
 		player.anim_cast(0.45)
 	else:
 		player.anim_attack(0.3)
@@ -577,6 +577,26 @@ func _do(id: String) -> bool:
 		"stand":
 			player.buffs["stand"] = 5.0
 			burst(chest, Color("c0c8d4"), 18, 4.0, 0.5)
+		# ---------------- self buffs of the Magic and Ranged trees
+		"combustion":
+			player.buffs["shout"] = 8.0
+			player.res = minf(player.res_max, player.res + player.res_max * 0.3)
+			ring(p, 3.0, Color("ff8a3a"), 0.5)
+			burst(chest, Color("ff8a3a"), 20, 5.0, 0.6)
+		"bestial":
+			player.buffs["shout"] = 8.0
+			var bheal := player.max_hp * 0.1
+			player.hp = minf(player.max_hp, player.hp + bheal)
+			float_text(p + Vector3(0, 2.4, 0), "+%d" % int(bheal), Color("7be08a"))
+			burst(chest, Color("ff9a4a"), 20, 5.0, 0.6)
+		"iceblock":
+			player.buffs["iceblock"] = 3.0
+			player.inv_t = maxf(player.inv_t, 3.0)
+			player.hp = minf(player.max_hp, player.hp + player.max_hp * 0.15)
+			burst(chest, Color("8ae0ff"), 22, 4.0, 0.6)
+		"turtle":
+			player.buffs["stand"] = 5.0
+			burst(chest, Color("7ad84a"), 18, 4.0, 0.5)
 		# ---------------- shadow and venom
 		"backstab":
 			_melee(1.9, 1.4, 2.8, 3.0, Color("ff6a7a"))
