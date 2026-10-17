@@ -377,6 +377,7 @@ func _apply_inventory(refresh := true) -> void:
 	main._apply_gear(refresh)
 	if refresh:
 		main.ui.refresh_inventory()
+		main.ui.refresh_forge()   # the smith's repair list and fee
 
 
 func _apply_journal() -> void:

@@ -118,7 +118,7 @@ func _setup(ui_node: Node, online_node: Node, at: Vector3) -> void:
 	_dev_bar.add_child(ui._label("Item level (0 = yours)", 14, ui.MUTED))
 	_level = SpinBox.new()
 	_level.min_value = 0
-	_level.max_value = 20
+	_level.max_value = 30
 	_dev_bar.add_child(_level)
 	# the two grids
 	var body := HBoxContainer.new()

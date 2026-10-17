@@ -482,6 +482,52 @@ static func can_equip(_item: Dictionary, _class_id: String) -> bool:
 	return true
 
 
+# ---- equipment level requirements: a level in the gear's own combat skill (Magic 15 for level 15 cloth, Melee 15 for level 15 plate)
+const STYLE_SKILL_NAMES := {"melee": "Melee", "ranged": "Ranged", "magic": "Magic"}
+const CLASS_SKILL := {"warrior": "melee", "rogue": "melee", "mage": "magic", "hunter": "ranged"}
+static var my_level := 1   # your level in the combat skill you train (set by the UI from the character)
+
+
+static func style_skill(item: Dictionary) -> String:
+	match String(item.get("armor", "")):
+		"plate", "leather":
+			return "melee"
+		"mail":
+			return "ranged"
+		"cloth":
+			return "magic"
+	match String(item.get("type", "")):
+		"staff":
+			return "magic"
+		"bow":
+			return "ranged"
+		"sword", "dagger", "shortsword", "shield":
+			return "melee"
+	var st: Dictionary = item.get("stats", {})
+	var best := "str"
+	for k: String in ["str", "agi", "int"]:
+		if float(st.get(k, 0.0)) > float(st.get(best, 0.0)):
+			best = k
+	return {"str": "melee", "agi": "ranged", "int": "magic"}[best]
+
+
+static func required_level(item: Dictionary) -> int:
+	return maxi(1, int(item.get("ilvl", 1)))
+
+
+## Can this character (class, level in the skill they train) wear it? Other styles' gear needs a skill they do not train (level 1).
+static func requirement_met(item: Dictionary, class_id: String, level: int) -> bool:
+	if item.is_empty():
+		return true
+	var have := level if style_skill(item) == String(CLASS_SKILL.get(class_id, "melee")) else 1
+	return have >= required_level(item)
+
+
+static func requirement_line(item: Dictionary, class_id: String, level: int) -> String:
+	var ok := requirement_met(item, class_id, level)
+	return "[color=#%s]Requires %s %d[/color]" % ["9fe0a0" if ok else "e05a4a", STYLE_SKILL_NAMES[style_skill(item)], required_level(item)]
+
+
 static func color(item: Dictionary) -> Color:
 	return Color(RARITY_COLORS[int(item["rarity"])])
 
@@ -493,11 +539,28 @@ static func totals(equipment: Dictionary) -> Dictionary:
 		var it: Dictionary = equipment[slot]
 		if it.is_empty():
 			continue
-		var mult := upg_mult(it)
+		var mult := upg_mult(it) * wear_mult(it)
 		for k: String in it["stats"]:
 			var part := 0.5 if (slot == "offhand" and k == "dmg") else 1.0   # the off-hand hits for half
 			t[k] = float(t.get(k, 0.0)) + float(it["stats"][k]) * mult * part
 	return t
+
+
+## Durability in percent (armor loses some each time you die; the smith repairs it for gold). Below 20% a piece gives only part of its stats.
+const DAMAGED_BELOW := 20.0
+
+
+static func durability(item: Dictionary) -> float:
+	return float(item.get("dur", 100.0))
+
+
+static func is_damaged(item: Dictionary) -> bool:
+	return not item.is_empty() and durability(item) < DAMAGED_BELOW
+
+
+static func wear_mult(item: Dictionary) -> float:
+	var d := durability(item)
+	return 1.0 if d >= DAMAGED_BELOW else 0.5 + 0.5 * maxf(d, 0.0) / DAMAGED_BELOW
 
 
 ## Each forge upgrade (+1 to +5) raises all of an item's stats by 10%.
@@ -587,8 +650,15 @@ static func tooltip(item: Dictionary, class_id: String, equipped: Dictionary = {
 	var lines: Array[String] = []
 	lines.append("[font_size=25][color=#%s]%s[/color][/font_size]" % [c, display_name(item)])
 	lines.append("[color=#a89dba]%s %s%s · Item level %d[/color]" % [RARITY_NAMES[int(item["rarity"])], String(item.get("armor", "")).capitalize() + " " if item.get("armor", "") != "" else "", SLOT_NAMES[item["slot"]], int(item["ilvl"])])
+	lines.append(requirement_line(item, class_id, my_level))
+	if ARMOR_SLOTS.has(String(item["slot"])) or item["slot"] == "offhand":
+		var dp := durability(item)
+		var dcol := "e05a4a" if dp < DAMAGED_BELOW else ("e8c24a" if dp < 50.0 else "a89dba")
+		lines.append("[color=#%s]Durability %d%%[/color]" % [dcol, roundi(dp)])
+		if dp < DAMAGED_BELOW:
+			lines.append("[color=#e05a4a]Damaged: gives %d%% of its stats. Repair it at the smith.[/color]" % roundi(wear_mult(item) * 100.0))
 	var st: Dictionary = item["stats"]
-	var mult := upg_mult(item)
+	var mult := upg_mult(item) * wear_mult(item)
 	for k: String in STAT_ORDER:
 		if not st.has(k):
 			continue

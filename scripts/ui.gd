@@ -138,6 +138,8 @@ var _forge_views := {}
 var _forge_tabs := {}
 var _forge_mats: VBoxContainer
 var _forge_gold: Label
+var _repair_list: VBoxContainer
+var _repair_btn: Button
 var _tier_btns: Array = []
 var _piece_btns := {}
 var _recipe_box: VBoxContainer
@@ -257,11 +259,13 @@ class ItemSlot extends Button:
 		_empty_label.text = "" if not it.is_empty() else label
 		_empty_label.add_theme_font_size_override("font_size", 9)
 		_empty_label.add_theme_color_override("font_color", Color("5a5068"))
-		_count.text = ""
+		_count.text = "!" if Items.is_damaged(it) else ""   # worn down below 20%: it gives only part of its stats
+		_count.add_theme_color_override("font_color", Color("ff6a5a") if Items.is_damaged(it) else Color.WHITE)
 		_badge.text = ("+%d" % int(it.get("upg", 0))) if (not it.is_empty() and int(it.get("upg", 0)) > 0) else ""
 		var border := Items.color(it) if not it.is_empty() else Color("3a3248")
 		var bg := Color("1a1624") if it.is_empty() else Color("272136")
-		var unusable := not it.is_empty() and not Items.can_equip(it, gui.main.player.class_id)
+		Items.my_level = int(gui.main.state.get("lvl", 1))
+		var unusable := not it.is_empty() and (not Items.can_equip(it, gui.main.player.class_id) or not Items.requirement_met(it, gui.main.player.class_id, Items.my_level))
 		if unusable:
 			bg = Color("3a1a20")
 		for st in ["normal", "hover", "pressed"]:
@@ -316,6 +320,7 @@ class ItemSlot extends Button:
 				if float(y["ember_chance"]) > 0.0:
 					parts.append("%d%% chance of Ember Shard" % roundi(float(y["ember_chance"]) * 100.0))
 				hint = "\n[color=#9fe0a0]Salvage: %s[/color]\n[color=#6a6078]Click to salvage[/color]" % ", ".join(parts)
+		Items.my_level = int(gui.main.state.get("lvl", 1))
 		r.text = Items.tooltip(item, cls, eq) + hint
 		p.add_child(r)
 		return p
@@ -2791,12 +2796,12 @@ func _build_forge() -> void:
 	var hv := VBoxContainer.new()
 	hv.add_child(_label("HEARTH FORGE", 11, EMBER, font_label))
 	hv.add_child(_label("%s the Smith" % Data.SMITH_NAME, 26, EMBER_HI))
-	hv.add_child(_label("Upgrade your gear or break it down. New pieces are made at an anvil.", 14, MUTED))
+	hv.add_child(_label("Upgrade, repair or break down your gear. New pieces are made at an anvil.", 14, MUTED))
 	head.add_child(hv)
 	left.add_child(head)
 	var tabs := HBoxContainer.new()
 	tabs.add_theme_constant_override("separation", 6)
-	for t in [["upgrade", "Upgrade"], ["salvage", "Salvage"]]:
+	for t in [["upgrade", "Upgrade"], ["salvage", "Salvage"], ["repair", "Repair"]]:
 		var b := Button.new()
 		b.text = t[1]
 		b.custom_minimum_size = Vector2(120, 0)
@@ -2912,6 +2917,24 @@ func _build_forge() -> void:
 	salv.add_child(_salv_bag)
 	left.add_child(salv)
 	_forge_views["salvage"] = salv
+
+	# repair view
+	var rep := VBoxContainer.new()
+	rep.add_theme_constant_override("separation", 8)
+	var rtxt := _label("Armor loses durability every time you die. Below 20% it gives only part of its stats. Pay the smith to make everything you wear and carry like new.", 15, MUTED, null, true)
+	rtxt.custom_minimum_size = Vector2(600, 0)
+	rep.add_child(rtxt)
+	_repair_list = VBoxContainer.new()
+	_repair_list.add_theme_constant_override("separation", 4)
+	rep.add_child(_repair_list)
+	_repair_btn = Button.new()
+	_repair_btn.custom_minimum_size = Vector2(260, 0)
+	_repair_btn.pressed.connect(func() -> void:
+		if main.online != null:
+			main.online.send({"t": "repair"}))
+	rep.add_child(_repair_btn)
+	left.add_child(rep)
+	_forge_views["repair"] = rep
 
 	# right: materials
 	var right := VBoxContainer.new()
@@ -3061,6 +3084,31 @@ func refresh_forge() -> void:
 					var r := _upg_ref.duplicate()
 					ub.pressed.connect(func() -> void: cr.upgrade(r))
 					_upg_detail.add_child(ub)
+		"repair":
+			for ch in _repair_list.get_children():
+				ch.queue_free()
+			var worn: Array = []
+			var eq2: Dictionary = main.state.get("equip", {})
+			for sname2: String in Items.SLOTS + ["offhand"]:
+				var it2: Dictionary = eq2.get(sname2, {})
+				if not it2.is_empty() and Items.durability(it2) < 100.0:
+					worn.append(it2)
+			for it3: Dictionary in main.state.get("bag", []):
+				if Items.durability(it3) < 100.0:
+					worn.append(it3)
+			if worn.is_empty():
+				_repair_list.add_child(_label("Everything you wear and carry is in good shape.", 16, Color("9fe0a0")))
+			for it4: Dictionary in worn:
+				var rrow := HBoxContainer.new()
+				rrow.add_theme_constant_override("separation", 8)
+				rrow.add_child(_mini_icon(Items.icon(it4)))
+				var dp2 := Items.durability(it4)
+				var rl := _label("%s  %d%%" % [Items.display_name(it4), roundi(dp2)], 16, Color("e05a4a") if dp2 < Items.DAMAGED_BELOW else TEXT)
+				rrow.add_child(rl)
+				_repair_list.add_child(rrow)
+			var fee: int = int(main.online.inv.get("repair_cost", 0)) if main.online != null else 0
+			_repair_btn.text = "Repair all (%d gold)" % fee
+			_repair_btn.disabled = fee <= 0 or int(main.state.get("gold", 0)) < fee
 		"salvage":
 			var bag2: Array = main.state.get("bag", [])
 			for i in MAX_BAG:
