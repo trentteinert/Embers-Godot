@@ -3928,10 +3928,11 @@ func _fill_kit_abilities(cid: String, interactive: bool) -> void:
 
 
 # ---------------------------------------------------------------- talents window (centred, WoW-style)
-const TAL_CW := 84.0
-const TAL_CH := 74.0
-const TAL_COLS := 4
+const TAL_CW := 62.0     # a cell of the tree grid (5 across, 6 rows, like the WoW talent frames)
+const TAL_CH := 64.0
+const TAL_COLS := 5
 const TAL_TIERS := 6
+const TAL_ICON := 50.0
 var talent_root: Control
 var _tal_body: VBoxContainer
 
@@ -4044,7 +4045,7 @@ func refresh_talents() -> void:
 			refresh_talents())
 		tabs.add_child(tb)
 	_tal_body.add_child(_label("Every character can learn from all three skills. Each skill earns its own points (one every 2 levels of Melee, Magic or Ranged, trained by fighting with that kind of weapon). Abilities work while you hold a matching weapon: a sword for Melee, a staff for Magic, a bow for Ranged.", 13, MUTED, null, true))
-	_tal_body.add_child(_label("Put points into more than one tree for a hybrid build.   Round icons are passives, square icons teach an ability.   Left-click adds a point, right-click takes one back. You earn one every 2 levels (15 total). Each row opens after 2 more points in that tree.", 12, MUTED, null, true))
+	_tal_body.add_child(_label("Put points into more than one tree for a hybrid build.   Gold-framed icons teach an ability, the rest are passives. Arrows join a talent to the one it needs.   Left-click adds a point, right-click takes one back. You earn one every 2 levels (15 total). Each row opens after 2 more points in that tree.", 12, MUTED, null, true))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
 	_tal_body.add_child(row)
@@ -4059,7 +4060,7 @@ var _tal_view := ""
 func _talent_tree_panel(cid: String, tree: Dictionary) -> Control:
 	var tcol := Color(tree["color"])
 	var p := PanelContainer.new()
-	p.add_theme_stylebox_override("panel", _sb(PANEL2, tcol.darkened(0.35), 2, 10))
+	p.add_theme_stylebox_override("panel", _sb(tcol.darkened(0.82), tcol.darkened(0.35), 2, 10))
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 6)
 	p.add_child(v)
@@ -4075,19 +4076,18 @@ func _talent_tree_panel(cid: String, tree: Dictionary) -> Control:
 	var canvas := Control.new()
 	canvas.custom_minimum_size = Vector2(TAL_CW * TAL_COLS, TAL_CH * TAL_TIERS)
 	v.add_child(canvas)
-	var spent: int = main.talent_points_spent(tree["id"])
 	var nodes: Array = []
 	for n: Dictionary in Data.TALENTS[cid]:
 		if n["tree"] == tree["id"]:
 			nodes.append(n)
-	# prerequisite arrows, drawn under the icons
+	# prerequisite arrows, drawn under the icons: each one joins a talent to the one it needs, straight down the column
 	var lines := Control.new()
 	lines.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	lines.set_anchors_preset(Control.PRESET_FULL_RECT)
 	canvas.add_child(lines)
 	var centers := {}
 	for n: Dictionary in nodes:
-		centers[n["id"]] = Vector2((int(n["col"]) + 0.5) * TAL_CW, int(n["tier"]) * TAL_CH + 27.0)
+		centers[n["id"]] = Vector2((int(n["col"]) + 0.5) * TAL_CW, int(n["tier"]) * TAL_CH + TAL_ICON * 0.5 + 4.0)
 	lines.draw.connect(func() -> void:
 		for n: Dictionary in nodes:
 			if not n.has("req"):
@@ -4095,13 +4095,13 @@ func _talent_tree_panel(cid: String, tree: Dictionary) -> Control:
 			var a: Vector2 = centers[n["req"]]
 			var b: Vector2 = centers[n["id"]]
 			var on: bool = main.talent_rank(String(n["req"])) >= 1
-			var col := tcol if on else Color(0.35, 0.33, 0.4)
+			var col := Color("e8c870") if on else Color(0.36, 0.34, 0.42)
 			var dir := (b - a).normalized()
-			var s := a + dir * 29.0
-			var e := b - dir * 31.0
-			lines.draw_line(s, e, col, 4.0, true)
+			var s := a + dir * (TAL_ICON * 0.5 + 1.0)
+			var e := b - dir * (TAL_ICON * 0.5 + 3.0)
+			lines.draw_line(s, e - dir * 6.0, col, 5.0, true)
 			var side := Vector2(-dir.y, dir.x)
-			lines.draw_colored_polygon(PackedVector2Array([e + dir * 8.0, e + side * 7.0, e - side * 7.0]), col))
+			lines.draw_colored_polygon(PackedVector2Array([e + dir * 1.0, e - dir * 12.0 + side * 8.0, e - dir * 12.0 - side * 8.0]), col))
 	for n: Dictionary in nodes:
 		canvas.add_child(_talent_node(n, tcol, centers[n["id"]]))
 	return p
@@ -4113,26 +4113,31 @@ func _talent_node(n: Dictionary, tcol: Color, center: Vector2) -> Control:
 	var is_ab: bool = n.has("ability")
 	var can: bool = block == ""
 	var maxed: bool = rank >= int(n["max"])
+	var live: bool = rank > 0 or can
 	var box := Control.new()
 	box.size = Vector2(TAL_CW, TAL_CH)
-	box.position = center - Vector2(TAL_CW * 0.5, 27.0)
+	box.position = center - Vector2(TAL_CW * 0.5, TAL_ICON * 0.5 + 4.0)
 	var b := Button.new()
 	b.focus_mode = Control.FOCUS_NONE
-	b.size = Vector2(50, 50)
-	b.position = Vector2((TAL_CW - 50.0) * 0.5, 2)
-	var fill := tcol.darkened(0.55)
-	var border := Color(0.3, 0.28, 0.34)
-	if rank > 0:
-		fill = tcol.darkened(0.2)
-		border = tcol.lightened(0.5) if maxed else tcol.lightened(0.2)
-	elif can:
+	b.size = Vector2(TAL_ICON, TAL_ICON)
+	b.position = Vector2((TAL_CW - TAL_ICON) * 0.5, 4)
+	# square icons like the WoW talent frames: grey while out of reach, in colour once you can take them, gold once learned
+	var fill := Color(0.1, 0.09, 0.13)
+	var border := Color(0.28, 0.27, 0.32)
+	if maxed:
+		fill = tcol.darkened(0.55)
+		border = Color("f0d878")
+	elif rank > 0:
 		fill = tcol.darkened(0.6)
-		border = EMBER_HI
+		border = Color("78d878")
+	elif can:
+		fill = tcol.darkened(0.7)
+		border = Color("78d878") if not is_ab else Color("f0d878")
 	var sbn := StyleBoxFlat.new()
 	sbn.bg_color = fill
 	sbn.border_color = border
-	sbn.set_border_width_all(3)
-	sbn.set_corner_radius_all(25 if not is_ab else 6)
+	sbn.set_border_width_all(3 if is_ab else 2)
+	sbn.set_corner_radius_all(5)
 	var sbh: StyleBoxFlat = sbn.duplicate()
 	sbh.bg_color = fill.lightened(0.15)
 	sbh.border_color = border.lightened(0.3)
@@ -4140,23 +4145,29 @@ func _talent_node(n: Dictionary, tcol: Color, center: Vector2) -> Control:
 		b.add_theme_stylebox_override(st, sbn)
 	b.add_theme_stylebox_override("hover", sbh)
 	b.text = _initials(String(n["name"]))
+	var icon_max := int(TAL_ICON) - 12
 	if is_ab and Icons.ability(String(n["ability"])) != null:
 		b.text = ""
 		b.icon = Icons.ability(String(n["ability"]))
-		b.expand_icon = true
-		b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		b.add_theme_constant_override("icon_max_width", 34)
 	elif not is_ab and Icons.talent(String(n["id"])) != null:
 		b.text = ""
 		b.icon = Icons.talent(String(n["id"]))
+	if b.icon != null:
 		b.expand_icon = true
 		b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		b.add_theme_constant_override("icon_max_width", 30)
-	b.add_theme_font_size_override("font_size", 22)
-	var tc: Color = TEXT if (rank > 0 or can) else Color(0.5, 0.48, 0.55)
+		b.add_theme_constant_override("icon_max_width", icon_max)
+		var ic := Color.WHITE if live else Color(0.38, 0.37, 0.42)   # out of reach: dimmed
+		for cn: String in ["icon_normal_color", "icon_hover_color", "icon_pressed_color", "icon_focus_color", "icon_disabled_color", "icon_hover_pressed_color"]:
+			b.add_theme_color_override(cn, ic)
+	b.add_theme_font_size_override("font_size", 20)
+	var tc: Color = TEXT if live else Color(0.5, 0.48, 0.55)
 	for cn: String in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
 		b.add_theme_color_override(cn, tc)
 	var tip := "%s  (%s)\n%s\nRank %d / %d" % [n["name"], "Ability" if is_ab else "Passive", n["desc"], rank, n["max"]]
+	if n.has("req"):
+		tip += "\nRequires: %s" % Data.talent_node(String(n["req"]))["name"]
+	if int(n["tier"]) > 0:
+		tip += "\nNeeds %d points in this tree" % (int(n["tier"]) * 2)
 	if block != "" and block != "Maxed":
 		tip += "\n\n" + block
 	b.tooltip_text = tip
@@ -4166,22 +4177,16 @@ func _talent_node(n: Dictionary, tcol: Color, center: Vector2) -> Control:
 		if ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_RIGHT:
 			main.unlearn_talent(nid))
 	box.add_child(b)
-	var rk := _label("%d/%d" % [rank, n["max"]], 11, EMBER_HI if can else (TEXT if rank > 0 else MUTED), font_label)
-	rk.position = Vector2(TAL_CW * 0.5 + 14.0, 44)
+	# the rank count sits in the bottom-right corner of the icon, green when full, yellow while there is more to take
+	var rcol := Color("78e078") if maxed else (Color("f0d060") if live else Color(0.55, 0.53, 0.6))
+	var rk := _label("%d/%d" % [rank, n["max"]], 11, rcol, font_label)
 	rk.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var rkp := PanelContainer.new()
-	rkp.add_theme_stylebox_override("panel", _sb(Color(0.05, 0.04, 0.08, 0.95), border, 1, 2))
-	rkp.position = Vector2(TAL_CW * 0.5 + 6.0, 38)
+	rkp.add_theme_stylebox_override("panel", _sb(Color(0.03, 0.03, 0.05, 0.92), Color(0, 0, 0, 0), 0, 2))
+	rkp.position = Vector2(TAL_CW * 0.5 + TAL_ICON * 0.5 - 22.0, TAL_ICON - 12.0)
 	rkp.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	rk.position = Vector2.ZERO
 	rkp.add_child(rk)
 	box.add_child(rkp)
-	var nl := _label(String(n["name"]), 10, TEXT if (rank > 0 or can) else MUTED, null, true)
-	nl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	nl.position = Vector2(2, 54)
-	nl.size = Vector2(TAL_CW - 4.0, 20)
-	nl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	box.add_child(nl)
 	return box
 
 
