@@ -264,7 +264,7 @@ class ItemSlot extends Button:
 		_badge.text = ("+%d" % int(it.get("upg", 0))) if (not it.is_empty() and int(it.get("upg", 0)) > 0) else ""
 		var border := Items.color(it) if not it.is_empty() else Color("3a3248")
 		var bg := Color("1a1624") if it.is_empty() else Color("272136")
-		Items.my_level = int(gui.main.state.get("lvl", 1))
+		Items.levels = gui.main.combat_levels()
 		var unusable := not it.is_empty() and (not Items.can_equip(it, gui.main.player.class_id) or not Items.requirement_met(it, gui.main.player.class_id, Items.my_level))
 		if unusable:
 			bg = Color("3a1a20")
@@ -320,7 +320,7 @@ class ItemSlot extends Button:
 				if float(y["ember_chance"]) > 0.0:
 					parts.append("%d%% chance of Ember Shard" % roundi(float(y["ember_chance"]) * 100.0))
 				hint = "\n[color=#9fe0a0]Salvage: %s[/color]\n[color=#6a6078]Click to salvage[/color]" % ", ".join(parts)
-		Items.my_level = int(gui.main.state.get("lvl", 1))
+		Items.levels = gui.main.combat_levels()
 		r.text = Items.tooltip(item, cls, eq) + hint
 		p.add_child(r)
 		return p
@@ -1517,7 +1517,7 @@ func update_hud(p: Player, state: Dictionary, quest: Dictionary, cooldowns: Arra
 			row.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 			_q_checks.add_child(row)
 	_gold_label.text = "%d gold" % int(state.get("gold", 0))
-	set_portrait(_player_portrait, "me:" + p.class_id)
+	set_portrait(_player_portrait, "me:" + (p.look_class if p.look_class != "" else p.class_id))
 	_dev_tag.visible = main.dev_mode
 	var sig_on: bool = int(state.get("step", 0)) == 1 and not state.get("done", false) and main.combat.boss == null
 	_sigil_row.visible = sig_on
@@ -2593,7 +2593,7 @@ func refresh_inventory() -> void:
 	var p: Player = main.player
 	var c: Dictionary = Data.CLASSES[p.class_id]
 	_inv_title.text = "%s · Level %d" % [c["name"], p.level]
-	set_portrait(_inv_doll, "me:" + p.class_id)
+	set_portrait(_inv_doll, "me:" + (p.look_class if p.look_class != "" else p.class_id))
 	var eq: Dictionary = main.state.get("equip", {})
 	for sname: String in _inv_slots:
 		(_inv_slots[sname] as ItemSlot).set_item(eq.get(sname, {}), Items.SLOT_NAMES[sname].to_upper())
@@ -3979,6 +3979,8 @@ func refresh_talents() -> void:
 	for c in _tal_body.get_children():
 		c.queue_free()
 	var cid: String = main.player.class_id
+	if cid == "rogue":
+		cid = "warrior"
 	var head := HBoxContainer.new()
 	head.add_theme_constant_override("separation", 14)
 	_tal_body.add_child(head)
@@ -4003,11 +4005,12 @@ func refresh_talents() -> void:
 		_tal_view = cid
 	cid = _tal_view
 	var trees: Array = Data.TALENT_TREES[cid]
-	var left: int = main.talent_points_left()
-	var total: int = main.talent_points_total()
-	var pts := _label("Points available: %d" % left, 17, EMBER_HI if left > 0 else MUTED)
+	var vstyle: String = String(Data.COMBAT_SKILL.get(cid, "melee"))
+	var left: int = main.talent_points_left(vstyle)
+	var total: int = main.talent_points_total(vstyle)
+	var pts := _label("%s points: %d" % [Data.SKILLS[vstyle]["name"], left], 17, EMBER_HI if left > 0 else MUTED)
 	head.add_child(pts)
-	var spent_txt := "  ·  spent %d of %d  (" % [main.talent_points_spent(), total]
+	var spent_txt := "  ·  %s level %d  ·  spent %d of %d  (" % [Data.SKILLS[vstyle]["name"], main.skill_level_of(vstyle), main.talent_points_spent("", vstyle), total]
 	var bits: Array = []
 	for t: Dictionary in trees:
 		bits.append("%s %d" % [t["name"], main.talent_points_spent(t["id"])])
@@ -4022,6 +4025,7 @@ func refresh_talents() -> void:
 	reset.focus_mode = Control.FOCUS_NONE
 	reset.tooltip_text = "Refund every talent point (free)"
 	reset.disabled = main.talent_points_spent() == 0
+	reset.tooltip_text = "Refund every talent point in all three skills (free)"
 	reset.pressed.connect(func() -> void: main.reset_talents())
 	head.add_child(reset)
 	head.add_child(close)
@@ -4033,15 +4037,14 @@ func refresh_talents() -> void:
 		tb.toggle_mode = true
 		tb.button_pressed = sid == cid
 		tb.focus_mode = Control.FOCUS_NONE
-		tb.text = "%s%s" % [TAL_STYLES[sid], "  (yours)" if sid == own_cid else ""]
+		tb.text = "%s  Lv %d%s" % [TAL_STYLES[sid], main.skill_level_of(String(Data.COMBAT_SKILL[sid])), "  (in hand)" if sid == own_cid else ""]
 		tb.custom_minimum_size = Vector2(150, 30)
 		tb.pressed.connect(func() -> void:
 			_tal_view = sid
 			refresh_talents())
 		tabs.add_child(tb)
-	if cid != own_cid:
-		_tal_body.add_child(_label("You fight as a %s, so this tree is just a preview. Talents are earned from your own combat level (one point every 2 levels)." % Data.CLASSES[own_cid]["name"], 13, MUTED, null, true))
-	_tal_body.add_child(_label("Put points into more than one tree for a hybrid build.   Round icons are passives, square icons teach an ability.   Left-click adds a point, right-click takes one back. You earn one every 2 levels (15 total). Each row opens after 2 more points in that tree." + (" The bottom ability needs 10, so a true hybrid cannot reach it." if cid == "warrior" else " These trees are passives; your abilities unlock with level."), 12, MUTED, null, true))
+	_tal_body.add_child(_label("Every character can learn from all three skills. Each skill earns its own points (one every 2 levels of Melee, Magic or Ranged, trained by fighting with that kind of weapon). Abilities work while you hold a matching weapon: a sword for Melee, a staff for Magic, a bow for Ranged.", 13, MUTED, null, true))
+	_tal_body.add_child(_label("Put points into more than one tree for a hybrid build.   Round icons are passives, square icons teach an ability.   Left-click adds a point, right-click takes one back. You earn one every 2 levels (15 total). Each row opens after 2 more points in that tree.", 12, MUTED, null, true))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 16)
 	_tal_body.add_child(row)
@@ -4107,9 +4110,6 @@ func _talent_tree_panel(cid: String, tree: Dictionary) -> Control:
 func _talent_node(n: Dictionary, tcol: Color, center: Vector2) -> Control:
 	var rank: int = main.talent_rank(n["id"])
 	var block: String = main.talent_block(n["id"])
-	var own: bool = Data.talent_owner(String(n["id"])) == main.player.class_id
-	if not own:
-		block = "Preview only: not your combat style"
 	var is_ab: bool = n.has("ability")
 	var can: bool = block == ""
 	var maxed: bool = rank >= int(n["max"])

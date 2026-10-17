@@ -16,6 +16,8 @@ const STA_REGEN := 30.0
 const TURN_SPEED := 3.4        # radians per second with A / D
 
 var class_id := "warrior"
+var look_class := ""   # online: the class you started as (your looks); class_id then follows the weapon in your hand
+
 var level := 1
 var max_hp := 100.0
 var hp := 100.0
@@ -154,7 +156,7 @@ func setup(id: String, lvl: int, refill := true, t := 0) -> void:
 	dash.clear()
 	if model:
 		model.queue_free()
-	model = Models.hero_geared(id, equipped, look)
+	model = Models.hero_geared(look_class if look_class != "" else id, equipped, look)
 	model.scale = Vector3.ONE * MODEL_SCALE
 	add_child(model)
 	model.set_facing(forward_vec(), true)
@@ -166,7 +168,7 @@ func refresh_look() -> void:
 		return
 	var yaw_dir := forward_vec()
 	model.queue_free()
-	model = Models.hero_geared(class_id, equipped, look)
+	model = Models.hero_geared(look_class if look_class != "" else class_id, equipped, look)
 	model.scale = Vector3.ONE * MODEL_SCALE
 	add_child(model)
 	model.set_facing(yaw_dir, true)
@@ -184,15 +186,16 @@ func refresh_stats() -> void:
 ## Sum of a passive-talent effect ("dmg", "crit", "hp", "armor", "res", "move", "cd") over the ranks you hold.
 func tfx(kind: String) -> float:
 	var total := 0.0
-	for n: Dictionary in Data.TALENTS.get(class_id, []):
-		if not n.has("effects"):
-			continue
-		var r := tal(String(n["id"]))
-		if r == 0:
-			continue
-		for e: Dictionary in n["effects"]:
-			if e["kind"] == kind:
-				total += float(e["per"]) * r
+	for cls: String in Data.TALENTS:
+		for n: Dictionary in Data.TALENTS[cls]:
+			if not n.has("effects"):
+				continue
+			var r := tal(String(n["id"]))
+			if r == 0:
+				continue
+			for e: Dictionary in n["effects"]:
+				if e["kind"] == kind:
+					total += float(e["per"]) * r
 	return total
 
 

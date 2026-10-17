@@ -986,15 +986,9 @@ func use_on(a: String, b: String) -> void:
 
 
 # ---------------------------------------------------------------- talents
-var _talent_owner := {}
-
-
-## Ranks only count while you fight in the style that owns the talent (Melee talents do nothing with a bow).
+## Talent ranks count everywhere: every tree is open to every character. Points come from each combat skill
+## on its own (one per 2 levels of Melee, Magic or Ranged) and are spent in that skill's trees.
 func talent_rank(id: String) -> int:
-	if not _talent_owner.has(id):
-		_talent_owner[id] = Data.talent_owner(id)
-	if player != null and _talent_owner[id] != player.class_id:
-		return 0
 	var t: Variant = state.get("talents")
 	if t is Dictionary:
 		return int((t as Dictionary).get(id, 0))
@@ -1002,37 +996,64 @@ func talent_rank(id: String) -> int:
 
 
 func has_talents() -> bool:
-	return Data.TALENTS.has(player.class_id)
+	return true
 
 
-## One point per level after the first.
-func talent_points_total() -> int:
-	return player.level / 2 if has_talents() else 0
+## Melee, Magic or Ranged: the skill whose points pay for talent `id` (its tree's owner).
+func talent_style(id: String) -> String:
+	return String(Data.COMBAT_SKILL.get(Data.talent_owner(id), "melee"))
 
 
-func talent_points_spent(tree := "") -> int:
+## The combat style you fight in now (the weapon in your hand, online).
+func active_style() -> String:
+	return String(Data.COMBAT_SKILL.get(player.class_id, "melee"))
+
+
+## Your level in each combat skill. Online these come from the server; offline you only train the one you chose.
+func combat_levels() -> Dictionary:
+	if online != null and online.started:
+		return {"melee": online.skill_level("melee"), "magic": online.skill_level("magic"), "ranged": online.skill_level("ranged")}
+	var out := {"melee": 1, "magic": 1, "ranged": 1}
+	out[active_style()] = int(state.get("lvl", player.level))
+	return out
+
+
+func skill_level_of(style: String) -> int:
+	return int(combat_levels().get(style, 1))
+
+
+## One point every 2 levels of the skill ("" = the style in your hand).
+func talent_points_total(style := "") -> int:
+	return skill_level_of(style if style != "" else active_style()) / 2
+
+
+func talent_points_spent(tree := "", style := "") -> int:
 	var n := 0
 	var t: Variant = state.get("talents")
-	if t is Dictionary and has_talents():
-		for node: Dictionary in Data.TALENTS[player.class_id]:
-			if tree == "" or node["tree"] == tree:
-				n += int((t as Dictionary).get(node["id"], 0))
+	if t is Dictionary:
+		for cls: String in Data.TALENTS:
+			if style != "" and String(Data.COMBAT_SKILL.get(cls, "melee")) != style:
+				continue
+			for node: Dictionary in Data.TALENTS[cls]:
+				if tree == "" or node["tree"] == tree:
+					n += int((t as Dictionary).get(node["id"], 0))
 	return n
 
 
-func talent_points_left() -> int:
-	return talent_points_total() - talent_points_spent()
+func talent_points_left(style := "") -> int:
+	var st := style if style != "" else active_style()
+	return talent_points_total(st) - talent_points_spent("", st)
 
 
 ## "" if you can put a point in it, otherwise why not.
 func talent_block(id: String) -> String:
 	var node: Dictionary = Data.talent_node(id)
-	if node.is_empty() or not has_talents() or Data.talent_owner(id) != player.class_id:
+	if node.is_empty():
 		return "Not available"
 	if talent_rank(id) >= int(node["max"]):
 		return "Maxed"
-	if talent_points_left() <= 0:
-		return "No talent points left"
+	if talent_points_left(talent_style(id)) <= 0:
+		return "No %s talent points left" % Data.SKILLS[talent_style(id)]["name"]
 	if node.has("req") and talent_rank(String(node["req"])) < 1:
 		return "Needs %s first" % Data.talent_node(String(node["req"]))["name"]
 	var need: int = int(node["tier"]) * 2
@@ -1073,15 +1094,18 @@ func unlearn_talent(id: String) -> void:
 	# would anything left standing lose its footing?
 	t[id] = r - 1
 	var bad := ""
-	for n: Dictionary in Data.TALENTS[player.class_id]:
-		var nr := talent_rank(String(n["id"]))
-		if nr <= 0:
-			continue
-		if n.has("req") and talent_rank(String(n["req"])) < 1:
-			bad = "%s needs it" % n["name"]
-			break
-		if talent_points_spent(n["tree"]) < int(n["tier"]) * 2:
-			bad = "%s needs those points" % n["name"]
+	for cls: String in Data.TALENTS:
+		for n: Dictionary in Data.TALENTS[cls]:
+			var nr := talent_rank(String(n["id"]))
+			if nr <= 0:
+				continue
+			if n.has("req") and talent_rank(String(n["req"])) < 1:
+				bad = "%s needs it" % n["name"]
+				break
+			if talent_points_spent(n["tree"]) < int(n["tier"]) * 2:
+				bad = "%s needs those points" % n["name"]
+				break
+		if bad != "":
 			break
 	if bad != "":
 		t[id] = r

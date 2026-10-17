@@ -294,10 +294,20 @@ func _ready_to_start() -> bool:
 	return my_id >= 0 and not chr.is_empty() and not inv.is_empty() and _have_pos and not started
 
 
+## There are no classes online: the weapon in your hand sets your combat style, and the style picks your resource
+## (Energy, Mana or Focus), ability list and basic attack. The player's class_id follows it; look_class keeps your looks.
+const STYLE_CLASS := {"melee": "warrior", "magic": "mage", "ranged": "hunter"}
+
+
+func _style_cls() -> String:
+	return String(STYLE_CLASS.get(str(chr.get("style", "melee")), "warrior"))
+
+
 func _begin_play() -> void:
 	started = true
 	_npcs_passable(main.quests)
-	var cls: String = str(chr["class"])
+	var origin: String = str(chr["class"])
+	var cls: String = _style_cls()
 	main.state = {"cls": cls, "look": {}, "name": account if account != "" else guest_name, "lvl": int(chr["level"]), "xp": 0, "potions": 0, "shards": 0,
 		"bi": 0, "step": 0, "runes": [false, false, false, false], "done": false, "bag": [], "equip": {}, "gold": 0, "shop": [], "quests": {}, "mats": {},
 		"skills": {}, "tools": {}, "bag_lvl": 0, "slayer": {}, "kit": true, "tut_safe": false, "tod": 0.3, "bar": [-1, -1, -1, -1, -1, -1]}
@@ -306,6 +316,7 @@ func _begin_play() -> void:
 	_apply_inventory(false)
 	_apply_journal()
 	main.player.look = {}
+	main.player.look_class = origin
 	main.player.setup(cls, int(chr["level"]), true, 0)
 	main.player.teleport(_my_target)
 	main._begin_play()
@@ -337,14 +348,15 @@ func _begin_play() -> void:
 func _apply_character(refresh := true) -> void:
 	var s: Dictionary = main.state
 	var lvl: int = int(chr["level"])
-	var changed: bool = int(s.get("lvl", 0)) != lvl or str(s.get("cls", "")) != str(chr["class"])
-	s["cls"] = str(chr["class"])
+	var cls: String = _style_cls()
+	var changed: bool = int(s.get("lvl", 0)) != lvl or str(s.get("cls", "")) != cls
+	s["cls"] = cls
 	s["lvl"] = lvl
 	s["xp"] = int(chr["xp_into_level"])
 	s["xp_need"] = int(chr["xp_next"]) if int(chr["xp_next"]) > 0 else 1
 	s["gold"] = int(chr["gold"])
 	var sk: Dictionary = s.get("skills", {})
-	sk[Data.COMBAT_SKILL[s["cls"]]] = int(chr["xp"])
+	sk[Data.COMBAT_SKILL[cls]] = int(chr["xp"])
 	s["skills"] = sk
 	var talents: Dictionary = {}
 	for pair: Array in chr["talents"]:
@@ -441,6 +453,26 @@ func _on_snapshot(s: Dictionary) -> void:
 	_sync_shots(s["shots"])
 
 
+## The server says what style you fight in (it follows your weapon): switch the class tables, bar and XP bar to match.
+func _set_style(style: String) -> void:
+	var cls: String = String(STYLE_CLASS.get(style, "warrior"))
+	var p: Player = main.player
+	if p.class_id == cls or not started:
+		return
+	chr["style"] = style
+	var s: Dictionary = main.state
+	s["cls"] = cls
+	var e: Dictionary = skill_levels.get(String(Data.COMBAT_SKILL[cls]), {})
+	if not e.is_empty():
+		s["lvl"] = int(e["level"])
+		s["xp"] = int(e["xp_into"])
+		s["xp_need"] = maxi(1, int(e["xp_next"]))
+	p.setup(cls, int(s["lvl"]), false, 0)
+	main.ui.build_ability_bar(cls)
+	p.refresh_stats()
+	main.ui.refresh_window()
+
+
 func _apply_me(v: Dictionary) -> void:
 	var p: Player = main.player
 	# the server knows about floors, stairs and jumps; follow the terrain you can see where it differs from the server's grid
@@ -452,6 +484,7 @@ func _apply_me(v: Dictionary) -> void:
 		_have_pos = true
 	if not started:
 		return
+	_set_style(str(v.get("style", "melee")))
 	p.hp = float(v["hp"])
 	p.max_hp = float(v["max_hp"])
 	p.res = float(v["res"])
@@ -777,7 +810,7 @@ func _on_event(e: Variant) -> void:
 
 ## An auto attack (the class basic attack) by player `pid`: swing, shoot or cast, with the game's own sound and white slash.
 func _on_basic_attack(pid: int, n: Node3D, ab: String) -> void:
-	var cls: String = main.player.class_id if pid == my_id else (n as RemotePlayer).class_id
+	var cls: String = main.player.class_id if pid == my_id else (n as RemotePlayer).style_class
 	# dual wielders announce each swing as basic_melee_main / basic_melee_off (they alternate hands, and swing faster)
 	var left := ab.ends_with("_off")
 	var dual := left or ab.ends_with("_main")
@@ -817,7 +850,7 @@ func _on_cast_event(pid: int, ev: Variant) -> void:
 		var snd: String = ABILITY_SOUND.get(ab, "")
 		if snd != "":
 			Sfx.play(snd, n.global_position, -3.0)
-		var spell: bool = main.player.class_id == "mage" if pid == my_id else (n as RemotePlayer).class_id == "mage"
+		var spell: bool = main.player.class_id == "mage" if pid == my_id else (n as RemotePlayer).style_class == "mage"
 		if pid == my_id:
 			if spell or ab in ["shout", "poison", "smoke", "trap", "wolf", "stand", "flurry", "stealth", "venomburst"]:
 				main.player.anim_cast(0.45)

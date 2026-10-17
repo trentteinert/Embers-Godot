@@ -4,7 +4,8 @@ extends Node3D
 
 var rig: Rig
 var tag: Label3D
-var class_id := "warrior"
+var class_id := "warrior"      # their looks (the class they started as)
+var style_class := "warrior"   # what they fight as right now: follows their weapon
 var target_pos := Vector3.ZERO
 var face := Vector3(0, 0, 1)
 var player_name := ""
@@ -62,6 +63,7 @@ func apply(v: Dictionary, world: World) -> void:
 	if aim.length() > 0.1:
 		face = aim.normalized()
 	dead = bool(v["dead"])
+	style_class = String({"melee": "warrior", "magic": "mage", "ranged": "hunter"}.get(str(v.get("style", "melee")), "warrior"))
 	air = bool(v.get("air", false))
 	work = str(v.get("work", ""))
 	buffs = v["buffs"]

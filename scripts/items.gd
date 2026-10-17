@@ -485,7 +485,8 @@ static func can_equip(_item: Dictionary, _class_id: String) -> bool:
 # ---- equipment level requirements: a level in the gear's own combat skill (Magic 15 for level 15 cloth, Melee 15 for level 15 plate)
 const STYLE_SKILL_NAMES := {"melee": "Melee", "ranged": "Ranged", "magic": "Magic"}
 const CLASS_SKILL := {"warrior": "melee", "rogue": "melee", "mage": "magic", "hunter": "ranged"}
-static var my_level := 1   # your level in the combat skill you train (set by the UI from the character)
+static var my_level := 1   # (offline) your level in the combat skill you train
+static var levels := {}    # combat skill -> your level in it (set by the UI from the character); missing means 1
 
 
 static func style_skill(item: Dictionary) -> String:
@@ -519,7 +520,7 @@ static func required_level(item: Dictionary) -> int:
 static func requirement_met(item: Dictionary, class_id: String, level: int) -> bool:
 	if item.is_empty():
 		return true
-	var have := level if style_skill(item) == String(CLASS_SKILL.get(class_id, "melee")) else 1
+	var have: int = int(levels.get(style_skill(item), 1))
 	return have >= required_level(item)
 
 
