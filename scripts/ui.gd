@@ -4021,12 +4021,12 @@ func refresh_talents() -> void:
 	sp2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(sp2)
 	var reset := Button.new()
-	reset.text = "Reset all"
+	reset.text = "Reset %s" % Data.SKILLS[vstyle]["name"]
 	reset.focus_mode = Control.FOCUS_NONE
 	reset.tooltip_text = "Refund every talent point (free)"
-	reset.disabled = main.talent_points_spent() == 0
-	reset.tooltip_text = "Refund every talent point in all three skills (free)"
-	reset.pressed.connect(func() -> void: main.reset_talents())
+	reset.disabled = main.talent_points_spent("", vstyle) == 0
+	reset.tooltip_text = "Refund every %s talent point (free). The other skills are not touched." % Data.SKILLS[vstyle]["name"]
+	reset.pressed.connect(func() -> void: main.reset_talents(vstyle))
 	head.add_child(reset)
 	head.add_child(close)
 	var tabs := HBoxContainer.new()

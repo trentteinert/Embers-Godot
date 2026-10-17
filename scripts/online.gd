@@ -461,6 +461,11 @@ func _set_style(style: String) -> void:
 		return
 	chr["style"] = style
 	var s: Dictionary = main.state
+	# each style has its own action bar: park this one, bring up the other
+	var bars: Dictionary = s.get("bars", {})
+	bars[p.class_id] = (s["bar"] as Array).duplicate()
+	s["bars"] = bars
+	s["bar"] = (bars[cls] as Array).duplicate() if bars.has(cls) else [-1, -1, -1, -1, -1, -1]
 	s["cls"] = cls
 	var e: Dictionary = skill_levels.get(String(Data.COMBAT_SKILL[cls]), {})
 	if not e.is_empty():
@@ -468,6 +473,14 @@ func _set_style(style: String) -> void:
 		s["xp"] = int(e["xp_into"])
 		s["xp_need"] = maxi(1, int(e["xp_next"]))
 	p.setup(cls, int(s["lvl"]), false, 0)
+	main._prune_bar()
+	if (s["bar"] as Array).all(func(i: Variant) -> bool: return int(i) < 0):
+		# first time in this style: put what you can use on the bar
+		var n := 0
+		for i in (Data.ABILITIES[cls] as Array).size():
+			if n < 6 and main.ability_locked(i) == "":
+				(s["bar"] as Array)[n] = i
+				n += 1
 	main.ui.build_ability_bar(cls)
 	p.refresh_stats()
 	main.ui.refresh_window()

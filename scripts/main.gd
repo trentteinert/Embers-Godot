@@ -1120,15 +1120,23 @@ func unlearn_talent(id: String) -> void:
 	ui.refresh_window()
 
 
-func reset_talents() -> void:
+## Refund the points of one skill ("melee", "magic" or "ranged"); the other skills' talents stay as they are.
+func reset_talents(style := "") -> void:
+	var st := style if style != "" else active_style()
 	if online != null:
-		online.send({"t": "respec"})
+		online.send({"t": "respec", "style": st})
 		return
-	state["talents"] = {}
+	var tal: Dictionary = state.get("talents", {})
+	for cls: String in Data.TALENTS:
+		if String(Data.COMBAT_SKILL.get(cls, "melee")) != st:
+			continue
+		for node: Dictionary in Data.TALENTS[cls]:
+			tal.erase(node["id"])
+	state["talents"] = tal
 	player.refresh_stats()
 	_prune_bar()
 	Sfx.play("ui_click", Vector3.INF, -6.0)
-	ui.toast("Talents reset. All points refunded.")
+	ui.toast("%s talents reset. Points refunded." % Data.SKILLS[st]["name"])
 	ui.build_ability_bar(player.class_id)
 	ui.refresh_window()
 
