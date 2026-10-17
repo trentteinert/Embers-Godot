@@ -1210,6 +1210,13 @@ func set_bar_slot(idx: int, slot: int) -> void:
 	Sfx.play("ui_click", Vector3.INF, -6.0)
 	ui.build_ability_bar(player.class_id)
 	ui.refresh_window()
+	_bar_edited()
+
+
+## Online, the server keeps your bars with your character.
+func _bar_edited() -> void:
+	if online != null:
+		online.save_bars()
 
 
 ## Put an ability (index into your class list) on the first free slot, or take it off if it's already there.
@@ -1235,6 +1242,7 @@ func toggle_on_bar(idx: int) -> void:
 		quests.notify("bar", "any", 1)
 	ui.build_ability_bar(player.class_id)
 	ui.refresh_window()
+	_bar_edited()
 
 
 func clear_bar_slot(slot: int) -> void:
@@ -1244,6 +1252,7 @@ func clear_bar_slot(slot: int) -> void:
 		Sfx.play("ui_click", Vector3.INF, -6.0)
 		ui.build_ability_bar(player.class_id)
 		ui.refresh_window()
+		_bar_edited()
 
 
 func has_target() -> bool:

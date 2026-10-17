@@ -318,6 +318,25 @@ func _begin_play() -> void:
 	main.player.look = {}
 	main.player.look_class = origin
 	main.player.setup(cls, int(chr["level"]), true, 0)
+	# restore the saved action bars (ability ids per style -> slots in each style's list)
+	var saved: Dictionary = chr.get("bars", {})
+	var restored: Dictionary = {}
+	for style: String in saved:
+		var bcls: String = String(STYLE_CLASS.get(style, ""))
+		if bcls == "":
+			continue
+		var slots: Array = [-1, -1, -1, -1, -1, -1]
+		var ids: Array = saved[style]
+		for k in mini(6, ids.size()):
+			for i in (Data.ABILITIES[bcls] as Array).size():
+				if Data.ABILITIES[bcls][i]["id"] == str(ids[k]):
+					slots[k] = i
+		restored[bcls] = slots
+	main.state["bars"] = restored
+	if restored.has(cls):
+		main.state["bar"] = (restored[cls] as Array).duplicate()
+	main._prune_bar()
+	_fill_bar_if_empty(cls)
 	main.player.teleport(_my_target)
 	main._begin_play()
 	ui2 = OnlineUI.new()
@@ -453,6 +472,38 @@ func _on_snapshot(s: Dictionary) -> void:
 	_sync_shots(s["shots"])
 
 
+## Send your action bars (per style, as ability ids) so the server keeps them with the character.
+func save_bars() -> void:
+	if not started:
+		return
+	var s: Dictionary = main.state
+	var bars: Dictionary = (s.get("bars", {}) as Dictionary).duplicate()
+	bars[main.player.class_id] = s["bar"]
+	var out := {}
+	for style: String in STYLE_CLASS:
+		var cls: String = STYLE_CLASS[style]
+		if not bars.has(cls):
+			continue
+		var ids: Array = []
+		for idx: Variant in bars[cls]:
+			var i := int(idx)
+			ids.append(String(Data.ABILITIES[cls][i]["id"]) if i >= 0 and i < (Data.ABILITIES[cls] as Array).size() else "")
+		out[style] = ids
+	send({"t": "save_bars", "bars": out})
+
+
+## Put what you can use on an empty bar (a style you have not set up yet).
+func _fill_bar_if_empty(cls: String) -> void:
+	var bar: Array = main.state["bar"]
+	if not bar.all(func(i: Variant) -> bool: return int(i) < 0):
+		return
+	var n := 0
+	for i in (Data.ABILITIES[cls] as Array).size():
+		if n < 6 and main.ability_locked(i) == "":
+			bar[n] = i
+			n += 1
+
+
 ## The server says what style you fight in (it follows your weapon): switch the class tables, bar and XP bar to match.
 func _set_style(style: String) -> void:
 	var cls: String = String(STYLE_CLASS.get(style, "warrior"))
@@ -474,13 +525,8 @@ func _set_style(style: String) -> void:
 		s["xp_need"] = maxi(1, int(e["xp_next"]))
 	p.setup(cls, int(s["lvl"]), false, 0)
 	main._prune_bar()
-	if (s["bar"] as Array).all(func(i: Variant) -> bool: return int(i) < 0):
-		# first time in this style: put what you can use on the bar
-		var n := 0
-		for i in (Data.ABILITIES[cls] as Array).size():
-			if n < 6 and main.ability_locked(i) == "":
-				(s["bar"] as Array)[n] = i
-				n += 1
+	_fill_bar_if_empty(cls)
+	save_bars()
 	main.ui.build_ability_bar(cls)
 	p.refresh_stats()
 	main.ui.refresh_window()
