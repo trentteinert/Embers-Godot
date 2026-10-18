@@ -270,6 +270,10 @@ func _on_message(m: Dictionary) -> void:
 			var why: String = str(m["why"])
 			if quest_test:
 				print("QB reject: ", m)
+			var nice := {"NeedsTarget": "Select an enemy first", "NotFacing": "Face your target", "OutOfRange": "Out of range", "WrongWeapon": "You need a matching weapon in hand",
+				"NoTargets": "Nothing to hit", "NotEnoughResource": "Not enough resource", "Locked": "Learn it in your talents (T)"}
+			if nice.has(why):
+				why = String(nice[why])
 			main.ui.toast(why.substr(0, 1).to_upper() + why.substr(1), Color("e0a080"))
 		"error":
 			if not started and bool(cfg.get("auto", false)):
