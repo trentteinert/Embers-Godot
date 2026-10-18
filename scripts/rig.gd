@@ -683,16 +683,6 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 		knee_r = lerpf(knee_r, 0.3, up)
 		body_off -= 0.04 * up
 
-	# a bow in the hand turns upright while it is drawn (arm out front, limbs up and down), and hangs normally otherwise
-	var bow_up := 0.0
-	if _ranged_t > 0.0 and not _ranged_staff:
-		var kb := 1.0 - _ranged_t / _ranged_dur
-		bow_up = smoothstep(0.0, 0.15, kb) * (1.0 - smoothstep(0.78, 1.0, kb))
-	for wp: Dictionary in _weapons:
-		if String(wp.get("type", "")) == "bow":
-			var bn: Node3D = wp["node"]
-			if is_instance_valid(bn) and bn.get_parent() == wp["home"]:
-				bn.rotation.x = (wp["home_xf"] as Transform3D).basis.get_euler().x + lerpf(0.0, PI * 0.5, bow_up)
 	if _ranged_t > 0.0:
 		var kr := 1.0 - _ranged_t / _ranged_dur
 		var back := 1.0 - smoothstep(0.78, 1.0, kr)   # the pose eases away at the end
@@ -733,6 +723,12 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 	# backing up the foot reaches back and lands on its toes
 	_rot("foot_l", clampf(leg_l * 0.3, -0.25, 0.4) - knee_l * 0.35 + back_k * clampf(leg_l * 1.1, 0.0, 0.5))
 	_rot("foot_r", clampf(leg_r * 0.3, -0.25, 0.4) - knee_r * 0.35 + back_k * clampf(leg_r * 1.1, 0.0, 0.5))
+	# a bow in the hand stays upright however far the arm is raised: it turns against the arm's pitch, so it is right from the first frame
+	for wp: Dictionary in _weapons:
+		if String(wp.get("type", "")) == "bow":
+			var bn: Node3D = wp["node"]
+			if is_instance_valid(bn) and bn.get_parent() == wp["home"]:
+				bn.rotation.x = (wp["home_xf"] as Transform3D).basis.get_euler().x + PI * 0.5 * clampf(-arm_l / 1.5, 0.0, 1.0)
 	_rot("arm_l", arm_l, 0, arm_lz)
 	_rot("arm_r", arm_r, 0, arm_rz)
 	_rot("forearm_l", elb_l)
