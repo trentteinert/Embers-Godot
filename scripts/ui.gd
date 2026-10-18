@@ -302,7 +302,7 @@ class ItemSlot extends Button:
 		var price := Data.sell_price(item)
 		match kind:
 			"bag":
-				hint = "\n[color=#6a6078]Click or right-click to equip · Shift-click to drop · Drag to move, or out of the bag to drop[/color]"
+				hint = "\n[color=#6a6078]Click to equip · Right-click for options · Drag to move, or out of the bag to drop[/color]"
 			"equip":
 				hint = "\n[color=#6a6078]Click to unequip[/color]"
 			"shop":
@@ -2450,9 +2450,6 @@ func bag_click(sl: ItemSlot, right: bool, shift: bool, at: Vector2) -> void:
 			chat_say("Nothing interesting happens.", MUTED)
 		return
 	if sl.item.is_empty() and sl.mat_id == "":
-		return
-	if right and not sl.item.is_empty():
-		main.equip_from_bag(sl.index)   # right-click on gear or a weapon puts it on
 		return
 	if right:
 		_open_ctx(sl, at)
