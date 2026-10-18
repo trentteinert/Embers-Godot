@@ -337,6 +337,7 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 	var s := sin(_phase)
 	var c := cos(_phase)
 	var amt := minf(_move, 1.0)
+	var still := 1.0 - amt   # standing still: attack and cast poses plant the feet, but while walking the legs keep walking
 	var run := clampf(_move - 1.0, 0.0, 0.5) * 2.0     # 0 walking .. 1 sprinting
 	var fem := 1.0 if get_meta("femme", false) else 0.0
 	var idle_k := 1.0 - smoothstep(0.0, 0.35, _move)    # 1 standing .. 0 moving
@@ -563,10 +564,10 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 		arm_rz = lerpf(float(base_pose["arm_rz"]), arm_rz, aw)
 		torso_y = lerpf(float(base_pose["torso_y"]), torso_y, aw)
 		torso_x = lerpf(float(base_pose["torso_x"]), torso_x, aw)
-		leg_l = lerpf(float(base_pose["leg_l"]), leg_l, aw)
-		leg_r = lerpf(float(base_pose["leg_r"]), leg_r, aw)
-		knee_l = lerpf(float(base_pose["knee_l"]), knee_l, aw)
-		knee_r = lerpf(float(base_pose["knee_r"]), knee_r, aw)
+		leg_l = lerpf(float(base_pose["leg_l"]), leg_l, aw * still)
+		leg_r = lerpf(float(base_pose["leg_r"]), leg_r, aw * still)
+		knee_l = lerpf(float(base_pose["knee_l"]), knee_l, aw * still)
+		knee_r = lerpf(float(base_pose["knee_r"]), knee_r, aw * still)
 		body_y = lerpf(float(base_pose["body_y"]), body_y, aw)
 		push = lerpf(float(base_pose["push"]), push, aw)
 	else:
@@ -677,10 +678,10 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 		arm_rz = 0.55 * up
 		torso_x -= 0.2 * up
 		torso_x += 0.15 * smoothstep(0.75, 1.0, k2)   # snaps forward as the spell leaves
-		leg_l = lerpf(leg_l, -0.25, up)
-		leg_r = lerpf(leg_r, 0.3, up)
-		knee_l = lerpf(knee_l, 0.3, up)
-		knee_r = lerpf(knee_r, 0.3, up)
+		leg_l = lerpf(leg_l, -0.25, up * still)
+		leg_r = lerpf(leg_r, 0.3, up * still)
+		knee_l = lerpf(knee_l, 0.3, up * still)
+		knee_r = lerpf(knee_r, 0.3, up * still)
 		body_off -= 0.04 * up
 
 	if _ranged_t > 0.0:
@@ -698,10 +699,10 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 			arm_rz = lerpf(arm_rz, 0.1 * pull, back)
 			torso_y = lerpf(torso_y, -0.3, back)
 			torso_x += 0.04 * smoothstep(0.62, 0.7, kr) * back
-			leg_l = lerpf(leg_l, -0.3, back)
-			leg_r = lerpf(leg_r, 0.3, back)
-			knee_l = lerpf(knee_l, 0.15, back)
-			knee_r = lerpf(knee_r, 0.15, back)
+			leg_l = lerpf(leg_l, -0.3, back * still)
+			leg_r = lerpf(leg_r, 0.3, back * still)
+			knee_l = lerpf(knee_l, 0.15, back * still)
+			knee_r = lerpf(knee_r, 0.15, back * still)
 		else:
 			# staff: raised overhead, waved in a circle, then swept forward as the bolt leaves
 			var wind := smoothstep(0.0, 0.35, kr)
@@ -713,8 +714,8 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 			elb_l = lerpf(elb_l, -1.1 * wind, back)
 			torso_x += (-0.2 * wind * (1.0 - sweep) + 0.3 * sweep) * back
 			torso_y += sin(kr * TAU * 1.5) * 0.3 * (1.0 - sweep) * wind * back
-			leg_l = lerpf(leg_l, -0.25, back)
-			leg_r = lerpf(leg_r, 0.25, back)
+			leg_l = lerpf(leg_l, -0.25, back * still)
+			leg_r = lerpf(leg_r, 0.25, back * still)
 	_rot("leg_l", leg_l, 0, leg_lz)
 	_rot("leg_r", leg_r, 0, leg_rz)
 	_rot("shin_l", knee_l)
