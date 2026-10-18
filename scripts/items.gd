@@ -673,6 +673,10 @@ static func tooltip(item: Dictionary, class_id: String, equipped: Dictionary = {
 		else:
 			lines.append("[color=#6fd05a]+%d %s[/color]" % [roundi(v), STAT_NAMES[k]])
 	if item["slot"] == "weapon":
+		var cds := {"dagger": 0.33, "shortsword": 0.4, "sword": 0.45, "staff": 1.3, "bow": 1.4}
+		if cds.has(String(item["type"])):
+			var cdv: float = cds[String(item["type"])]
+			lines.append("[color=#a89dba]Attack speed: %s (%.2f s)[/color]" % ["Very fast" if cdv < 0.36 else ("Fast" if cdv < 0.43 else ("Average" if cdv < 0.9 else "Slow, hits harder")), cdv])
 		var who: String = CLASS_FOR_WEAPON.get(item["type"], "")
 		if who != "":
 			lines.append("[color=#a89dba]%s weapon[/color]" % Data.SKILLS[Data.COMBAT_SKILL[who]]["name"])
