@@ -830,7 +830,8 @@ func _on_world_click(button: int) -> void:
 	var e := clicker.pick_enemy()
 	if e:
 		set_target(e)
-		if button == MOUSE_BUTTON_RIGHT:
+		# right-click starts a melee fighter swinging; a bow or staff only starts shooting once you press an ability at the target
+		if button == MOUSE_BUTTON_RIGHT and String(Data.CLASS_COMBAT[player.class_id]["attack"]) == "melee":
 			combat.auto_attack = true
 		return
 	if clicker.click():

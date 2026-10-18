@@ -545,6 +545,21 @@ func anim_attack(dur := 0.25, face := true, left := false, fast := false) -> voi
 		model.attack(dur, left, fast)
 
 
+## A basic bow shot (draw and release) or staff wave. `staff`: true for a bolt from a staff.
+func anim_ranged(staff: bool, dur: float, face := true) -> void:
+	if face:
+		_face_aim_t = 0.6
+	armed_t = 6.0
+	if model:
+		model.set_armed(true, true)
+		if face:
+			model.set_facing(aim_dir)
+		if staff:
+			model.wave(dur)
+		else:
+			model.shoot(dur)
+
+
 func anim_cast(dur := 0.4, face := true) -> void:
 	if face:
 		_face_aim_t = 0.5

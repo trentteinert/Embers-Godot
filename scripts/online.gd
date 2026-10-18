@@ -928,11 +928,13 @@ func _on_basic_attack(pid: int, n: Node3D, ab: String) -> void:
 	var bolt: bool = ab == "basic_bolt"
 	if pid == my_id:
 		if bolt:
-			main.player.anim_cast(0.25, false)   # false: do not turn the character toward the enemy
+			main.player.anim_ranged(true, 0.9, false)   # the staff waves; false: do not turn the character toward the enemy
+		elif ab == "basic_arrow":
+			main.player.anim_ranged(false, 1.0, false)   # a two-handed bow draw and release
 		else:
 			main.player.anim_attack(0.28 if dual else 0.3, false, left, dual)
 	else:
-		(n as RemotePlayer).play_attack(bolt, left, dual)
+		(n as RemotePlayer).play_attack(bolt, left, dual, ab == "basic_arrow")
 	match ab:
 		"basic_melee":
 			Sfx.play("swing_heavy" if cls == "warrior" else "swing", n.global_position, -6.0)

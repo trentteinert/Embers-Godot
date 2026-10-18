@@ -23,6 +23,9 @@ var _attack_t := 0.0
 var _attack_dur := 0.25
 var _attack_left := false
 var _cast_t := 0.0
+var _ranged_t := 0.0     # drawing a bow or waving a staff for a basic shot
+var _ranged_dur := 1.0
+var _ranged_staff := false
 var _cast_dur := 0.4
 var _flash_t := 0.0
 var _flashing := false
@@ -212,6 +215,19 @@ func attack(dur := 0.25, left := false, fast := false) -> void:
 	_attack_left = left
 
 
+## Basic ranged attack: a two-handed bow draw and release, or a wave of the staff. The shot leaves near the end.
+func shoot(dur := 1.0) -> void:
+	_ranged_t = dur
+	_ranged_dur = dur
+	_ranged_staff = false
+
+
+func wave(dur := 0.9) -> void:
+	_ranged_t = dur
+	_ranged_dur = dur
+	_ranged_staff = true
+
+
 func cast(dur := 0.4) -> void:
 	_cast_t = dur
 	_cast_dur = dur
@@ -273,6 +289,7 @@ func tick(delta: float, move: float) -> void:
 	rotation.y = _yaw
 	_attack_t = maxf(0.0, _attack_t - delta)
 	_cast_t = maxf(0.0, _cast_t - delta)
+	_ranged_t = maxf(0.0, _ranged_t - delta)
 	if _draw_t > 0.0:
 		_draw_t = maxf(0.0, _draw_t - delta)
 		if not _draw_swapped and _draw_t <= DRAW_DUR * 0.5:
@@ -666,6 +683,37 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 		knee_r = lerpf(knee_r, 0.3, up)
 		body_off -= 0.04 * up
 
+	if _ranged_t > 0.0:
+		var kr := 1.0 - _ranged_t / _ranged_dur
+		var back := 1.0 - smoothstep(0.78, 1.0, kr)   # the pose eases away at the end
+		if not _ranged_staff:
+			# bow: left arm out holding the bow, right hand draws the string back to the cheek, then lets go
+			var pull := smoothstep(0.0, 0.6, kr) * (1.0 - smoothstep(0.62, 0.7, kr))
+			arm_l = lerpf(arm_l, -1.5, back)
+			elb_l = lerpf(elb_l, -0.05, back)
+			arm_lz = lerpf(arm_lz, -0.12, back)
+			arm_r = lerpf(arm_r, -1.5, back)
+			elb_r = lerpf(elb_r, -0.15 - 1.95 * pull, back)
+			arm_rz = lerpf(arm_rz, 0.35 * pull, back)
+			torso_y = lerpf(torso_y, -0.5, back)
+			torso_x += 0.04 * smoothstep(0.62, 0.7, kr) * back
+			leg_l = lerpf(leg_l, -0.3, back)
+			leg_r = lerpf(leg_r, 0.3, back)
+			knee_l = lerpf(knee_l, 0.15, back)
+			knee_r = lerpf(knee_r, 0.15, back)
+		else:
+			# staff: raised overhead, waved in a circle, then swept forward as the bolt leaves
+			var wind := smoothstep(0.0, 0.35, kr)
+			var sweep := smoothstep(0.35, 0.55, kr)
+			arm_r = lerpf(arm_r, lerpf(-2.7, -1.15, sweep) * wind + arm_r * (1.0 - wind), back)
+			elb_r = lerpf(elb_r, lerpf(-0.6, -0.15, sweep) * wind, back)
+			arm_rz = lerpf(arm_rz, sin(kr * TAU * 1.5) * 0.45 * (1.0 - sweep) * wind, back)
+			arm_l = lerpf(arm_l, -1.0 * wind, back)
+			elb_l = lerpf(elb_l, -1.1 * wind, back)
+			torso_x += (-0.2 * wind * (1.0 - sweep) + 0.3 * sweep) * back
+			torso_y += sin(kr * TAU * 1.5) * 0.3 * (1.0 - sweep) * wind * back
+			leg_l = lerpf(leg_l, -0.25, back)
+			leg_r = lerpf(leg_r, 0.25, back)
 	_rot("leg_l", leg_l, 0, leg_lz)
 	_rot("leg_r", leg_r, 0, leg_rz)
 	_rot("shin_l", knee_l)

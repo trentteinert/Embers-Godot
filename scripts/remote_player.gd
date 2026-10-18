@@ -73,13 +73,15 @@ func apply(v: Dictionary, world: World) -> void:
 		_last = target_pos
 
 
-func play_attack(cast: bool, left := false, fast := false) -> void:
+func play_attack(cast: bool, left := false, fast := false, arrow := false) -> void:
 	if rig == null:
 		return
 	rig.set_armed(true, true)
 	_attack_t = 4.0
 	if cast:
-		rig.cast(0.4)
+		rig.wave(0.9)
+	elif arrow:
+		rig.shoot(1.0)
 	else:
 		rig.attack(0.3 if not fast else 0.28, left, fast)
 
