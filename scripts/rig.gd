@@ -123,7 +123,7 @@ func add_weapon(n: Node3D, home: Node3D, side: int, w: String) -> void:
 			mount = Transform3D(Basis.from_euler(Vector3(0.0, PI * 0.5, 0.2)), Vector3(0.0, 0.1, -0.27))
 		_:
 			mount = Transform3D(Basis.from_euler(Vector3(-0.08, 0, 0.85 * side)), Vector3(-0.05 * side, 0.1, -0.2))
-	_weapons.append({"node": n, "home": home, "home_xf": n.transform, "mount_xf": mount})
+	_weapons.append({"node": n, "home": home, "home_xf": n.transform, "mount_xf": mount, "type": w})
 
 
 func is_armed() -> bool:
@@ -683,19 +683,30 @@ func _anim_humanoid() -> void:   # block animation v2 (godot_character/anim_huma
 		knee_r = lerpf(knee_r, 0.3, up)
 		body_off -= 0.04 * up
 
+	# a bow in the hand turns upright while it is drawn (arm out front, limbs up and down), and hangs normally otherwise
+	var bow_up := 0.0
+	if _ranged_t > 0.0 and not _ranged_staff:
+		var kb := 1.0 - _ranged_t / _ranged_dur
+		bow_up = smoothstep(0.0, 0.15, kb) * (1.0 - smoothstep(0.78, 1.0, kb))
+	for wp: Dictionary in _weapons:
+		if String(wp.get("type", "")) == "bow":
+			var bn: Node3D = wp["node"]
+			if is_instance_valid(bn) and bn.get_parent() == wp["home"]:
+				bn.rotation.x = (wp["home_xf"] as Transform3D).basis.get_euler().x + lerpf(0.0, PI * 0.5, bow_up)
 	if _ranged_t > 0.0:
 		var kr := 1.0 - _ranged_t / _ranged_dur
 		var back := 1.0 - smoothstep(0.78, 1.0, kr)   # the pose eases away at the end
 		if not _ranged_staff:
 			# bow: left arm out holding the bow, right hand draws the string back to the cheek, then lets go
 			var pull := smoothstep(0.0, 0.6, kr) * (1.0 - smoothstep(0.62, 0.7, kr))
+			# the bow arm reaches across the body towards the drawing hand, the bow itself held upright
 			arm_l = lerpf(arm_l, -1.5, back)
 			elb_l = lerpf(elb_l, -0.05, back)
-			arm_lz = lerpf(arm_lz, -0.12, back)
+			arm_lz = lerpf(arm_lz, 0.3, back)
 			arm_r = lerpf(arm_r, -1.5, back)
 			elb_r = lerpf(elb_r, -0.15 - 1.95 * pull, back)
-			arm_rz = lerpf(arm_rz, 0.35 * pull, back)
-			torso_y = lerpf(torso_y, -0.5, back)
+			arm_rz = lerpf(arm_rz, 0.1 * pull, back)
+			torso_y = lerpf(torso_y, -0.3, back)
 			torso_x += 0.04 * smoothstep(0.62, 0.7, kr) * back
 			leg_l = lerpf(leg_l, -0.3, back)
 			leg_r = lerpf(leg_r, 0.3, back)
