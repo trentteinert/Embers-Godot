@@ -140,7 +140,7 @@ const TALENTS := {
 		# ---------------- Shadow
 		{"id": "sh_ambush", "col": 0, "tree": "shadow", "tier": 0, "max": 3, "name": "Ambush", "desc": "+30% damage per rank on your first hit from stealth."},
 		{"id": "sh_keen", "col": 1, "tree": "shadow", "tier": 0, "max": 3, "name": "Keen Edge", "desc": "+4% critical strike chance per rank."},
-		{"id": "sh_step", "col": 3, "tree": "shadow", "tier": 0, "max": 1, "name": "Shadow Step", "desc": "Learn Shadow Step: dash through a target within 9 m, untouchable mid-dash.", "ability": "step"},
+		{"id": "sh_step", "col": 3, "tree": "shadow", "tier": 3, "max": 1, "name": "Shadow Step", "desc": "Learn Shadow Step: dash through a target within 9 m, untouchable mid-dash.", "ability": "step"},
 		{"id": "sh_stealth", "col": 4, "tree": "shadow", "tier": 0, "max": 1, "name": "Stealth", "desc": "Learn Stealth: slip out of sight. Your first hit from stealth always crits.", "ability": "stealth"},
 		{"id": "sh_backstab", "col": 0, "tree": "shadow", "tier": 1, "max": 1, "name": "Backstab", "desc": "Strike becomes Backstab: a precise blow at close range for huge damage."},
 		{"id": "sh_prep", "col": 1, "tree": "shadow", "tier": 1, "max": 2, "name": "Preparation", "desc": "Stealth and Smoke Bomb cool down 20% faster per rank.", "req": "sh_keen"},
@@ -153,7 +153,7 @@ const TALENTS := {
 		{"id": "sh_flurry", "col": 4, "tree": "shadow", "tier": 3, "max": 1, "name": "Blade Flurry", "desc": "Learn Blade Flurry: attack twice as fast for 5s.", "ability": "flurry", "req": "sh_smoke"},
 		{"id": "sh_lethal", "col": 1, "tree": "shadow", "tier": 3, "max": 3, "name": "Lethality", "desc": "Critical strikes deal 20% more damage per rank."},
 		{"id": "sh_exec", "col": 2, "tree": "shadow", "tier": 3, "max": 2, "name": "Executioner", "desc": "+15% damage per rank to enemies below 30% health."},
-		{"id": "sh_dual", "col": 3, "tree": "shadow", "tier": 3, "max": 1, "name": "Dual Wield", "desc": "Unlocks your off-hand: wield a second one-handed weapon."},
+		{"id": "sh_dual", "col": 3, "tree": "shadow", "tier": 0, "max": 1, "name": "Dual Wield", "desc": "Unlocks your off-hand: wield a second one-handed weapon."},
 		{"id": "sh_opp", "col": 0, "tree": "shadow", "tier": 4, "max": 2, "name": "Opportunist", "desc": "+5% critical strike chance per rank."},
 		{"id": "sh_dance", "col": 1, "tree": "shadow", "tier": 4, "max": 1, "name": "Shadow Dance", "desc": "Leaving stealth with an attack refunds 30 Energy."},
 		{"id": "sh_cloak", "col": 3, "tree": "shadow", "tier": 4, "max": 1, "name": "Shadow Cloak", "desc": "Dropping below 30% health cloaks you in stealth for 4s. 45s cooldown."},
