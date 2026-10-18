@@ -119,8 +119,7 @@ func _setup(ui_node: Node, online_node: Node, at: Vector3) -> void:
 	_level = SpinBox.new()
 	_level.min_value = 0
 	_level.max_value = 30
-	_level.prefix = "Item level "
-	_level.special_value_text = "Item level: mine"
+	_level.prefix = "Item level (0 = mine): "
 	_level.tooltip_text = "Level of the gear you take (1-30). 'mine' (0) uses your own level."
 	_level.custom_minimum_size = Vector2(150, 0)
 	_dev_bar.add_child(_level)

@@ -1784,7 +1784,7 @@ func _prompt_text(it: Dictionary) -> String:
 				return "[G] Ask %s for a Slayer task" % Data.SLAYER_NAME
 			return "[G] Talk to %s" % Data.SLAYER_NAME
 		"rack":
-			return "[G] Take the bow and staff" if not bool(state.get("rack", false)) else "The rack is empty"
+			return "[G] Take the bow and staff" if (online != null or not bool(state.get("rack", false))) else "The rack is empty"
 		"furnace":
 			return "[G] Smelt ore (Furnace)"
 		"anvil":
@@ -1870,7 +1870,10 @@ func interact_with(it: Dictionary) -> void:
 	if online != null and it["kind"] == "varka":
 		online.talk("varka")
 		return
-	if online != null and it["kind"] in ["node", "fish", "rack", "cave", "cave_exit"]:
+	if online != null and it["kind"] == "rack":
+		online.send({"t": "take_rack"})   # the server hands out the bow and staff, once
+		return
+	if online != null and it["kind"] in ["node", "fish", "cave", "cave_exit"]:
 		ui.toast("That isn't available in the online version yet", Color("e0a080"))
 		return
 	var b := _boss()

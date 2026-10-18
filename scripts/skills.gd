@@ -874,15 +874,91 @@ func _build_stations() -> void:
 	# campfires (Cooking)
 	for fp: Vector3 in world.campfires:
 		_make_fire(fp, true)
-	# the furnace and anvil are the smithy's own; just name them
+	# in the original world the furnace and anvil are the smithy's own; in a custom world (placed with Embers points) they are built here
+	var custom: bool = str(world.get_meta("custom_world", "")) != ""
 	var fu := Node3D.new()
 	add_child(fu)
 	fu.global_position = world.furnace_pos
+	if custom:
+		_build_furnace(fu)
 	_label(fu, "Furnace", 2.3, Color("ffb070"))
 	var an := Node3D.new()
 	add_child(an)
 	an.global_position = world.anvil_pos
+	if custom:
+		_build_anvil(an)
+		_build_rack()
 	_label(an, "Anvil", 1.7, Color("c8ccd4"))
+
+
+## A solid block of the given size standing on the ground at `pos` (a corner of its base is at `pos - size/2`).
+func _block(parent: Node3D, size: Vector3, pos: Vector3, col: Color, glow := 0.0, solid := false) -> void:
+	var bm := BoxMesh.new()
+	bm.size = size
+	var mi := MeshInstance3D.new()
+	mi.mesh = bm
+	mi.material_override = _mat(col, glow)
+	mi.position = pos + Vector3(0, size.y * 0.5, 0)
+	parent.add_child(mi)
+	if solid:
+		var sb := StaticBody3D.new()
+		var cs := CollisionShape3D.new()
+		var bs := BoxShape3D.new()
+		bs.size = size
+		cs.shape = bs
+		sb.position = mi.position
+		sb.add_child(cs)
+		parent.add_child(sb)
+
+
+## The camp's weapon rack in a custom world: a wooden frame holding a bow and a staff (taken once, from Tam's rack).
+func _build_rack() -> void:
+	var root := Node3D.new()
+	add_child(root)
+	root.global_position = world.rack_pos
+	var wood := Color("6b4a2c")
+	_block(root, Vector3(0.18, 1.5, 0.18), Vector3(-0.8, 0, 0), wood, 0.0, true)
+	_block(root, Vector3(0.18, 1.5, 0.18), Vector3(0.8, 0, 0), wood, 0.0, true)
+	_block(root, Vector3(1.8, 0.14, 0.16), Vector3(0, 1.3, 0), wood)
+	_block(root, Vector3(1.8, 0.14, 0.16), Vector3(0, 0.6, 0), wood)
+	_block(root, Vector3(0.09, 1.5, 0.09), Vector3(-0.3, 0.2, 0.12), Color("a47a4a"))       # the staff
+	_block(root, Vector3(0.22, 0.22, 0.22), Vector3(-0.3, 1.68, 0.12), Color("b080ff"), 1.0)
+	_block(root, Vector3(0.07, 1.4, 0.07), Vector3(0.35, 0.2, 0.12), Color("8a5a30"))        # the bow
+	_block(root, Vector3(0.07, 0.3, 0.07), Vector3(0.45, 1.5, 0.12), Color("8a5a30"))
+	_block(root, Vector3(0.02, 1.4, 0.02), Vector3(0.5, 0.2, 0.12), Color("e8e0d0"))         # the string
+	_label(root, "Weapon rack", 2.2, Color("e8c070"))
+
+
+## A stone furnace: a squat kiln with a glowing mouth, a chimney and a few embers.
+func _build_furnace(root: Node3D) -> void:
+	var stone := Color("8a8c94")
+	var dark := Color("5c5e66")
+	_block(root, Vector3(1.8, 0.3, 1.5), Vector3(0, 0, 0), dark, 0.0, true)
+	_block(root, Vector3(1.6, 1.3, 1.3), Vector3(0, 0.3, 0), stone, 0.0, true)
+	_block(root, Vector3(1.2, 0.35, 1.0), Vector3(0, 1.6, 0), dark)
+	_block(root, Vector3(0.55, 1.1, 0.55), Vector3(-0.35, 1.95, -0.2), stone)     # chimney
+	_block(root, Vector3(0.7, 0.55, 0.12), Vector3(0, 0.55, 0.69), Color("1a1210"))   # the mouth
+	_block(root, Vector3(0.5, 0.3, 0.1), Vector3(0, 0.6, 0.72), Color("ff8a30"), 2.2)   # glowing coals
+	_block(root, Vector3(0.25, 0.14, 0.1), Vector3(0.05, 0.9, 0.73), Color("ffd060"), 2.6)
+	var light := OmniLight3D.new()
+	light.position = Vector3(0, 0.9, 1.2)
+	light.light_color = Color("ff9a40")
+	light.light_energy = 0.8
+	light.omni_range = 5.0
+	root.add_child(light)
+
+
+## An iron anvil on a log: a flat top, a horn, a waist and a foot.
+func _build_anvil(root: Node3D) -> void:
+	var iron := Color("52555e")
+	var top := Color("767a84")
+	_block(root, Vector3(0.9, 0.6, 0.9), Vector3(0, 0, 0), Color("6b4a2c"), 0.0, true)   # the log
+	_block(root, Vector3(0.9, 0.12, 0.5), Vector3(0, 0.6, 0), iron)                       # foot
+	_block(root, Vector3(0.4, 0.28, 0.32), Vector3(0, 0.72, 0), iron)                     # waist
+	_block(root, Vector3(1.0, 0.2, 0.46), Vector3(0, 1.0, 0), top)                        # face
+	_block(root, Vector3(0.32, 0.14, 0.3), Vector3(0.62, 1.04, 0), top)                   # horn
+	_block(root, Vector3(0.18, 0.1, 0.22), Vector3(0.82, 1.06, 0), top)
+	_block(root, Vector3(0.7, 0.04, 0.3), Vector3(-0.1, 1.2, 0), Color("9aa0aa"))         # polished top
 
 
 func _build_courses() -> void:
