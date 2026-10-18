@@ -154,7 +154,7 @@ static func _apply_meta(w: World, m: Dictionary) -> void:
 	w.alchemy_pos = w.camp_pos
 	w.bench_pos = w.camp_pos
 	w.camp_bench_pos = w.camp_pos
-	w.rack_pos = w.camp_pos + Vector3(3, 0, 3)
+	w.rack_pos = _v3(w, m["rack"]) if m.has("rack") else w.camp_pos + Vector3(3, 0, 3)   # the Weapon rack point, or beside the camp
 	var npcs: Dictionary = m.get("npcs", {})
 	for id: String in npcs:
 		w.npc_pos[id] = _v3(w, npcs[id])

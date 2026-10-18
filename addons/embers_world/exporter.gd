@@ -713,7 +713,7 @@ func _meta(points: Array, heights: PackedFloat32Array) -> Dictionary:
 		"smooth_blend_cells": _blend_cells() if _world.smooth_biome_blend else 0,
 		"smooth_path_cells": _smooth_path_cells(),
 		"flat_ground": _world.flat_ground_in_game, "ground_clutter": _world.ground_clutter}
-	var single := {K.SPAWN: "spawn", K.SHRINE: "shrine", K.CAMP: "camp", K.VILLAGE: "village", K.FORGE: "forge", K.FURNACE: "furnace", K.ANVIL: "anvil", K.SLAYER: "slayer"}
+	var single := {K.SPAWN: "spawn", K.SHRINE: "shrine", K.CAMP: "camp", K.VILLAGE: "village", K.FORGE: "forge", K.FURNACE: "furnace", K.ANVIL: "anvil", K.SLAYER: "slayer", K.RACK: "rack"}
 	var merchants: Array = []
 	var known_npcs: Array = _known.get("npcs", [])
 	var known_mats: Array = _known.get("materials", [])

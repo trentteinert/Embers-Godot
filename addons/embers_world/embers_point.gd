@@ -4,7 +4,7 @@ extends Marker3D
 ## A place the server needs to know about. Pick the kind, put it where it belongs. Shows a coloured label in
 ## the editor. For NPCs and Elite lairs, `id` is the character (see the list in the README).
 
-enum Kind { SPAWN, SHRINE, CAMP, VILLAGE, FORGE, FURNACE, ANVIL, SLAYER, MERCHANT, NPC, ELITE_LAIR, CAMPFIRE, FISHING_SPOT, RESOURCE_SPOT, BANK }
+enum Kind { SPAWN, SHRINE, CAMP, VILLAGE, FORGE, FURNACE, ANVIL, SLAYER, MERCHANT, NPC, ELITE_LAIR, CAMPFIRE, FISHING_SPOT, RESOURCE_SPOT, BANK, RACK }
 
 @export var kind: Kind = Kind.SPAWN: set = _set_kind
 ## NPC / Elite lair: the character id ("tam", "king", "rowan", ...). Resource spot: the material
@@ -15,8 +15,8 @@ enum Kind { SPAWN, SHRINE, CAMP, VILLAGE, FORGE, FURNACE, ANVIL, SLAYER, MERCHAN
 
 ## The bosses with a lair of their own; every other known character is an NPC.
 const ELITES := ["alpha", "barrowking", "champion"]
-const NAMES := ["Spawn", "Shrine", "Camp", "Village", "Forge", "Furnace", "Anvil", "Slayer", "Merchant", "NPC", "Elite lair", "Campfire", "Fishing spot", "Resource", "Bank"]
-const COLORS := [Color("ffd27a"), Color("c8a8ff"), Color("ff9a4a"), Color("8ad07a"), Color("e0703a"), Color("e0703a"), Color("e0703a"), Color("e8506a"), Color("f2c27a"), Color("7ac8ff"), Color("ff4a4a"), Color("ff9a4a"), Color("5ab0ff"), Color("b0b0b8"), Color("f2c27a")]
+const NAMES := ["Spawn", "Shrine", "Camp", "Village", "Forge", "Furnace", "Anvil", "Slayer", "Merchant", "NPC", "Elite lair", "Campfire", "Fishing spot", "Resource", "Bank", "Weapon rack"]
+const COLORS := [Color("ffd27a"), Color("c8a8ff"), Color("ff9a4a"), Color("8ad07a"), Color("e0703a"), Color("e0703a"), Color("e0703a"), Color("e8506a"), Color("f2c27a"), Color("7ac8ff"), Color("ff4a4a"), Color("ff9a4a"), Color("5ab0ff"), Color("b0b0b8"), Color("f2c27a"), Color("e8c070")]
 ## Drop onto the terrain whenever you move it in the editor.
 @export var stick_to_ground := true
 @export_tool_button("Snap to ground") var _snap_button: Callable = snap_to_ground
@@ -46,6 +46,28 @@ func _notification(what: int) -> void:
 var _label: Label3D
 var _shape: Node3D
 var _shape_key := ""
+
+
+## A little weapon rack: two posts, two rails, a bow and a staff.
+func _rack_shape() -> Node3D:
+	var root := Node3D.new()
+	var parts: Array = [
+		[Vector3(0.18, 1.5, 0.18), Vector3(-0.8, 0.75, 0), Color("6b4a2c")], [Vector3(0.18, 1.5, 0.18), Vector3(0.8, 0.75, 0), Color("6b4a2c")],
+		[Vector3(1.8, 0.14, 0.16), Vector3(0, 1.37, 0), Color("6b4a2c")], [Vector3(1.8, 0.14, 0.16), Vector3(0, 0.67, 0), Color("6b4a2c")],
+		[Vector3(0.09, 1.5, 0.09), Vector3(-0.3, 0.95, 0.12), Color("a47a4a")], [Vector3(0.2, 0.2, 0.2), Vector3(-0.3, 1.78, 0.12), Color("b080ff")],
+		[Vector3(0.07, 1.4, 0.07), Vector3(0.35, 0.9, 0.12), Color("8a5a30")],
+	]
+	for pt: Array in parts:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = pt[0]
+		mi.mesh = bm
+		mi.position = pt[1]
+		var mat := StandardMaterial3D.new()
+		mat.albedo_color = pt[2]
+		mi.material_override = mat
+		root.add_child(mi)
+	return root
 
 
 func _set_kind(v: Kind) -> void:
@@ -173,6 +195,8 @@ func _make_shape(k: int) -> Node3D:
 			return holder
 	if k == Kind.BANK:
 		return _chest_shape()
+	if k == Kind.RACK:
+		return _rack_shape()
 	if k == Kind.SHRINE:
 		return _shrine_shape()
 	var mi := MeshInstance3D.new()
