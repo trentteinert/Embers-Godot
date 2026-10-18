@@ -1472,12 +1472,18 @@ func equip_from_bag(idx: int) -> void:
 	var slot: String = item["slot"]
 	var eq: Dictionary = state["equip"]
 	# daggers dual wield: a second one-hander goes to the off-hand when the main hand is taken
-	if slot == "weapon" and talent_rank("sh_dual") > 0 and item["type"] in ["sword", "dagger", "shortsword"] and not eq.get("weapon", {}).is_empty() and eq.get("offhand", {}).is_empty():
+	var two_handed_now: bool = String(eq.get("weapon", {}).get("type", "")) in ["bow", "staff"]
+	if slot == "weapon" and talent_rank("sh_dual") > 0 and item["type"] in ["sword", "dagger", "shortsword"] and not eq.get("weapon", {}).is_empty() and eq.get("offhand", {}).is_empty() and not two_handed_now:
 		slot = "offhand"
 	var old: Dictionary = eq.get(slot, {})
 	bag.remove_at(idx)
 	if not old.is_empty():
 		bag.insert(idx, old)
+	# a bow or a staff takes both hands: a shield or second weapon in the off-hand goes back to the bag
+	if slot == "weapon" and String(item["type"]) in ["bow", "staff"] and not eq.get("offhand", {}).is_empty():
+		bag.append(eq["offhand"])
+		eq.erase("offhand")
+		ui.toast("A %s takes both hands: your off-hand item went to the bag" % item["type"])
 	eq[slot] = item
 	Sfx.play("equip")
 	_apply_gear()
