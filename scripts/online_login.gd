@@ -1,9 +1,9 @@
 class_name OnlineLogin
 extends CanvasLayer
-## The login screen for online play: server address, account, password, class and which world to play in. It
+## The login screen for online play: server address, account, password and which world to play in. It
 ## replaces the launch arguments (--online, --account, ...), which still work. It opens by itself when the game
 ## starts without them; "Single player" closes it and gives you the normal title screen.
-## Remembers the server, account, class and world (never the password) in user://embers_login.cfg.
+## Remembers the server, account and world (never the password) in user://embers_login.cfg.
 
 const BG := Color(0.075, 0.06, 0.105, 0.97)
 const LINE := Color("5a4a6a")
@@ -19,13 +19,11 @@ var _panel: PanelContainer
 var _server: LineEdit
 var _account: LineEdit
 var _password: LineEdit
-var _class: OptionButton
 var _world: OptionButton
 var _mode_login: Button
 var _mode_register: Button
 var _play: Button
 var _msg: Label
-var _class_row: Control
 var _worlds: Array = []   # scene path per _world item ("" = the original)
 var _register := false
 var _open_btn: Button
@@ -168,14 +166,6 @@ func _build(root: Control) -> void:
 	_server = _field(v, "Server", "ws://127.0.0.1:7777")
 	_account = _field(v, "Account name", "3-20 letters, numbers or _")
 	_password = _field(v, "Password", "at least 8 characters to create an account", true)
-	_class_row = VBoxContainer.new()
-	v.add_child(_class_row)
-	_class_row.add_child(_label("Class (for a new character)", 13, MUTED))
-	_class = OptionButton.new()
-	for c in ["warrior", "mage", "hunter"]:
-		_class.add_item(c.capitalize())
-	_class.custom_minimum_size = Vector2(380, 36)
-	_class_row.add_child(_class)
 	v.add_child(_label("World", 13, MUTED))
 	_world = OptionButton.new()
 	_world.custom_minimum_size = Vector2(380, 36)
@@ -216,7 +206,6 @@ func _set_mode(register: bool) -> void:
 	_register = register
 	_mode_login.button_pressed = not register
 	_mode_register.button_pressed = register
-	_class_row.visible = register
 	_play.text = "CREATE ACCOUNT AND PLAY" if register else "PLAY"
 	_say("", false)
 
@@ -259,8 +248,6 @@ func _load() -> void:
 	var ok := c.load(SAVE) == OK
 	_server.text = str(Online.cfg.get("url", c.get_value("login", "server", "ws://127.0.0.1:7777") if ok else "ws://127.0.0.1:7777"))
 	_account.text = str(Online.cfg.get("account", c.get_value("login", "account", "") if ok else ""))
-	var cls: String = str(Online.cfg.get("class", c.get_value("login", "class", "warrior") if ok else "warrior"))
-	_class.select(maxi(0, ["warrior", "mage", "hunter"].find(cls)))
 	var w: String = str(Online.cfg.get("world", c.get_value("login", "world", "") if ok else ""))
 	_world.select(maxi(0, _worlds.find(w)))
 	if ok and c.get_value("login", "has_account", false) and not Online.cfg.has("register"):
@@ -275,7 +262,6 @@ func _save() -> void:
 	var c := ConfigFile.new()
 	c.set_value("login", "server", _server.text.strip_edges())
 	c.set_value("login", "account", _account.text.strip_edges())
-	c.set_value("login", "class", ["warrior", "mage", "hunter"][_class.selected])
 	c.set_value("login", "world", _worlds[_world.selected])
 	c.set_value("login", "has_account", true)
 	c.save(SAVE)
@@ -302,7 +288,7 @@ func _submit() -> void:
 	_save()
 	var want: String = _worlds[_world.selected]
 	Online.cfg = {"auto": true, "url": url, "account": acct, "password": pw, "register": _register,
-		"class": ["warrior", "mage", "hunter"][_class.selected], "world": want, "demo_done": true}
+		"class": "warrior", "world": want, "demo_done": true}
 	_say("Connecting...", false)
 	var loaded: String = str(main.world.get_meta("custom_world", ""))
 	if want == loaded:
