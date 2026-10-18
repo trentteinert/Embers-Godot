@@ -1788,7 +1788,7 @@ func _prompt_text(it: Dictionary) -> String:
 		"furnace":
 			return "[G] Smelt ore (Furnace)"
 		"anvil":
-			return "[G] Anvil (forge metal)"
+			return "[G] Anvil (forge metal; needs a hammer)"
 		"fire":
 			return "[G] Cook (Cooking)"
 		"fish":

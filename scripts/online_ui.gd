@@ -233,7 +233,7 @@ func _lvl(skill: String) -> int:
 
 
 func _rank(r: Dictionary) -> int:
-	return {"ok": 0, "mats": 1, "station": 2, "level": 3, "have": 4}.get(str(r["state"]), 5)
+	return {"ok": 0, "mats": 1, "tool": 1, "station": 2, "level": 3, "have": 4}.get(str(r["state"]), 5)
 
 
 func _count_ok() -> int:
@@ -262,6 +262,9 @@ func _row(r: Dictionary) -> Control:
 		"station":
 			tag = "  go to " + ("a fire" if str(r["station"]) == "fire" else "a town")
 			col = MUTED
+		"tool":
+			tag = "  need a hammer"
+			col = WARN
 		"level":
 			tag = "  %s %d" % [Data.SKILLS[str(r["skill"])]["name"], int(r["lvl"])]
 			col = MUTED
