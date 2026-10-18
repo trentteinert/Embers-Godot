@@ -442,7 +442,7 @@ func make_gear(tier: int, slot: String, masterwork: bool) -> void:
 
 func brew_potion() -> void:
 	if main.online != null:
-		main.ui.toast("Brew potions in the Workshop (J)")
+		main.ui.toast("Use a vial on a herb to brew potions")
 		return
 	var cost := {"mossgel": 2, "gold": 5}
 	if not can_afford(cost):

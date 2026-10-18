@@ -346,7 +346,7 @@ func _begin_play() -> void:
 	_setup_chat()
 	_apply_recipes(recipes)
 	main.ui.toast("Welcome, %s" % main.state["name"])
-	main.ui.chat_say("J = Workshop (recipes) · U = skills · Enter = chat · click trees, rocks, plants and ripples to gather", Color("9a8fa8"))
+	main.ui.chat_say("U = skills · Enter = chat · click trees, rocks, plants and ripples to gather", Color("9a8fa8"))
 	if OS.get_cmdline_user_args().has("--online-fill-bar"):
 		var bar: Array = [-1, -1, -1, -1, -1, -1]
 		var n: int = 0
@@ -1166,7 +1166,7 @@ func source_of(mat: String) -> String:
 	for table: String in Data.RECIPES:
 		for r: Dictionary in Data.RECIPES[table]:
 			if str(r["out"]) == mat:
-				return "Make it in the Workshop (J): %s" % r["name"]
+				return "Craft it: %s" % r["name"]
 	return "Dropped by creatures"
 
 
@@ -1206,7 +1206,7 @@ func _apply_recipes(list: Array) -> void:
 		_nudge_t = _t
 		var r2: Dictionary = ready[0]
 		_nudged[str(r2["id"])] = true
-		main.ui.chat_say("You can make %s now. Press J." % r2["name"], Color("8ad07a"))
+		main.ui.chat_say("You can make %s now. Use a tool on its materials (knife on twigs, hammer on a bar)." % r2["name"], Color("8ad07a"))
 	if ui2 != null and ui2.win.visible:
 		ui2._rebuild()
 
@@ -1359,7 +1359,7 @@ func node_prompt(it: Dictionary) -> String:
 	if kind == "fire":
 		return "Cook at the fire"
 	if kind == "fish":
-		return str(d["label"]) + ("" if inv_count("rod") > 0 else "  (you need a Fishing Rod: Workshop, J)")
+		return str(d["label"]) + ("" if inv_count("rod") > 0 else "  (you need a Fishing Rod: use a knife on twigs)")
 	var nd: Dictionary = Data.NODES[kind]
 	var need := ""
 	if skill_level(str(nd["skill"])) < int(nd["lvl"]):
@@ -1371,7 +1371,7 @@ func node_prompt(it: Dictionary) -> String:
 			if inv_count(str(line[i])) > 0:
 				best = i
 		if best < int(nd.get("tt", 0)):
-			need = "  (needs a %s: Workshop, J)" % Data.MATERIALS[line[int(nd.get("tt", 0))]]["name"]
+			need = "  (needs a %s)" % Data.MATERIALS[line[int(nd.get("tt", 0))]]["name"]
 	return "%s %s%s" % [nd["verb"], Data.MATERIALS[kind]["name"], need]
 
 
@@ -1493,9 +1493,6 @@ func _unhandled_input(event: InputEvent) -> void:
 	if typing():
 		return
 	match (event as InputEventKey).keycode:
-		KEY_J:
-			ui2.toggle()
-			get_viewport().set_input_as_handled()
 		KEY_F8:
 			_switch_character()
 			get_viewport().set_input_as_handled()

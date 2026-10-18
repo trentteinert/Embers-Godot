@@ -894,7 +894,7 @@ func use_mat(id: String) -> void:
 		elif id in TOOL_HINTS:
 			ui.toast("%s: %s" % [Data.MATERIALS[id]["name"], TOOL_HINTS[id]])
 		else:
-			ui.toast("%s: use the Workshop (J) to make things from it" % Data.MATERIALS[id]["name"])
+			ui.toast("%s: use it on a tool (knife, hammer, vial) to make things" % Data.MATERIALS[id]["name"])
 		return
 	match id:
 		"hpot", "greater":
@@ -1857,8 +1857,18 @@ func interact_with(it: Dictionary) -> void:
 	if online != null and it["kind"] in ["furnace", "anvil", "fire"]:
 		# the game's own windows, in the chat box (the server does the making)
 		if it["kind"] == "anvil":
-			if online.ui2 != null:
-				online.ui2.toggle()   # the Workshop lists what you can forge here (no hammer needed)
+			# the hammer or a bar used on the anvil (or just the anvil, with a hammer in the bag) opens the smithing menu in the chat box
+			var src: String = ui.use_src
+			if src != "":
+				ui.cancel_use()
+				if src == "hammer" or src.ends_with("_bar"):
+					ui.open_combo("anvil", "" if src == "hammer" else src)
+				else:
+					ui.chat_say("Nothing interesting happens.", Color("a89cb8"))
+			elif online.inv_count("hammer") > 0:
+				ui.open_combo("anvil", "")
+			else:
+				ui.chat_say("You need a hammer to smith. Use a knife on twigs to make a Wooden Hammer.", Color("e8c070"))
 		else:
 			toggle_window("furnace" if it["kind"] == "furnace" else "cooking")
 		return

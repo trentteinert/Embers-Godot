@@ -157,17 +157,13 @@ func _build_window(root: Control) -> void:
 	_set_tab("all")
 
 
+## The recipe window is gone: crafting happens in the game's own chat-box menu (use a tool on an item).
 func toggle() -> void:
-	win.visible = not win.visible
-	if win.visible:
-		_rebuild()
+	return
 
 
-func open(tab := "") -> void:
-	if tab != "":
-		_set_tab(tab)
-	win.visible = true
-	_rebuild()
+func open(_tab_name := "") -> void:
+	return
 
 
 func _set_tab(t: String) -> void:
