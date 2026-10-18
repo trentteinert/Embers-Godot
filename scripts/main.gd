@@ -1788,7 +1788,7 @@ func _prompt_text(it: Dictionary) -> String:
 		"furnace":
 			return "[G] Smelt ore (Furnace)"
 		"anvil":
-			return "[G] Anvil (use a hammer on a bar)"
+			return "[G] Anvil (forge metal)"
 		"fire":
 			return "[G] Cook (Cooking)"
 		"fish":
@@ -1857,7 +1857,8 @@ func interact_with(it: Dictionary) -> void:
 	if online != null and it["kind"] in ["furnace", "anvil", "fire"]:
 		# the game's own windows, in the chat box (the server does the making)
 		if it["kind"] == "anvil":
-			ui.chat_say("Use a hammer on a bar from your bag to forge here.", Color("e8c070"))
+			if online.ui2 != null:
+				online.ui2.toggle()   # the Workshop lists what you can forge here (no hammer needed)
 		else:
 			toggle_window("furnace" if it["kind"] == "furnace" else "cooking")
 		return
