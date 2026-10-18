@@ -112,6 +112,12 @@ func add_weapon(n: Node3D, home: Node3D, side: int, w: String) -> void:
 			mount = Transform3D(Basis(xax, d, zax).scaled(Vector3.ONE * 0.62), Vector3(-0.3 * side, 0.0, -0.02))
 		"shield":
 			mount = Transform3D(Basis.from_euler(Vector3(-PI * 0.5, 0, 0)), Vector3(0, 0.3, -0.24))
+		"staff":
+			# slung across the back, the head over the right shoulder
+			mount = Transform3D(Basis.from_euler(Vector3(0.0, 0.0, 0.42)), Vector3(-0.05, -0.05, -0.3))
+		"bow":
+			# hung on the back, limbs up and down, the grip on the middle of the spine
+			mount = Transform3D(Basis.from_euler(Vector3(0.0, PI * 0.5, 0.2)), Vector3(0.0, 0.1, -0.27))
 		_:
 			mount = Transform3D(Basis.from_euler(Vector3(-0.08, 0, 0.85 * side)), Vector3(-0.05 * side, 0.1, -0.2))
 	_weapons.append({"node": n, "home": home, "home_xf": n.transform, "mount_xf": mount})

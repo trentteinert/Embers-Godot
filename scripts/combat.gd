@@ -398,7 +398,7 @@ func _try_attack() -> void:
 	match cc["attack"]:
 		"melee":
 			Sfx.play("swing_heavy" if player.class_id == "warrior" else "swing", Vector3.INF, -6.0)
-			_melee(cc["range"], cc["arc"], basic_mult, cc["knock"], Color("fff4d8"))
+			_melee(cc["range"], cc["arc"], basic_mult, 0.0, Color("fff4d8"))
 		"bolt":
 			Sfx.play("bolt", Vector3.INF, -8.0)
 			_player_shot(player.aim_dir, cc["speed"], _pd(basic_mult), "bolt", Color("c49bff"), cc["life"])

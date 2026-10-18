@@ -62,7 +62,8 @@ var _want_attack := false
 var _sent_target := -2
 var _sent_bar := -1
 var _bar_t := 0.0
-var _shot_nodes: Array[MeshInstance3D] = []
+var _shot_nodes: Array[Node3D] = []   # one holder per live shot: a ball (bolts, fire) and an arrow model, one of them shown
+var _shot_last: Array = []           # where each holder was last frame, so arrows point the way they fly
 var _disconnected := false
 var _was_dead := false
 var _kind_color := {"fire": Color("ff7a3a"), "arrow": Color("ffe9a8"), "knife": Color("d8dce6"), "bolt": Color("c49bff"), "orb": Color("ff5a4a")}
@@ -771,24 +772,73 @@ func _sync_plants(list: Array) -> void:
 			plants.erase(id)
 
 
+func _arrow_model() -> Node3D:
+	# an arrow built along -Z (the way it flies): wooden shaft, steel head, red fletching
+	var root := Node3D.new()
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color("9a7a4a")
+	var steel := StandardMaterial3D.new()
+	steel.albedo_color = Color("d8dce6")
+	var fletch := StandardMaterial3D.new()
+	fletch.albedo_color = Color("e05a4a")
+	var parts: Array = [
+		[Vector3(0.035, 0.035, 0.8), Vector3(0, 0, 0), wood],
+		[Vector3(0.09, 0.09, 0.07), Vector3(0, 0, -0.4), steel],
+		[Vector3(0.06, 0.06, 0.07), Vector3(0, 0, -0.46), steel],
+		[Vector3(0.025, 0.025, 0.05), Vector3(0, 0, -0.5), steel],
+		[Vector3(0.2, 0.012, 0.16), Vector3(0, 0, 0.33), fletch],
+		[Vector3(0.012, 0.2, 0.16), Vector3(0, 0, 0.33), fletch],
+	]
+	for p: Array in parts:
+		var mi := MeshInstance3D.new()
+		var bm := BoxMesh.new()
+		bm.size = p[0]
+		mi.mesh = bm
+		mi.position = p[1]
+		mi.material_override = p[2]
+		root.add_child(mi)
+	return root
+
+
 func _sync_shots(list: Array) -> void:
 	while _shot_nodes.size() < list.size():
+		var holder := Node3D.new()
 		var mi: MeshInstance3D = MeshInstance3D.new()
+		mi.name = "Ball"
 		var sm: SphereMesh = SphereMesh.new()
 		sm.radius = 0.18
 		sm.height = 0.36
 		mi.mesh = sm
-		main.add_child(mi)
-		_shot_nodes.append(mi)
+		holder.add_child(mi)
+		var ar := _arrow_model()
+		ar.name = "Arrow"
+		holder.add_child(ar)
+		main.add_child(holder)
+		_shot_nodes.append(holder)
+		_shot_last.append(Vector3.INF)
 	for i in _shot_nodes.size():
 		_shot_nodes[i].visible = i < list.size()
 		if i < list.size():
 			var sh: Dictionary = list[i]
-			_shot_nodes[i].global_position = _w3(sh["pos"], float(sh["y"]))
-			var m: StandardMaterial3D = StandardMaterial3D.new()
-			m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-			m.albedo_color = Color("ff5a4a") if sh["hostile"] else _kind_color.get(str(sh["kind"]), Color("ffd27a"))
-			_shot_nodes[i].material_override = m
+			var pos: Vector3 = _w3(sh["pos"], float(sh["y"]))
+			var holder: Node3D = _shot_nodes[i]
+			var is_arrow: bool = str(sh["kind"]) == "arrow"
+			(holder.get_node("Ball") as Node3D).visible = not is_arrow
+			(holder.get_node("Arrow") as Node3D).visible = is_arrow
+			var last: Vector3 = _shot_last[i]
+			if is_arrow and last != Vector3.INF and last.distance_to(pos) > 0.02 and last.distance_to(pos) < 6.0:
+				holder.global_position = pos
+				holder.look_at(pos + (pos - last), Vector3.UP)
+			else:
+				holder.global_position = pos
+			_shot_last[i] = pos
+			if not is_arrow:
+				var m: StandardMaterial3D = StandardMaterial3D.new()
+				m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+				m.albedo_color = Color("ff5a4a") if sh["hostile"] else _kind_color.get(str(sh["kind"]), Color("ffd27a"))
+				(holder.get_node("Ball") as MeshInstance3D).material_override = m
+		else:
+			_shot_last[i] = Vector3.INF
 
 
 # ================================================================ events -> effects

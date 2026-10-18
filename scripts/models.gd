@@ -239,18 +239,26 @@ static func hero_geared(id: String, equip: Dictionary, look := {}) -> Rig:
 	cfg["metal"] = "a3adba"
 	var wep: Dictionary = equip.get("weapon", {})
 	var off: Dictionary = equip.get("offhand", {})
-	if id == "rogue" or (not off.is_empty() and String(off.get("type", "")) != "shield"):
-		# dual wield: main hand right, off-hand left, whatever one-handers they are
-		cfg["weapon_r"] = String(wep.get("type", "")) if not wep.is_empty() else ""
-		cfg["weapon_l"] = String(off.get("type", "")) if not off.is_empty() else ""
-		cfg["wmetal"] = _tier_col(wep if not wep.is_empty() else off, "plate").to_html(false)
-		if not off.is_empty():
-			cfg["wmetal_l"] = _tier_col(off, "plate").to_html(false)
-	elif wep.is_empty():
-		cfg["weapon_r"] = ""
-		cfg["weapon_l"] = ""
-	else:
+	# you see the weapon in your hand, whatever class you started as: a sword, dagger, staff or bow
+	var wt: String = String(wep.get("type", "")) if not wep.is_empty() else ""
+	var two_hand: bool = wt in ["bow", "staff"]
+	cfg["weapon_r"] = ""
+	cfg["weapon_l"] = ""
+	if wt == "bow":
+		cfg["weapon_l"] = "bow"
+	elif wt != "":
+		cfg["weapon_r"] = wt
+	if wt != "":
 		cfg["wmetal"] = _tier_col(wep, "plate").to_html(false)
+	if not off.is_empty() and not two_hand:
+		if String(off.get("type", "")) == "shield":
+			cfg["weapon_l"] = "shield"
+		else:
+			# dual wield: the off-hand weapon in the left hand
+			cfg["weapon_l"] = String(off.get("type", ""))
+			cfg["wmetal_l"] = _tier_col(off, "plate").to_html(false)
+			if wt == "":
+				cfg["wmetal"] = _tier_col(off, "plate").to_html(false)
 	if cfg.get("weapon_l", "") == "shield":
 		cfg["weapon_l"] = "shield" if String(off.get("type", "")) == "shield" else ""
 		# the shield keeps its own look (not the chest's or the helm's colours) until you find one with a different look:
