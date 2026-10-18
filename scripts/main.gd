@@ -1261,6 +1261,8 @@ func has_target() -> bool:
 
 
 func set_target(e: Enemy) -> void:
+	if e != target:
+		combat.auto_attack = false   # picking another enemy (click or Tab) does not start attacking it: press an ability at it (melee: right-click)
 	target = e   # online: Online notices and tells the server
 
 
